@@ -1,0 +1,301 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+/* --------------------------
+   Mini-logos on the top-right of the navbar
+   -------------------------- */
+.navbar .minilogo{
+	margin-top: 8px;
+}
+.navbar .minilogo img{
+	margin-left: 12px;
+}
+
+
+/* --------------------------
+   The header space for title and abstract of each tool
+   -------------------------- */
+.splash-unit{
+	margin-bottom: 30px;
+	min-height: 90px;
+}
+
+.splash-unit .image{
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.splash-unit .title{
+	margin-bottom: 0;
+	font-size: 60px;
+	font-weight: 300;
+  	line-height: 1;
+  	letter-spacing: -1px;
+  	color: inherit;
+	
+	display: inline-block;
+	padding-bottom: 10px;
+  	vertical-align: bottom;
+}
+
+.splash-unit .abstract {
+  font-size: 18px;
+  font-weight: 200;
+  line-height: 30px;
+  color: #999999;
+
+  margin-top: 32px;
+}
+
+/* --------------------------
+   Main panel (Workbench) the one that is light or dark
+   -------------------------- */
+#workbench{
+	background-color: #F4F3F2;
+	color: #555;
+
+	padding-bottom: 30px;
+	margin-bottom: 20px;
+
+	-webkit-transition-property: background-color, color;
+	-webkit-transition-duration: 2s;
+	-moz-transition-property: background-color, color;
+	-moz-transition-duration: 2s;
+	transition-property: background-color, color;
+	transition-duration: 2s;
+}
+.isColorSpace{
+	border-right: 20px solid #FFF;
+	margin-right: -20px;
+}
+
+
+
+
+/* --------------------------
+   Color result
+   -------------------------- */
+.colorResult-top{
+	width: 100%;
+	height: 70px;
+}
+
+.colorResult-bottomBorder{
+	width: 100%;
+	height: 6px;
+}
+
+.colorResult-bottom{
+	width: 100%;
+	margin-bottom: 20px;
+	background-color:#EEE;
+}
+
+.colorResult-hex{
+	width: 100px;
+}
+
+.colorResult-rgb{
+	width: 100px;
+}
+
+.colorResult-value{
+	padding-left: 8px;
+	padding-top: 5px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #888;
+}
+
+.colorResult-label{
+	padding-left: 8px;
+	padding-bottom: 8px;
+	font-size: 10px;
+	color: #AAA;
+	line-height: 8px;
+}
+
+
+
+
+
+
+
+/* --------------------------
+   Palette
+   -------------------------- */
+#palette_visual{
+	margin-top: 10px;
+}
+.palette_item{
+	display: inline-block;
+	margin: 3px;
+	height: 80px;
+	width: 48px;
+	
+	-webkit-transition-property: background-image;
+	-webkit-transition-duration: 2s;
+	-moz-transition-property: background-image;
+	-moz-transition-duration: 2s;
+	transition-property: background-image;
+	transition-duration: 2s;
+}
+.palette_item.light{
+	background-image:url(../res/palette_hole.png);
+}
+.palette_item.dark{
+	background-image:url(../res/palette_hole_dark.png);
+}
+.palette_color{
+	height: 0px;
+	width: 36px;
+	margin-left:6px;
+	margin-top: 14px;
+	
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	
+	-moz-box-shadow: inset -1px 6px 15px rgba(30,30,30,0.2), inset 0px -20px 25px rgba(255,255,255,0.2);
+	-webkit-box-shadow: inset -1px 6px 15px rgba(30,30,30,0.2), inset 0px -20px 25px rgba(255,255,255,0.2);
+}
+.colored{
+	-webkit-transition-property: height;
+	-webkit-transition-duration: 1s;
+	-moz-transition-property: height;
+	-moz-transition-duration: 1s;
+	transition-property: height;
+	transition-duration: 1s;
+	height: 58px;
+}
+.palette_item_buttons{
+	position:absolute;
+}
+.palette_item_lock_icon{
+	margin-left:10px;
+	margin-top:36px;
+}
+
+
+
+
+/* --------------------------
+   Dark background
+   -------------------------- */
+.add-on{
+	-webkit-transition-property: color;
+	-webkit-transition-duration: 2s;
+	-moz-transition-property: color;
+	-moz-transition-duration: 2s;
+	transition-property: color;
+	transition-duration: 2s;
+	-webkit-transition-property: background-color;
+	-webkit-transition-duration: 2s;
+	-moz-transition-property: background-color;
+	-moz-transition-duration: 2s;
+	transition-property: background-color;
+	transition-duration: 2s;
+}
+.add-on.dark{
+	background-color: #666;
+}
+
+
+/* --------------------------
+   Inline Palette (for the text)
+   -------------------------- */
+.inlinePalette{
+	margin-left: 0;
+	list-style: none;
+}
+.inlinePalette li{
+	display: inline-block;
+  	*display: inline;
+	width: 100px;
+	padding-top: 50px;
+	margin-bottom: 25px;
+	margin-right: 4px;
+
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	
+	-moz-box-shadow: inset -1px 6px 15px rgba(30,30,30,0.1), inset 0px -20px 25px rgba(255,255,255,0.1);
+	-webkit-box-shadow: inset -1px 6px 15px rgba(30,30,30,0.1), inset 0px -20px 25px rgba(255,255,255,0.1);
+}
+.inlinePalette li p{
+	font-size: 16px;
+	color: #888;
+	padding-left: 2px;
+	background-color:#EEE;
+	border-top: 2px solid #AAA;
+	margin-bottom: -20px;
+}
+
+
+/* --------------------------
+   MISCILLANEOUS
+   -------------------------- */
+#hmin, #cmin, #lmin, .hmin, .cmin, .lmin{
+	margin-right: -2px;
+}
+#hmax, #cmax, #lmax, .hmax, .cmax, .lmax{
+	margin-left: -2px;
+}
+
+.unselectable, .unselectable:hover, .unselectable:active{
+	cursor:default;
+}
+.hover, .hover:active{
+	cursor: pointer;
+}
+
+.textblock{
+	margin-top: 20px;
+}
+
+
+
+
+
+#hs_div, #sl_div, #hl_div, #sv_div, #hv_div, #rg_div, #gb_div, #rb_div{
+	max-width: 300px;
+}
+.generator button{
+	width: 100%;
+	height: 30px;
+}
+.percent{
+	text-shadow: -1px -1px #FFF, 1px 1px #333;
+	text-align:center;
+	vertical-align:middle;
+}
+#colorspace{
+	color:#FFF;
+	font-size: 9px;
+	word-wrap: break-word;
+}
+#colorspace span{
+	margin-right: 1px;
+}
+#carto{
+	width: 100%;
+	height: 300px;
+}
+
+
+#palette_hex_container{
+	height: 120px;
+	margin-top: 20px;
+	border: 1px solid #999;
+	background-color: rgba(255, 255, 255, 0.2);
+	overflow-y: scroll;
+}
+#palette_hex{
+	font-size: 1.8em;
+}
+
+.spacetitle h3{
+	border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+}
