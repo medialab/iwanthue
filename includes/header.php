@@ -24,9 +24,10 @@
                             </li>
                         </ul>
 
-                       <div class="minilogo pull-right">
-                            <a href="http://medialab.sciences-po.fr"><img src="res/mini-tools.png"/></a>
-                            <a href="http://tools.medialab.sciences-po.fr"><img src="res/mini-sp.png"/></a>
+                        <div class="pull-right">
+                            <ul class="nav">
+                                <li><a href="http://tools.medialab.sciences-po.fr"><i class="icon icon-plus icon-white"></i> <span style="color: #FFF">Médialab Tools</span></a></li>
+                            </ul>
                         </div>
                         
                     </div><!--/.nav-collapse -->
