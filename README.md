@@ -2,7 +2,7 @@ iWantHue
 ========
 **Colors for data scientists.** *Generate and refine palettes of optimally distinct colors.*
 
-*[iWantHue](http://lab.medialab.sciences-po.fr/iwanthue/examples.php)* allows you to generate palettes of colors. It is about mastering the properties of a palette by setting a range of Hue, Chroma (unbiased saturation) and Lightness. You can generate palettes of any size or just get the generator for a javascript project. The algorithm optimizes the perceptive distance in the color subspace, ensuring an optimal readability.
+*[iWantHue](http://lab.medialab.sciences-po.fr/iwanthue/)* allows you to generate palettes of colors. It is about mastering the properties of a palette by setting a range of Hue, Chroma (unbiased saturation) and Lightness. You can generate palettes of any size or just get the generator for a javascript project. The algorithm optimizes the perceptive distance in the color subspace, ensuring an optimal readability.
 
 ###How it works
 1. **K-means** or **force vector repulsion** algorithms ensure an even distribution of colors
