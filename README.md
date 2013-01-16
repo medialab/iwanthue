@@ -18,7 +18,7 @@ constrained by **user-friendly** settings, to generate **high quality** custom p
 [Explanations](http://lab.medialab.sciences-po.fr/iwanthue/theory.php) and an [experiment](http://lab.medialab.sciences-po.fr/iwanthue/experiment.php) on color theory
 
 ###More info
-* The tool itself is [available online](http://lab.medialab.sciences-po.fr/iwanthue/examples.php)
+* The tool itself is [available online](http://lab.medialab.sciences-po.fr/iwanthue/)
 * Its source code is available on [GitHub](https://github.com/medialab/iwanthue/)
 * If you have issues or requests, [tell us about them](https://github.com/medialab/iwanthue/issues)
 * You will find more tools on [Médialab Tools](http://tools.medialab.sciences-po.fr/)
