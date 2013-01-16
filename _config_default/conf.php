@@ -1,0 +1,4 @@
+<?php
+$googleAnalyticsId = "";
+$twitterText = "";
+?>

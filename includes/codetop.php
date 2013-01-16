@@ -1,3 +1,4 @@
+<?php include('includes/config_management.php'); ?>
 		<link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
         <link rel="stylesheet" href="css/prettify.css">
