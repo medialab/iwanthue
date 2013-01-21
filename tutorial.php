@@ -63,51 +63,12 @@
             
                 
                 <h1>Tutorials</h1>
-
+                <p>Coming soon :) !</p>
         </div>
     </div>
-<!-- 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
- -->
-        <script>window.jQuery || document.write('<script src="js/libs/jquery-1.8.0.min.js"><\/script>')</script>
-        
-        <script src="js/libs/bootstrap.min.js"></script>
+<?php include('includes/codebottom.php'); ?>
 
         <script src="js/libs/d3.v3.min.js"></script>
-
-        <script src="js/libs/prettify.js"></script>
-
-        <script src="js/libs/chroma.js"></script>
-        <script src="js/libs/chroma.palette-gen.js"></script>
-
-        <script src="js/libs/FileSaver.js"></script>
-
-        <script src="js/libs/sigma.min.js"></script>
-        <script src="js/libs/sigma.forceatlas2.js"></script>
-
-        <script src="js/background.js"></script>
-        <script src="js/colorspace.js"></script>
-        <script src="js/presets.js"></script>
-        <script src="js/selectors.js"></script>
-        <script src="js/fitting.js"></script>
-        <script src="js/palettegeneration.js"></script>
-        <script src="js/colorpicker.js"></script>
-
-        <script src="js/sandbox.js"></script>
-
-        <script>
-
-// var margin = {top: 40, right: 10, bottom: 10, left: 10},
-
-
-
-        </script>
-
-        <script>
-            /*var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));*/
-        </script>
+        
     </body>
 </html>
