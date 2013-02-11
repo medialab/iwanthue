@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Palettes Generator</title>
+	<title>iWantHue - Palettes Generator</title>
 
 <?php include("includes/codetop.php"); ?>
 

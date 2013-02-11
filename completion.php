@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Palette Completion</title>
+	<title>iWantHue - Palette Completion</title>
 
 <?php include("includes/codetop.php"); ?>
 

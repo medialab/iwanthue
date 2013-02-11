@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Palettes Correction</title>
+	<title>iWantHue - Palettes Correction</title>
 
 <?php include("includes/codetop.php"); ?>
 
