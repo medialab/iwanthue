@@ -28,6 +28,9 @@ if(isset($twitterText) && $twitterText != ""){
                             <a href="#">Modernizr</a>,
                             <a href="#">Initializr</a>
                         </p>
+                        <p>
+                            Check our <a href="https://github.com/medialab/iwanthue">GitHub</a>.
+                        </p>
                     
                     </div>
                     <div class="span4">
@@ -50,6 +53,11 @@ if(isset($twitterText) && $twitterText != ""){
                                 Developed by Mathieu Jacomy
                                 <br/>
                                 at the <a href="http://medialab.sciences-po.fr">Sciences-Po Medialab</a>
+                            </p>
+                            <p>
+                                Help, bug report or contacting us:
+                                <br/>
+                                <i class="icon-hand-right"></i> <a href="https://github.com/medialab/iwanthue/issues">GitHub Issues</a>.
                             </p>
                         </div>
                     </div>
