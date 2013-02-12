@@ -21,12 +21,12 @@ if(isset($twitterText) && $twitterText != ""){
                         <p>
                             We used:
                             <br/>
-                            <strong><a href="#">Sigma.js</a></strong>,
-                            <a href="#">Prettify</a>,
-                            <a href="#">Bootstrap</a>,
-                            <a href="#">jQuery</a>,
-                            <a href="#">Modernizr</a>,
-                            <a href="#">Initializr</a>
+                            <strong><a href="http://sigmajs.org/">Sigma.js</a></strong>,
+                            <a href="http://code.google.com/p/google-code-prettify/">Prettify</a>,
+                            <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>,
+                            <a href="http://jquery.com/">jQuery</a>,
+                            <a href="http://modernizr.com/">Modernizr</a>,
+                            <a href="http://www.initializr.com/">Initializr</a>
                         </p>
                         <p>
                             Check our <a href="https://github.com/medialab/iwanthue">GitHub</a>.
