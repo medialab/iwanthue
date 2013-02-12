@@ -6,10 +6,9 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="">I want hue</a>
+                    <a class="brand" href="index.php">I want hue</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav">
-                            <!--<li class="active"><a href="#">Gaga</a></li>-->
                             <li><a href="tutorial.php">Tutorials</a></li>
                             <li><a href="examples.php">Examples</a></li>
                             <li><a href="theory.php">Theory</a></li>
