@@ -327,8 +327,15 @@ $('#hmin, #hmax, #cmin, #cmax, #lmin, #lmax').change(function(){
 // Colors network
 var s;
 var initSigma = function(){
-    // INIT SIGMA:
-    $('#carto').empty();
+    // Clean old sigma instances if needed
+    for(sid in sigma.instances){
+        var sInstance = sigma.instances[sid]
+        sInstance.stopForceAtlas2()
+        // sInstance.emptyGraph()
+    }
+    $('#carto').empty()
+
+    // INIT SIGMA
     s = sigma.init(document.getElementById('carto'))
         .drawingProperties({
             
