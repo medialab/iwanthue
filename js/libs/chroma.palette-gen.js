@@ -261,6 +261,18 @@ var paletteGenerator = {
 	},
 
 	getColorDistance: function(lab1, lab2){
-		return Math.sqrt(Math.pow(lab1[0]-lab2[0], 2) + Math.pow(lab1[1]-lab2[1], 2) + Math.pow(lab1[2]-lab2[2], 2));
+		return trichromaticDistance(lab1, lab2)
+
+		// Proposition for color-blind compliant distance:
+		// return 0.3 * trichromaticDistance(lab1, lab2) + 0.7 * redgreenDeficiencyDistance(lab1, lab2);
+		
+		function trichromaticDistance(lab1, lab2){
+			return Math.sqrt(Math.pow(lab1[0]-lab2[0], 2) + Math.pow(lab1[1]-lab2[1], 2) + Math.pow(lab1[2]-lab2[2], 2));
+		}
+
+		function redgreenDeficiencyDistance(lab1, lab2){
+			// The a* is the red-green contrast channel in CIE LAB, so we just omit this channel in distance computing!
+			return Math.sqrt(Math.pow(lab1[0]-lab2[0], 2) + /* Math.pow(lab1[1]-lab2[1], 2) +*/ Math.pow(lab1[2]-lab2[2], 2));
+		}
 	}
 }
