@@ -163,7 +163,7 @@ var paletteGenerator = {
 					var minDistance = 1000000;
 					for(j=0; j<kMeans.length; j++){
 						var kMean = kMeans[j];
-						var distance = Math.sqrt(Math.pow(lab[0]-kMean[0], 2) + Math.pow(lab[1]-kMean[1], 2) + Math.pow(lab[2]-kMean[2], 2));
+						var distance = paletteGenerator.getColorDistance(lab, kMean);
 						if(distance < minDistance){
 							minDistance = distance;
 							samplesClosest[i] = j;
@@ -199,7 +199,7 @@ var paletteGenerator = {
 							var minDistance = 10000000000;
 							var closest = -1;
 							for(i=0; i<freeColorSamples.length; i++){
-								var distance = Math.sqrt(Math.pow(freeColorSamples[i][0]-candidateKMean[0], 2) + Math.pow(freeColorSamples[i][1]-candidateKMean[1], 2) + Math.pow(freeColorSamples[i][2]-candidateKMean[2], 2));
+								var distance = paletteGenerator.getColorDistance(freeColorSamples[i], candidateKMean);
 								if(distance < minDistance){
 									minDistance = distance;
 									closest = i;
@@ -212,7 +212,7 @@ var paletteGenerator = {
 							var minDistance = 10000000000;
 							var closest = -1;
 							for(i=0; i<colorSamples.length; i++){
-								var distance = Math.sqrt(Math.pow(colorSamples[i][0]-candidateKMean[0], 2) + Math.pow(colorSamples[i][1]-candidateKMean[1], 2) + Math.pow(colorSamples[i][2]-candidateKMean[2], 2));
+								var distance = paletteGenerator.getColorDistance(colorSamples[i], candidateKMean)
 								if(distance < minDistance){
 									minDistance = distance;
 									closest = i;
@@ -258,5 +258,9 @@ var paletteGenerator = {
 			colorsToSort = colorsToSort.filter(function(c,i){return i!=index;});
 		}
 		return diffColors;
+	},
+
+	getColorDistance: function(lab1, lab2){
+		return Math.sqrt(Math.pow(lab1[0]-lab2[0], 2) + Math.pow(lab1[1]-lab2[1], 2) + Math.pow(lab1[2]-lab2[2], 2));
 	}
 }
