@@ -39,8 +39,9 @@ var paletteGenerator = {
 			var colors = [];
 			
 			// It will be necessary to check if a Lab color exists in the rgb space.
-			function checkLab(lab){
+			function checkColor(lab){
 				var color = chroma.lab(lab[0], lab[1], lab[2]);
+
 				return !isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256 && checkColor(color);
 			}
 			
@@ -49,7 +50,7 @@ var paletteGenerator = {
 			for(i=0; i<colorsCount; i++){
 				// Find a valid Lab color
 				var color = [Math.random(),2*Math.random()-1,2*Math.random()-1];
-				while(!checkLab(color)){
+				while(!checkColor(color)){
 					color = [Math.random(),2*Math.random()-1,2*Math.random()-1];
 				}
 				colors.push(color);
@@ -100,7 +101,7 @@ var paletteGenerator = {
 					if(displacement>0){
 						var ratio = speed * Math.min(0.1, displacement)/displacement;
 						candidateLab = [color[0] + vectors[i].dl*ratio, color[1] + vectors[i].da*ratio, color[2] + vectors[i].db*ratio];
-						if(checkLab(candidateLab)){
+						if(checkColor(candidateLab)){
 							colors[i] = candidateLab;
 						}
 					}
@@ -274,5 +275,28 @@ var paletteGenerator = {
 			// The a* is the red-green contrast channel in CIE LAB, so we just omit this channel in distance computing!
 			return Math.sqrt(Math.pow(lab1[0]-lab2[0], 2) + /* Math.pow(lab1[1]-lab2[1], 2) +*/ Math.pow(lab1[2]-lab2[2], 2));
 		}
+	},
+
+	RGBtoXYZ: function(R, G, B){
+    var_R = parseFloat( R / 255 )        //R from 0 to 255
+    var_G = parseFloat( G / 255 )        //G from 0 to 255
+    var_B = parseFloat( B / 255 )        //B from 0 to 255
+
+    if ( var_R > 0.04045 ) var_R = Math.pow( ( var_R + 0.055 ) / 1.055 ) , 2.4 )
+    else                   var_R = var_R / 12.92
+    if ( var_G > 0.04045 ) var_G = Math.pow( ( var_G + 0.055 ) / 1.055 ) , 2.4 )
+    else                   var_G = var_G / 12.92
+    if ( var_B > 0.04045 ) var_B = Math.pow( ( var_B + 0.055 ) / 1.055 ) , 2.4 )
+    else                   var_B = var_B / 12.92
+
+    var_R = var_R * 100
+    var_G = var_G * 100
+    var_B = var_B * 100
+
+    //Observer. = 2°, Illuminant = D65
+    X = var_R * 0.4124 + var_G * 0.3576 + var_B * 0.1805
+    Y = var_R * 0.2126 + var_G * 0.7152 + var_B * 0.0722
+    Z = var_R * 0.0193 + var_G * 0.1192 + var_B * 0.9505
+    return [X, Y, Z]
 	}
 }
