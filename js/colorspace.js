@@ -139,8 +139,10 @@ var getSubColorSpace = function(){
 	// Sample the color space (for monitoring)
 	var subspaceSamples = [];
 	colorSamples.forEach(function(c){
-		// Test if the color is in the specified subspace
-		if(colorspaceSelector(c.hcl)){
+		if(
+				// Test if the color is in the specified subspace
+				colorspaceSelector(c.hcl)
+			){
 			subspaceSamples.push(c.color);
 		}
 	});
