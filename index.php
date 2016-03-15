@@ -256,7 +256,7 @@
         <script src="js/libs/FileSaver.js"></script>
 
         <script src="js/libs/sigma.min.js"></script>
-        <script src="js/libs/sigma.forceatlas2.js"></script>
+        <script src="js/libs/sigma.layout.forceatlas2.min.js"></script>
 
         <script src="js/background.js"></script>
         <script src="js/colorspace.js"></script>
@@ -326,47 +326,48 @@ $('#hmin, #hmax, #cmin, #cmax, #lmin, #lmax').change(function(){
 
 // Colors network
 var s;
+var forceStopTimers = [];
 var initSigma = function(){
     // Clean old sigma instances if needed
-    for(sid in sigma.instances){
-        var sInstance = sigma.instances[sid]
+    for(sid in sigma.instances()){
+        var sInstance = sigma.instances()[sid]
         sInstance.stopForceAtlas2()
-        // sInstance.emptyGraph()
+        sInstance.graph.clear()
+        sInstance.kill()
     }
     $('#carto').empty()
+    forceStopTimers.forEach(function(t){
+        clearTimeout(t)
+    })
 
     // INIT SIGMA
-    s = sigma.init(document.getElementById('carto'))
-        .drawingProperties({
-            
-            // Labels:
-            font: "'Arial', sans-serif;",
-            defaultLabelColor: '#333',
-            defaultLabelSize: 16,
-            defaultLabelBGColor: '#fff',
-            defaultLabelHoverColor: '#000',
-            labelThreshold: 100,
-            
-            // Edges
-            defaultEdgeType: 'line'
-            
-        }).graphProperties({
-            
-            // Nodes size
-            minNodeSize: 0.2,
-            maxNodeSize: 5,
-            minEdgeSize: 1,
-            maxEdgeSize: 1
-            
-        }).mouseProperties({
-            
-            mouseEnabled: false,
-            blockScroll: true,
-            minRatio: 1,
-            maxRatio: 1
+    s = new sigma({
+      container: 'carto'
+      ,settings: {
+        // Labels:
+        font: "'Arial', sans-serif;",
+        defaultLabelColor: '#333',
+        defaultLabelSize: 16,
+        defaultLabelBGColor: '#fff',
+        defaultLabelHoverColor: '#000',
+        labelThreshold: 100,
         
-        });
-        
+        // Edges
+        defaultEdgeType: 'line',
+        drawEdges: false,
+
+        minNodeSize: 0.2,
+        maxNodeSize: 5,
+        minEdgeSize: 1,
+        maxEdgeSize: 1,
+
+        mouseEnabled: false,
+        blockScroll: true,
+        minRatio: 1,
+        maxRatio: 1
+      }
+    });
+    
     // Mouse actions
     s.bind('overnodes',function(e){
         // Cursor: pointer for hovered nodes

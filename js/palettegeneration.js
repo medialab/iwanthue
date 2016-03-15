@@ -38,7 +38,7 @@ var drawPalette = function(colors, matchings){
 			var muteColor = ($('#darkBackground').is(':checked'))?('#222222'):('#DDDDDD');
 			var i = event.currentTarget.id.split("_")[2];
 			var m = matchings[''+colors[i].hex()].join("|");
-			s.iterNodes(function(n){
+			s.graph.nodes().forEach(function(n){
 				if(m.indexOf(n.label)<0){
 					n.color = muteColor;
 				}
@@ -52,19 +52,21 @@ var drawPalette = function(colors, matchings){
 				left:$('#palette_color_'+i).offset().left+4
 			})
 
-			s.draw();
+			s.refresh();
+			s.render();
 		});
 
 		$('#palette_item_'+i).mouseout(function(event){
 			var i = event.currentTarget.id.split("_")[2];
 			var m = matchings[''+colors[i].hex()].join("|");
-			s.iterNodes(function(n){
+			s.graph.nodes().forEach(function(n){
 				if(m.indexOf(n.label)<0){
 					n.color = ''+n.label;
 				}
 			});
 			$('#palette_item_buttons_'+i).hide()
-			s.draw();
+			s.refresh();
+			s.render();
 		});
 	}
 	

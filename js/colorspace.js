@@ -8,18 +8,18 @@ function updateColorSpace(colors, keepPositions){
 	
 	var positionsIndex = {};
 	if(keepPositions){
-		s.iterNodes(function(n){
+		s.graph.nodes().forEach(function(n){
 			positionsIndex[n.id] = {x:n.x, y:n.y};
 		});
 	}
 	
-	s.stopForceAtlas2();
 	initSigma();
 	
 	// Building the graph
-	s.emptyGraph();
+	s.graph.clear();
 	subspaceSamples.forEach(function(color){
-		s.addNode(color.hex(),{
+		s.graph.addNode({
+			id: color.hex(),
 			x: 1000 - 1000 * (color.lab()[1]-0.37*color.lab()[0]),
 			y: 1000 * (color.lab()[2]-0.58*color.lab()[0]),
 			size: 1,
@@ -29,13 +29,15 @@ function updateColorSpace(colors, keepPositions){
 	});
 	
 	if(keepPositions){
-		s.iterNodes(function(n){
+		s.graph.nodes().forEach(function(n){
 			if(positionsIndex[n.id]){
 				n.x = positionsIndex[n.id].x;
 				n.y = positionsIndex[n.id].y;
 			}
 		});
 	}
+
+	s.refresh();
 
 	// If colors are passed...
 	if(colors && colors.length>0){
@@ -68,7 +70,7 @@ function updateColorSpace(colors, keepPositions){
 				for(i=0; i<group.length; i++){
 					var c1 = group[i];
 					var c2 = group[(i+1)%group.length];
-					s.addEdge(times+"_"+c1+"_"+c2, c1, c2, {});
+					s.graph.addEdge({id:times+"_"+c1+"_"+c2, source:c1, target:c2});
 				}			
 			});
 		}
@@ -100,9 +102,24 @@ function updateColorSpace(colors, keepPositions){
 	}
 	
 	if(colors && colors.length>0){
-		s.startForceAtlas2();
+		s.startForceAtlas2(
+			{
+				slowDown: 3,
+				scalingRatio: 200,
+				strongGravityMode: true,
+				gravity: 0.1
+			}
+		);
+		forceStopTimers = [
+			setTimeout(function(){s.configForceAtlas2({slowDown:4})}, 500),
+			setTimeout(function(){s.configForceAtlas2({slowDown:8})}, 1000),
+			setTimeout(function(){s.configForceAtlas2({slowDown:16})}, 1500),
+			setTimeout(function(){s.configForceAtlas2({slowDown:32})}, 2000),
+			setTimeout(function(){s.stopForceAtlas2()}, 5000)
+		]
 	} else {
-		s.draw();
+		s.refresh();
+		s.render();
 	}	
 }
 
