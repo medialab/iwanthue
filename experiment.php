@@ -1014,9 +1014,6 @@ function labFancyKMeans(){
         
 <?php include('includes/codebottom.php'); ?>
 
-        <script src="js/libs/sigma.min.js"></script>
-        <script src="js/libs/sigma.forceatlas2.js"></script>
-
         <script src="js/background.js"></script>
         <script src="js/colorspace.js"></script>
         <script src="js/presets.js"></script>
