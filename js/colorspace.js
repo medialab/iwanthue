@@ -104,18 +104,19 @@ function updateColorSpace(colors, keepPositions){
 	if(colors && colors.length>0){
 		s.startForceAtlas2(
 			{
-				slowDown: 3,
-				scalingRatio: 200,
+				slowDown: 4,
+				scalingRatio: 10,
 				strongGravityMode: true,
 				gravity: 0.1
 			}
 		);
 		forceStopTimers = [
-			setTimeout(function(){s.configForceAtlas2({slowDown:4})}, 500),
+			// setTimeout(function(){s.configForceAtlas2({slowDown:4})}, 500),
 			setTimeout(function(){s.configForceAtlas2({slowDown:8})}, 1000),
 			setTimeout(function(){s.configForceAtlas2({slowDown:16})}, 1500),
-			setTimeout(function(){s.configForceAtlas2({slowDown:32})}, 2000),
-			setTimeout(function(){s.stopForceAtlas2()}, 5000)
+			setTimeout(function(){s.configForceAtlas2({slowDown:32})}, 2500),
+			setTimeout(function(){s.configForceAtlas2({slowDown:64})}, 5000),
+			setTimeout(function(){s.stopForceAtlas2()}, 15000)
 		]
 	} else {
 		s.refresh();
