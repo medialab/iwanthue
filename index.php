@@ -356,7 +356,7 @@ var initSigma = function(){
         defaultEdgeType: 'line',
         drawEdges: false,
 
-        maxNodeSize: 6,
+        maxNodeSize: 8,
 
         mouseEnabled: false,
         blockScroll: true,
@@ -386,7 +386,8 @@ window.onresize = function(){
 
 // Resize graph
 var resizeWidget = function(){
-    s.resize();
+    // s.refresh();
+    s.render();
     updateSelectors();
 }
 
