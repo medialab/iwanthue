@@ -289,19 +289,45 @@ $(document).ready(function(){
 // Init the color samples once for all
 console.log("Initializing color sampling...")
 var colorSamples = []
-var lstep = 0.05
-var astep = 0.1
-var bstep = 0.1
-for(l=0; l<=1; l+=lstep){
-    for(a=-1; a<=1; a+=astep){
-        for(b=-1; b<=1; b+=bstep){
-            var color = chroma.lab(l, a, b)
-            // Test if the color exists in the RGB color space (there are holes in the CIE Labs space)
-            if(!isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256){
-                colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl()})
+var l = 0
+var lstep
+var a
+var astep
+var b
+var bstep
+var d
+while (l<=1) {
+    a = 0
+    while (a <= 1.) {
+        b = 0
+        while (b <= 1.) {
+            var colors = []
+            colors.push(chroma.lab(l, a, b))
+            if (b > 0) {
+                colors.push(chroma.lab(l, a, -b))
             }
+            if (a > 0) {
+                colors.push(chroma.lab(l, -a, b))
+                if (b > 0) {
+                    colors.push(chroma.lab(l, -a, -b))
+                }
+            }
+            colors.forEach(function(color) {
+                // Test if the color exists in the RGB color space (there are holes in the CIE Labs space)
+                if(!isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256){
+                    colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl()})
+                }
+            })
+            bstep = 0.1
+            b += bstep
         }
+        astep = 0.1
+        a += astep
     }
+    // heuristic to get more precision in light and dark colors
+    // original value: 0.05
+    lstep = 0.1 / ( 2 + 8 * ((2*l - 1) * (2*l - 1)) )
+    l += lstep
 }
 console.log("...done")
 
