@@ -288,46 +288,49 @@ $(document).ready(function(){
 
 // Init the color samples once for all
 console.log("Initializing color sampling...")
-var colorSamples = []
+var colors = {}
+var color
 var l = 0
 var lstep
 var a
-var astep
 var b
-var bstep
-var d
+var r
+var rmax = Math.sqrt(2)
+var rstep
+var ang
+var angmax = Math.PI * 2 - 0.01
+var angstep
 while (l<=1) {
-    a = 0
-    while (a <= 1.) {
-        b = 0
-        while (b <= 1.) {
-            var colors = []
-            colors.push(chroma.lab(l, a, b))
-            if (b > 0) {
-                colors.push(chroma.lab(l, a, -b))
+    r = 0
+    while (r <= rmax) {
+        ang = (10000 * (Math.sqrt(r) + Math.sqrt(l)) % 10 ) / 100 // pseudo-random seed for a more natural feel
+        while (ang < angmax ) {
+            a = r * Math.cos(-3 * Math.PI / 4 - ang)
+            b = r * Math.sin(-3 * Math.PI / 4 - ang)
+            color = chroma.lab(l, a, b)
+            if(!isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256){
+                colors[color.hex()] = {color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl()}
             }
-            if (a > 0) {
-                colors.push(chroma.lab(l, -a, b))
-                if (b > 0) {
-                    colors.push(chroma.lab(l, -a, -b))
-                }
+            // heuristic so that angstep always produces the same distance on the circonference
+            if ( r == 0 ) {
+                ang = angmax + 1
+            } else {
+                // angstep = 0.1 / (r*r)
+                angstep = 0.09 / r
+                ang += angstep
             }
-            colors.forEach(function(color) {
-                // Test if the color exists in the RGB color space (there are holes in the CIE Labs space)
-                if(!isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256){
-                    colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl()})
-                }
-            })
-            bstep = 0.1
-            b += bstep
         }
-        astep = 0.1
-        a += astep
+        rstep = 0.001 + 0.2 * Math.log(1 + r/rmax)
+        r += rstep
     }
     // heuristic to get more precision in light and dark colors
     // original value: 0.05
-    lstep = 0.1 / ( 2 + 8 * ((2*l - 1) * (2*l - 1)) )
+    lstep = 0.12 / ( 2 + 8 * ((2*l - 1) * (2*l - 1)) )
     l += lstep
+}
+var colorSamples = []
+for (hex in colors) {
+    colorSamples.push(colors[hex])
 }
 console.log("...done")
 
