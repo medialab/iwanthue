@@ -20,9 +20,9 @@ function updateColorSpace(colors, keepPositions){
 	subspaceSamples.forEach(function(color){
 		s.graph.addNode({
 			id: color.hex(),
-			x: 1000 - 1000 * (color.lab()[1]-0.37*color.lab()[0]),
-			y: 1000 * (color.lab()[2]-0.58*color.lab()[0]),
-			size: Math.pow(1 - .6 * color.lab()[0], 2),
+			x: 1000 - 1000 * (color.lab()[1] - 0.25 * color.lab()[0] - 0.3 * color.lab()[2]) ,
+			y: 800 * (color.lab()[2] - 1.1 * color.lab()[0] + 0.1 * color.lab()[1]),
+			size: Math.pow(1 - .55 * color.lab()[0], 2),
 			label: color.hex(),
 			color: color.hex()
 		});
