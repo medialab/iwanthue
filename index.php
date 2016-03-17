@@ -133,6 +133,8 @@
                     <div id="resultColors">
                         <span class="muted">You must make a palette</span>
                     </div>
+                    <div id="additionalInfo">
+                    </div>
                 </div>
                 <div class="span6">
                     <div class="row">

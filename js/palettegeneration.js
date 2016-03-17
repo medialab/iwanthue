@@ -199,6 +199,8 @@ var drawPalette = function(colors, matchings){
 		)
 	)
 	prettyPrint()
+
+	updateAdditionalInfo(colors)
 }
 
 var resetPaletteColors = function(){
@@ -266,7 +268,151 @@ var reduceToPalette = function(){
 	updateColorSpace( colors, true )
 }
 
+var updateAdditionalInfo = function (colors) {
+	$('#additionalInfo').html('')
+	var pairs = []
+	colors.forEach(function(c1, i){
+		var c1lab = c1.lab()
+		var c1hex = c1.hex()
+		colors.forEach(function(c2, j){
+			var c2lab = c2.lab()
+			var c2hex = c2.hex()
+			var pair = {
+				c1: c1,
+				c2: c2,
+				c1id: i,
+				c2id: j,
+				c1hex: c1hex,
+				c2hex: c2hex,
+				distance: paletteGenerator.getColorDistance(c1lab, c2lab),
+				distanceProtanope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Protanope'),
+				distanceDeuteranope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Deuteranope'),
+				distanceTritanope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Tritanope')/*,
+				distanceSynth: paletteGenerator.getColorDistance(c1lab, c2lab, 'Synth')*/
+			}
+			pairs.push(pair)
+		})
+	})
 
+	// Append title
+	$('#additionalInfo').append(
+		$('<br><br><h3>Colorblindess Report</h3>')
+	)
+
+	var average
+	var count
+
+	pairs.sort(function(a,b){
+		return b.distance - a.distance
+	})
+	var pairDistances = $('<div></div>')
+	average = 0
+	count = 0
+	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
+	.forEach(function(pair){
+		displayPair(pairDistances, pair, 'distance')
+		average += pair.distance
+		count++
+	})
+	average = Math.round( 1000 * average / count ) / 1000
+	$('#additionalInfo').append(
+		$('<h5>Color pairs by distance (average '+average+')</h5>')
+			.after(pairDistances)
+	)
+
+	pairs.sort(function(a,b){
+		return b.distanceProtanope - a.distanceProtanope
+	})
+	var pairDistances = $('<div></div>')
+	average = 0
+	count = 0
+	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
+	.forEach(function(pair){
+		displayPair(pairDistances, pair, 'distanceProtanope')
+		average += pair.distanceProtanope
+		count++
+	})
+	average = Math.round( 1000 * average / count ) / 1000
+	$('#additionalInfo').append(
+		$('<h5>Color pairs by <em>Protanope</em> distance (average '+average+')</h5>')
+			.after(pairDistances)
+	)
+		
+	pairs.sort(function(a,b){
+		return b.distanceDeuteranope - a.distanceDeuteranope
+	})
+	var pairDistances = $('<div></div>')
+	average = 0
+	count = 0
+	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
+	.forEach(function(pair){
+		displayPair(pairDistances, pair, 'distanceDeuteranope')
+		average += pair.distanceDeuteranope
+		count++
+	})
+	average = Math.round( 1000 * average / count ) / 1000
+	$('#additionalInfo').append(
+		$('<h5>Color pairs by <em>Deuteranope</em> distance (average '+average+')</h5>')
+			.after(pairDistances)
+	)
+		
+	pairs.sort(function(a,b){
+		return b.distanceTritanope - a.distanceTritanope
+	})
+	var pairDistances = $('<div></div>')
+	average = 0
+	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
+	.forEach(function(pair){
+		displayPair(pairDistances, pair, 'distanceTritanope')
+		average += pair.distanceTritanope
+	})
+	average = Math.round( 1000 * average / (colors.length * (colors.length - 1)) ) / 1000
+	$('#additionalInfo').append(
+		$('<h5>Color pairs by <em>Tritanope</em> distance (average '+average+')</h5>')
+			.after(pairDistances)
+	)
+		
+	function displayPair(el, pair, distance) {
+		var n = Math.round(pair[distance] * 1000) / 1000
+		var note = noteDistance(n)
+		el.append(
+			$('<div class="row" style="height:20px; margin-bottom: 12px;"></div>')
+			.append(
+				$('<div class="span1" style="text-align: right;">'+pair.c1hex+'</div>')
+				.after(
+					$('<div class="span2" style="text-align: center; font-size: 24px; height: 20px; overflow: hidden;"></div>')
+					.append(
+						$('<span style="padding: 0px 6px 0px 6px; background-color:'+pair.c1hex+'; color:'+pair.c2hex+';">&nbsp;</span>')
+						.after($('<span style="padding: 0px 6px 0px 6px; background-color:'+pair.c1hex+'; color:'+pair.c2hex+';">&#8226;&#8226;</span>'))
+						.after($('<span style="padding: 0px 6px 0px 6px; background-color:'+pair.c2hex+'; color:'+pair.c1hex+';">&#8226;&#8226;</span>'))
+						.after($('<span style="padding: 0px 6px 0px 6px; background-color:'+pair.c2hex+'; color:'+pair.c1hex+';">&nbsp;</span>'))
+						.after($('<span>&nbsp;&nbsp;</span>'))
+						.after($('<span style="padding: 0px 0px 0px 0px; color:'+pair.c1hex+';">&#8226;&#8226;&#8226;</span>'))
+						.after($('<span style="padding: 0px 0px 0px 0px; color:'+pair.c2hex+';">&#8226;&#8226;&#8226;</span>'))
+					)
+				)
+				.after(
+					$('<div class="span1">'+pair.c2hex+'</div>')
+				)
+				.after(
+					$('<div class="span1">'+n+'</div>')
+				)
+				.after(
+					$('<div class="span1" style="font-size: 22px;">'+note+'</div>')
+				)
+			)
+		)
+	}
+
+	function noteDistance(distance) {
+		if (distance < 0.3) return '&#128556;'
+		if (distance < 0.6) return '&#128577;'
+		if (distance < 0.8) return '&#128528;'
+		if (distance < 1.0) return '&#128578;'
+		return '&#128516;'
+	}
+
+}
 
 
 

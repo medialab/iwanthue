@@ -1,7 +1,7 @@
 /**
       chroma.palette-gen.js - a palette generator for data scientists
 	  based on Chroma.js HCL color space
-      Copyright (C) 2012  Mathieu Jacomy
+      Copyright (C) 2016  Mathieu Jacomy
   
   	The JavaScript code in this page is free software: you can
       redistribute it and/or modify it under the terms of the GNU
@@ -245,10 +245,7 @@ var paletteGenerator = (function(undefined){
 				for(i=0; i<diffColors.length; i++){
 					var colorA = colorsToSort[candidate_index].lab();
 					var colorB = diffColors[i].lab();
-					var dl = colorA[0]-colorB[0];
-					var da = colorA[1]-colorB[1];
-					var db = colorA[2]-colorB[2];
-					d = Math.min(d, Math.sqrt(Math.pow(dl, 2)+Math.pow(da, 2)+Math.pow(db, 2)));
+					var d = ns.getColorDistance(colorA, colorB);
 				}
 				if(d > maxDistance){
 					maxDistance = d;
@@ -262,20 +259,149 @@ var paletteGenerator = (function(undefined){
 		return diffColors;
 	}
 
-	ns.getColorDistance = function(lab1, lab2){
-		return trichromaticDistance(lab1, lab2)
+	ns.getColorDistance = function(lab1, lab2, _type) {
 
-		// Proposition for color-blind compliant distance:
-		// return 0.3 * trichromaticDistance(lab1, lab2) + 0.7 * redgreenDeficiencyDistance(lab1, lab2);
+		if (_type === undefined) return distance(lab1, lab2)
 		
-		function trichromaticDistance(lab1, lab2){
+		var type = _type || 'Classic'
+		if (type == 'Classic') return distance(lab1, lab2)
+		else return distanceColorblind(lab1, lab2, type)
+
+		function distance(lab1, lab2) {
+			return cmcDistance(lab1, lab2, 1.5, 1);
+			// return euclidianDistance(lab1, lab2, 0.5, 1);
+		}
+
+		function distanceColorblind(lab1, lab2, type) {
+			var lab1_cb = ns.simulate(lab1, type);
+			var lab2_cb = ns.simulate(lab2, type);
+			return distance(lab1_cb, lab2_cb)
+		}
+
+		function euclidianDistance(lab1, lab2) {
 			return Math.sqrt(Math.pow(lab1[0]-lab2[0], 2) + Math.pow(lab1[1]-lab2[1], 2) + Math.pow(lab1[2]-lab2[2], 2));
 		}
 
-		function redgreenDeficiencyDistance(lab1, lab2){
-			// The a* is the red-green contrast channel in CIE LAB, so we just omit this channel in distance computing!
-			return Math.sqrt(Math.pow(lab1[0]-lab2[0], 2) + /* Math.pow(lab1[1]-lab2[1], 2) +*/ Math.pow(lab1[2]-lab2[2], 2));
+		// http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html
+		function cmcDistance(lab1, lab2, l, c) {
+			var L1 = 100 * lab1[0]
+			var L2 = 100 * lab2[0]
+			var a1 = 100 * lab1[1]
+			var a2 = 100 * lab2[1]
+			var b1 = 100 * lab1[2]
+			var b2 = 100 * lab2[2]
+			var C1 = Math.sqrt(Math.pow(a1, 2) + Math.pow(b1, 2))
+			var C2 = Math.sqrt(Math.pow(a2, 2) + Math.pow(b2, 2))
+			var deltaC = C1 - C2
+			var deltaL = L1 - L2
+			var deltaa = a1 - a2
+			var deltab = b1 - b2
+			var deltaH = Math.sqrt(Math.pow(deltaa, 2) + Math.pow(deltab, 2) + Math.pow(deltaC, 2))
+			var H1 = Math.atan2(b1, a1) * (180 / Math.PI)
+			while (H1 < 0) { H1 += 360 }
+			var F = Math.sqrt( Math.pow(C1, 4) / ( Math.pow(C1, 4) + 1900 ) )
+			var T = (164 <= H1 && H1 <= 345) ? ( 0.56 + Math.abs(0.2 * Math.cos(H1 + 168)) ) : ( 0.36 + Math.abs(0.4 * Math.cos(H1 + 35)) )
+			var S_L = (lab1[0]<16) ? (0.511) : (0.040975 * L1 / (1 + 0.01765 * L1) )
+			var S_C = (0.0638 * C1 / (1 + 0.0131 * C1)) + 0.638
+			var S_H = S_C * (F*T + 1 - F)
+			return Math.sqrt( Math.pow(deltaL/(l*S_L), 2) + Math.pow(deltaC/(c*S_C), 2) + Math.pow(deltaH/S_H, 2) ) / 100
 		}
+
+	}
+
+	ns.confusionLines = {
+		"Protanope": {
+			x: 0.7465,
+			y: 0.2535,
+			m: 1.273463,
+			yint: -0.073894
+		},
+		"Deuteranope": {
+			x: 1.4,
+			y: -0.4,
+			m: 0.968437,
+			yint: 0.003331
+		},
+		"Tritanope": {
+			x: 0.1748,
+			y: 0.0,
+			m: 0.062921,
+			yint: 0.292119
+		}
+	}
+
+	ns.simulate = function(lab, type, _amount) {
+		var amount = _amount || 1
+		// Get data from type
+		var confuse_x = ns.confusionLines[type].x;
+		var confuse_y = ns.confusionLines[type].y; 
+		var confuse_m = ns.confusionLines[type].m;
+		var confuse_yint = ns.confusionLines[type].yint;
+
+		// Code adapted from http://galacticmilk.com/labs/Color-Vision/Javascript/Color.Vision.Simulate.js
+		var color = chroma.lab(lab[0], lab[1], lab[2]);
+		var sr = color.rgb[0];
+		var sg = color.rgb[1];
+		var sb = color.rgb[2];
+		var dr = sr; // destination color
+		var dg = sg;
+		var db = sb;
+		// Convert source color into XYZ color space
+		var pow_r = Math.pow(sr, 2.2);
+		var pow_g = Math.pow(sg, 2.2);
+		var pow_b = Math.pow(sb, 2.2);
+		var X = pow_r * 0.412424  + pow_g * 0.357579 + pow_b * 0.180464; // RGB->XYZ (sRGB:D65)
+		var Y = pow_r * 0.212656  + pow_g * 0.715158 + pow_b * 0.0721856;
+		var Z = pow_r * 0.0193324 + pow_g * 0.119193 + pow_b * 0.950444;
+		// Convert XYZ into xyY Chromacity Coordinates (xy) and Luminance (Y)
+		var chroma_x = X / (X + Y + Z);
+		var chroma_y = Y / (X + Y + Z);
+		// Generate the "Confusion Line" between the source color and the Confusion Point
+		var m = (chroma_y - confuse_y) / (chroma_x - confuse_x); // slope of Confusion Line
+		var yint = chroma_y - chroma_x * m; // y-intercept of confusion line (x-intercept = 0.0)
+		// How far the xy coords deviate from the simulation
+		var deviate_x = (confuse_yint - yint) / (m - confuse_m);
+		var deviate_y = (m * deviate_x) + yint;
+		// Compute the simulated color's XYZ coords
+		var X = deviate_x * Y / deviate_y;
+		var Z = (1.0 - (deviate_x + deviate_y)) * Y / deviate_y;
+		// Neutral grey calculated from luminance (in D65)
+		var neutral_X = 0.312713 * Y / 0.329016; 
+		var neutral_Z = 0.358271 * Y / 0.329016; 
+		// Difference between simulated color and neutral grey
+		var diff_X = neutral_X - X;
+		var diff_Z = neutral_Z - Z;
+		diff_r = diff_X * 3.24071 + diff_Z * -0.498571; // XYZ->RGB (sRGB:D65)
+		diff_g = diff_X * -0.969258 + diff_Z * 0.0415557;
+		diff_b = diff_X * 0.0556352 + diff_Z * 1.05707;
+		// Convert to RGB color space
+		dr = X * 3.24071 + Y * -1.53726 + Z * -0.498571; // XYZ->RGB (sRGB:D65)
+		dg = X * -0.969258 + Y * 1.87599 + Z * 0.0415557;
+		db = X * 0.0556352 + Y * -0.203996 + Z * 1.05707;
+		// Compensate simulated color towards a neutral fit in RGB space
+		var fit_r = ((dr < 0.0 ? 0.0 : 1.0) - dr) / diff_r;
+		var fit_g = ((dg < 0.0 ? 0.0 : 1.0) - dg) / diff_g;
+		var fit_b = ((db < 0.0 ? 0.0 : 1.0) - db) / diff_b;
+		var adjust = Math.max( // highest value
+			(fit_r > 1.0 || fit_r < 0.0) ? 0.0 : fit_r, 
+			(fit_g > 1.0 || fit_g < 0.0) ? 0.0 : fit_g, 
+			(fit_b > 1.0 || fit_b < 0.0) ? 0.0 : fit_b
+		);
+		// Shift proportional to the greatest shift
+		dr = dr + (adjust * diff_r);
+		dg = dg + (adjust * diff_g);
+		db = db + (adjust * diff_b);
+		// Apply gamma correction
+		dr = Math.pow(dr, 1.0 / 2.2);
+		dg = Math.pow(dg, 1.0 / 2.2);
+		db = Math.pow(db, 1.0 / 2.2);
+		// Anomylize colors
+		dr = sr * (1.0 - amount) + dr * amount; 
+		dg = sg * (1.0 - amount) + dg * amount;
+		db = sb * (1.0 - amount) + db * amount;
+		
+		var dcolor = chroma.rgb(dr, dg, db);
+		return dcolor.lab();
 	}
 
 	return ns
