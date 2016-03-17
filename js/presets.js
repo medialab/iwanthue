@@ -1,6 +1,26 @@
 // Presets
 var presets = [
 	{
+		name: "All colors",
+		dark: false,
+		hmin: 0,
+		hmax: 360,
+		cmin: 0,
+		cmax: 3,
+		lmin: 0,
+		lmax: 1.5
+	},
+	{
+		name: "Default preset",
+		dark: false,
+		hmin: 0,
+		hmax: 360,
+		cmin: 0.9,
+		cmax: 2.4,
+		lmin: 0.5,
+		lmax: 1.2
+	},
+	{
 		name: "Fancy (light background)",
 		dark: false,
 		hmin: 0,
@@ -213,3 +233,8 @@ var updateSettings = function(){
 	updateSelectors();
 	updateColorSpace();
 };
+
+var initPresets = function(p) {
+	$('#presets').val(p)
+	updateSettings()
+}

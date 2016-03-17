@@ -102,7 +102,7 @@
 
                        <div class="row">
                             <div class="input-append span1">
-                                <input id="colorsCount" type="text" value="7" style="width:20px;"/>
+                                <input id="colorsCount" type="text" value="5" style="width:20px;"/>
                                 <span class="add-on">colors</span>
                             </div>
                             <div class="span2">
@@ -278,12 +278,13 @@ $(document).ready(function(){
     $('#cmax').val(3);
     $('#lmin').val(0);
     $('#lmax').val(1.5);
-    $('#colorsCount').val(7);
+    $('#colorsCount').val(5);
 
     initSelectors()
     colorpicker.init()
     updateColorSpace()
     initVisualPalette()
+    initPresets(1)
 });
 
 // Init the color samples once for all
@@ -412,6 +413,7 @@ $('.unselectable').attr('unselectable', 'on')
    .each(function() {
        this.onselectstart = function() { return false; };
    });
+
         </script>
 
     </body>
