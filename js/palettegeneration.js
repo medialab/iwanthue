@@ -296,7 +296,7 @@ var updateAdditionalInfo = function (colors) {
 
 	// Append title
 	$('#additionalInfo').append(
-		$('<br><br><h3>Colorblindess Report</h3>')
+		$('<br><br><h3>Differenciation report and color vision deficiency</h3>')
 	)
 
 	var average
@@ -361,12 +361,14 @@ var updateAdditionalInfo = function (colors) {
 	})
 	var pairDistances = $('<div></div>')
 	average = 0
+	count = 0
 	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
 	.forEach(function(pair){
 		displayPair(pairDistances, pair, 'distanceTritanope')
 		average += pair.distanceTritanope
+		count++
 	})
-	average = Math.round( 1000 * average / (colors.length * (colors.length - 1)) ) / 1000
+	average = Math.round( 1000 * average / count ) / 1000
 	$('#additionalInfo').append(
 		$('<h5>Color pairs by <em>Tritanope</em> distance (average '+average+')</h5>')
 			.after(pairDistances)
@@ -405,10 +407,10 @@ var updateAdditionalInfo = function (colors) {
 	}
 
 	function noteDistance(distance) {
-		if (distance < 0.3) return '&#128556;'
-		if (distance < 0.6) return '&#128577;'
-		if (distance < 0.8) return '&#128528;'
-		if (distance < 1.0) return '&#128578;'
+		if (distance < 0.2) return '&#128556;'
+		if (distance < 0.4) return '&#128577;'
+		if (distance < 0.6) return '&#128528;'
+		if (distance < 0.9) return '&#128578;'
 		return '&#128516;'
 	}
 

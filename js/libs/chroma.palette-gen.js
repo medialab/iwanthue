@@ -76,7 +76,7 @@ var paletteGenerator = (function(undefined){
 						var dl = colorA[0]-colorB[0];
 						var da = colorA[1]-colorB[1];
 						var db = colorA[2]-colorB[2];
-						var d = Math.sqrt(Math.pow(dl, 2)+Math.pow(da, 2)+Math.pow(db, 2));
+						var d = ns.getColorDistance(colorA, colorB)
 						if(d>0){
 							var force = repulsion/Math.pow(d,2);
 							
@@ -261,29 +261,52 @@ var paletteGenerator = (function(undefined){
 
 	ns.getColorDistance = function(lab1, lab2, _type) {
 
-		if (_type === undefined) return distance(lab1, lab2)
-		
-		var type = _type || 'Classic'
-		if (type == 'Classic') return distance(lab1, lab2)
+		var type = _type || 'Compromise'
+
+		if (type == 'Default') return defaultDistance(lab1, lab2)
+		if (type == 'Compromise') return compromiseDistance(lab1, lab2)
 		else return distanceColorblind(lab1, lab2, type)
 
-		function distance(lab1, lab2) {
-			return cmcDistance(lab1, lab2, 1.5, 1);
-			// return euclidianDistance(lab1, lab2, 0.5, 1);
+		function defaultDistance(lab1, lab2) {
+			return _cmcDistance(lab1, lab2, 2, 1);
+			// return _euclidianDistance(lab1, lab2, 2, 1);
 		}
 
 		function distanceColorblind(lab1, lab2, type) {
 			var lab1_cb = ns.simulate(lab1, type);
 			var lab2_cb = ns.simulate(lab2, type);
-			return distance(lab1_cb, lab2_cb)
+			return _cmcDistance(lab1_cb, lab2_cb, 2, 1);
 		}
 
-		function euclidianDistance(lab1, lab2) {
+		function compromiseDistance(lab1, lab2) {
+			var distances = []
+			var coeffs = []
+			distances.push(_cmcDistance(lab1, lab2, 2, 1))
+			coeffs.push(3)
+			var types = ['Protanope', 'Deuteranope', 'Tritanope']
+			types.forEach(function(type){
+				var lab1_cb = ns.simulate(lab1, type);
+				var lab2_cb = ns.simulate(lab2, type);
+				distances.push(_cmcDistance(lab1_cb, lab2_cb, 2, 1))
+			})
+			coeffs.push(2)
+			coeffs.push(2)
+			coeffs.push(1)
+			var total = 0
+			var count = 0
+			distances.forEach(function(d, i){
+				total += coeffs[i] * d
+				count += coeffs[i]
+			})
+			return total / count;
+		}
+
+		function _euclidianDistance(lab1, lab2) {
 			return Math.sqrt(Math.pow(lab1[0]-lab2[0], 2) + Math.pow(lab1[1]-lab2[1], 2) + Math.pow(lab1[2]-lab2[2], 2));
 		}
 
 		// http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html
-		function cmcDistance(lab1, lab2, l, c) {
+		function _cmcDistance(lab1, lab2, l, c) {
 			var L1 = 100 * lab1[0]
 			var L2 = 100 * lab2[0]
 			var a1 = 100 * lab1[1]
