@@ -192,7 +192,7 @@ var drawPalette = function(colors, matchings){
 			+"\nvar colors = paletteGenerator.generate(\n  "+parseInt($('#colorsCount').val())+", // Colors\n  function(color){ // This function filters valid colors"
 			+"\n    var hcl = color.hcl();"
 			+"\n    return "+hcondition+"\n      && "+ccondition+"\n      && "+lcondition+";"
-			+"\n  },\n  "+(useFV.toString())+", // Using Force Vector instead of k-Means\n  '"+(dType.toString())+"', // Color distance type (colorblindness)\n  "+q+" // Steps (quality)\n);"
+			+"\n  },\n  "+(useFV.toString())+", // Using Force Vector instead of k-Means\n  "+q+", // Steps (quality)\n  false, // Ultra precision\n  '"+(dType.toString())+"' // Color distance type (colorblindness)\n);"
 			+"\n// Sort colors by differenciation first"
 			+"\ncolors = paletteGenerator.diffSort(colors, '"+(dType.toString())+"');"
 		).after(
@@ -251,7 +251,7 @@ var reduceToPalette = function(){
 	}
 	
 	// Generate colors
-	var colors = paletteGenerator.generate(parseInt($('#colorsCount').val()), colorspaceSelector, useFV, q, dType)
+	var colors = paletteGenerator.generate(parseInt($('#colorsCount').val()), colorspaceSelector, useFV, q, false, dType)
 	colors = paletteGenerator.diffSort(colors)
 	palette = colors.map( function( color ){ return { color:color, hex:color.hex(), hcl:color.hcl(), lab:color.lab() } } )
 	
@@ -272,109 +272,121 @@ var reduceToPalette = function(){
 
 var updateAdditionalInfo = function (colors) {
 	$('#additionalInfo').html('')
-	var pairs = []
-	colors.forEach(function(c1, i){
-		var c1lab = c1.lab()
-		var c1hex = c1.hex()
-		colors.forEach(function(c2, j){
-			var c2lab = c2.lab()
-			var c2hex = c2.hex()
-			var pair = {
-				c1: c1,
-				c2: c2,
-				c1id: i,
-				c2id: j,
-				c1hex: c1hex,
-				c2hex: c2hex,
-				distance: paletteGenerator.getColorDistance(c1lab, c2lab),
-				distanceProtanope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Protanope'),
-				distanceDeuteranope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Deuteranope'),
-				distanceTritanope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Tritanope')/*,
-				distanceSynth: paletteGenerator.getColorDistance(c1lab, c2lab, 'Synth')*/
-			}
-			pairs.push(pair)
+	if (colors.length > 10) {
+		$('#additionalInfo').append(
+			$('<br><br><h3>Differenciation report only available for 10 colors or less</h3>')
+		)
+	} else {
+		var logMessage = ''
+		var pairs = []
+		colors.forEach(function(c1, i){
+			var c1lab = c1.lab()
+			var c1hex = c1.hex()
+			colors.forEach(function(c2, j){
+				var c2lab = c2.lab()
+				var c2hex = c2.hex()
+				var pair = {
+					c1: c1,
+					c2: c2,
+					c1id: i,
+					c2id: j,
+					c1hex: c1hex,
+					c2hex: c2hex,
+					distance: paletteGenerator.getColorDistance(c1lab, c2lab),
+					distanceProtanope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Protanope'),
+					distanceDeuteranope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Deuteranope'),
+					distanceTritanope: paletteGenerator.getColorDistance(c1lab, c2lab, 'Tritanope')
+				}
+				pairs.push(pair)
+			})
 		})
-	})
 
-	// Append title
-	$('#additionalInfo').append(
-		$('<br><br><h3>Differenciation report and color vision deficiency</h3>')
-	)
+		// Append report title
+		$('#additionalInfo').append(
+			$('<br><br><h3>Differenciation report and color vision deficiency</h3>')
+		)
 
-	var average
-	var count
+		var average
+		var count
 
-	pairs.sort(function(a,b){
-		return b.distance - a.distance
-	})
-	var pairDistances = $('<div></div>')
-	average = 0
-	count = 0
-	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
-	.forEach(function(pair){
-		displayPair(pairDistances, pair, 'distance')
-		average += pair.distance
-		count++
-	})
-	average = Math.round( 1000 * average / count ) / 1000
-	$('#additionalInfo').append(
-		$('<h5>Color pairs by distance (average '+average+')</h5>')
-			.after(pairDistances)
-	)
+		pairs.sort(function(a,b){
+			return b.distance - a.distance
+		})
+		var pairDistances = $('<div></div>')
+		average = 0
+		count = 0
+		pairs.filter(function(pair){ return pair.c1id < pair.c2id })
+		.forEach(function(pair){
+			displayPair(pairDistances, pair, 'distance')
+			average += pair.distance
+			count++
+		})
+		average = Math.round( 1000 * average / count ) / 1000
+		$('#additionalInfo').append(
+			$('<h5>Color pairs by distance (average '+average+')</h5>')
+				.after(pairDistances)
+		)
+		logMessage += average+','
 
-	pairs.sort(function(a,b){
-		return b.distanceProtanope - a.distanceProtanope
-	})
-	var pairDistances = $('<div></div>')
-	average = 0
-	count = 0
-	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
-	.forEach(function(pair){
-		displayPair(pairDistances, pair, 'distanceProtanope')
-		average += pair.distanceProtanope
-		count++
-	})
-	average = Math.round( 1000 * average / count ) / 1000
-	$('#additionalInfo').append(
-		$('<h5>Color pairs by <em>Protanope</em> distance (average '+average+')</h5>')
-			.after(pairDistances)
-	)
-		
-	pairs.sort(function(a,b){
-		return b.distanceDeuteranope - a.distanceDeuteranope
-	})
-	var pairDistances = $('<div></div>')
-	average = 0
-	count = 0
-	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
-	.forEach(function(pair){
-		displayPair(pairDistances, pair, 'distanceDeuteranope')
-		average += pair.distanceDeuteranope
-		count++
-	})
-	average = Math.round( 1000 * average / count ) / 1000
-	$('#additionalInfo').append(
-		$('<h5>Color pairs by <em>Deuteranope</em> distance (average '+average+')</h5>')
-			.after(pairDistances)
-	)
-		
-	pairs.sort(function(a,b){
-		return b.distanceTritanope - a.distanceTritanope
-	})
-	var pairDistances = $('<div></div>')
-	average = 0
-	count = 0
-	pairs.filter(function(pair){ return pair.c1id < pair.c2id })
-	.forEach(function(pair){
-		displayPair(pairDistances, pair, 'distanceTritanope')
-		average += pair.distanceTritanope
-		count++
-	})
-	average = Math.round( 1000 * average / count ) / 1000
-	$('#additionalInfo').append(
-		$('<h5>Color pairs by <em>Tritanope</em> distance (average '+average+')</h5>')
-			.after(pairDistances)
-	)
+		pairs.sort(function(a,b){
+			return b.distanceProtanope - a.distanceProtanope
+		})
+		var pairDistances = $('<div></div>')
+		average = 0
+		count = 0
+		pairs.filter(function(pair){ return pair.c1id < pair.c2id })
+		.forEach(function(pair){
+			displayPair(pairDistances, pair, 'distanceProtanope')
+			average += pair.distanceProtanope
+			count++
+		})
+		average = Math.round( 1000 * average / count ) / 1000
+		$('#additionalInfo').append(
+			$('<h5>Color pairs by <em>Protanope</em> distance (average '+average+')</h5>')
+				.after(pairDistances)
+		)
+		logMessage += average+','
+			
+		pairs.sort(function(a,b){
+			return b.distanceDeuteranope - a.distanceDeuteranope
+		})
+		var pairDistances = $('<div></div>')
+		average = 0
+		count = 0
+		pairs.filter(function(pair){ return pair.c1id < pair.c2id })
+		.forEach(function(pair){
+			displayPair(pairDistances, pair, 'distanceDeuteranope')
+			average += pair.distanceDeuteranope
+			count++
+		})
+		average = Math.round( 1000 * average / count ) / 1000
+		$('#additionalInfo').append(
+			$('<h5>Color pairs by <em>Deuteranope</em> distance (average '+average+')</h5>')
+				.after(pairDistances)
+		)
+		logMessage += average+','
+			
+		pairs.sort(function(a,b){
+			return b.distanceTritanope - a.distanceTritanope
+		})
+		var pairDistances = $('<div></div>')
+		average = 0
+		count = 0
+		pairs.filter(function(pair){ return pair.c1id < pair.c2id })
+		.forEach(function(pair){
+			displayPair(pairDistances, pair, 'distanceTritanope')
+			average += pair.distanceTritanope
+			count++
+		})
+		average = Math.round( 1000 * average / count ) / 1000
+		$('#additionalInfo').append(
+			$('<h5>Color pairs by <em>Tritanope</em> distance (average '+average+')</h5>')
+				.after(pairDistances)
+		)
+		logMessage += average
+
+		console.log('Average distances for different cases\n'+logMessage)
+	}
 		
 	function displayPair(el, pair, distance) {
 		var n = Math.round(pair[distance] * 1000) / 1000

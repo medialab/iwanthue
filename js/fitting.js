@@ -104,6 +104,7 @@ var setFitting = function(){
 	var cmax = +$('#cmax').val();
 	var lmin = +$('#lmin').val();
 	var lmax = +$('#lmax').val();
+	var distanceType = $('#colorblindFriendly').is(':checked') ? ('Compromise') : ('Default')
 	
 	// Conditions restraining the color space
 	var hcondition;
@@ -121,7 +122,7 @@ var setFitting = function(){
 	}
 	
 	// Correction
-	fitting.correction = kMeans(sourcePalette, subspaceSamples, colorspaceSelector, 50);
+	fitting.correction = kMeans(sourcePalette, subspaceSamples, colorspaceSelector, 10, distanceType);
 	
 	updateFittingDisplay();
 }
@@ -170,7 +171,7 @@ var actualizePalette = function(){
 	});
 }
 
-var kMeans = function(palette_, colorSamples_chroma, colorspaceSelector, steps){
+var kMeans = function(palette_, colorSamples_chroma, colorspaceSelector, steps, distanceType){
 	var kMeans = palette_.map(function(c){return c.lab;});
 	var colorSamples = colorSamples_chroma.map(function(color){return color.lab();});
 	var samplesClosest = colorSamples_chroma.map(function(color){return null;});
@@ -179,10 +180,10 @@ var kMeans = function(palette_, colorSamples_chroma, colorspaceSelector, steps){
 		// kMeans -> Samples Closest
 		for(i=0; i<colorSamples.length; i++){
 			var lab = colorSamples[i];
-			var minDistance = 1000000;
+			var minDistance = Infinity;
 			for(j=0; j<kMeans.length; j++){
 				var kMean = kMeans[j];
-				var distance = Math.sqrt(Math.pow(lab[0]-kMean[0], 2) + Math.pow(lab[1]-kMean[1], 2) + Math.pow(lab[2]-kMean[2], 2));
+				var distance = paletteGenerator.getColorDistance(lab, kMean, distanceType);
 				if(distance < minDistance){
 					minDistance = distance;
 					samplesClosest[i] = j;
@@ -221,10 +222,10 @@ var kMeans = function(palette_, colorSamples_chroma, colorspaceSelector, steps){
 					// The candidate kMean is out of the boundaries of the color space, or unfound.
 					if(freeColorSamples.length>0){
 						// We just search for the closest FREE color of the candidate kMean
-						var minDistance = 10000000000;
+						var minDistance = Infinity;
 						var closest = -1;
 						for(i=0; i<freeColorSamples.length; i++){
-							var distance = Math.sqrt(Math.pow(freeColorSamples[i][0]-candidateKMean[0], 2) + Math.pow(freeColorSamples[i][1]-candidateKMean[1], 2) + Math.pow(freeColorSamples[i][2]-candidateKMean[2], 2));
+							var distance = paletteGenerator.getColorDistance(freeColorSamples[i], candidateKMean, distanceType);
 							if(distance < minDistance){
 								minDistance = distance;
 								closest = i;
@@ -233,10 +234,10 @@ var kMeans = function(palette_, colorSamples_chroma, colorspaceSelector, steps){
 						kMeans[j] = freeColorSamples[closest];
 					} else {
 						// Then we just search for the closest color of the candidate kMean
-						var minDistance = 10000000000;
+						var minDistance = Infinity;
 						var closest = -1;
 						for(i=0; i<colorSamples.length; i++){
-							var distance = Math.sqrt(Math.pow(colorSamples[i][0]-candidateKMean[0], 2) + Math.pow(colorSamples[i][1]-candidateKMean[1], 2) + Math.pow(colorSamples[i][2]-candidateKMean[2], 2));
+							var distance = paletteGenerator.getColorDistance(colorSamples[i], candidateKMean, distanceType);
 							if(distance < minDistance){
 								minDistance = distance;
 								closest = i;

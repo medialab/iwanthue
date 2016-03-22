@@ -24,6 +24,7 @@ var paletteGenerator = (function(undefined){
 	ns = {}
 
 	ns.generate = function(colorsCount, checkColor, forceMode, quality, ultra_precision, distanceType){
+		console.log('Generate palettes for '+colorsCount+' colors using color distance "'+distanceType+'"')
 		// Default
 		if(colorsCount === undefined)
 			colorsCount = 8;
@@ -162,7 +163,7 @@ var paletteGenerator = (function(undefined){
 				// kMeans -> Samples Closest
 				for(i=0; i<colorSamples.length; i++){
 					var lab = colorSamples[i];
-					var minDistance = 1000000;
+					var minDistance = Infinity;
 					for(j=0; j<kMeans.length; j++){
 						var kMean = kMeans[j];
 						var distance = ns.getColorDistance(lab, kMean, distanceType);
@@ -198,7 +199,7 @@ var paletteGenerator = (function(undefined){
 						// The candidate kMean is out of the boundaries of the color space, or unfound.
 						if(freeColorSamples.length>0){
 							// We just search for the closest FREE color of the candidate kMean
-							var minDistance = 10000000000;
+							var minDistance = Infinity;
 							var closest = -1;
 							for(i=0; i<freeColorSamples.length; i++){
 								var distance = ns.getColorDistance(freeColorSamples[i], candidateKMean, distanceType);
@@ -211,7 +212,7 @@ var paletteGenerator = (function(undefined){
 
 						} else {
 							// Then we just search for the closest color of the candidate kMean
-							var minDistance = 10000000000;
+							var minDistance = Infinity;
 							var closest = -1;
 							for(i=0; i<colorSamples.length; i++){
 								var distance = ns.getColorDistance(colorSamples[i], candidateKMean, distanceType)
@@ -241,7 +242,7 @@ var paletteGenerator = (function(undefined){
 			var index = -1;
 			var maxDistance = -1;
 			for(candidate_index=0; candidate_index<colorsToSort.length; candidate_index++){
-				var d = 1000000000;
+				var d = Infinity;
 				for(i=0; i<diffColors.length; i++){
 					var colorA = colorsToSort[candidate_index].lab();
 					var colorB = diffColors[i].lab();
@@ -279,7 +280,7 @@ var paletteGenerator = (function(undefined){
 			var distances = []
 			var coeffs = []
 			distances.push(_cmcDistance(lab1, lab2, 2, 1))
-			coeffs.push(2)
+			coeffs.push(10)
 			var types = ['Protanope', 'Deuteranope', 'Tritanope']
 			types.forEach(function(type){
 				var lab1_cb = ns.simulate(lab1, type);
@@ -288,13 +289,13 @@ var paletteGenerator = (function(undefined){
 					var c
 					switch (type) {
 						case('Protanope'):
-							c = 3;
+							c = 50;
 							break;
 						case('Deuteranope'):
-							c = 1;
+							c = 50;
 							break;
 						case('Tritanope'):
-							c = 1;
+							c = 50;
 							break;
 					}
 					distances.push(_cmcDistance(lab1_cb, lab2_cb, 2, 1))
@@ -337,10 +338,6 @@ var paletteGenerator = (function(undefined){
 			var S_C = (0.0638 * C1 / (1 + 0.0131 * C1)) + 0.638
 			var S_H = S_C * (F*T + 1 - F)
 			var result = Math.sqrt( Math.pow(deltaL/(l*S_L), 2) + Math.pow(deltaC/(c*S_C), 2) + Math.pow(deltaH/S_H, 2) ) / 100
-			// if (isNaN(result)) {
-			// 	// Fallback: euclidian distance
-			// 	return _euclidianDistance(lab1, lab2)
-			// }
 			return result
 		}
 
