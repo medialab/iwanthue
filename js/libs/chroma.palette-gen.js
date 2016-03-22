@@ -364,9 +364,18 @@ var paletteGenerator = (function(undefined){
 		}
 	}
 
+	ns.simulate_cache = {}
+
 	ns.simulate = function(lab, type, _amount) {
 		// WARNING: may return [NaN, NaN, NaN]
+
 		var amount = _amount || 1
+
+		// Cache
+		var key = lab.join('-') + '-' + type + '-' + amount
+		var cache = ns.simulate_cache[key]
+		if (cache) return cache
+
 		// Get data from type
 		var confuse_x = ns.confusionLines[type].x;
 		var confuse_y = ns.confusionLines[type].y; 
@@ -436,7 +445,9 @@ var paletteGenerator = (function(undefined){
 		db = sb * (1.0 - amount) + db * amount;
 		
 		var dcolor = chroma.rgb(dr, dg, db);
-		return dcolor.lab();
+		var result = dcolor.lab()
+		ns.simulate_cache[key] = result
+		return result
 	}
 
 	return ns
