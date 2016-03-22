@@ -92,6 +92,9 @@
                         </table>
                         <br/>
                         <label class="checkbox">
+                            <input type="checkbox" id="colorblindFriendly" onchange="setting_toggle()"/> Colorblind friendly (slow)
+                        </label>
+                        <label class="checkbox">
                             <input type="checkbox" id="darkBackground"/> Dark background
                         </label>
                     </div>
@@ -301,7 +304,7 @@ for(l=0; l<=1; l+=lstep){
             var color = chroma.lab(l, a, b)
             // Test if the color exists in the RGB color space (there are holes in the CIE Labs space)
             if(!isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256){
-                colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl()})
+                colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl(), rgb:color.rgb})
             }
         }
     }

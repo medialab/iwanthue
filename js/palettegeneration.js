@@ -175,6 +175,7 @@ var drawPalette = function(colors, matchings){
 		,lmax = $('#lmax').val()
 		,q = 50	// quality
 		,useFV = ($('#algo').val()=="forcevector")	// Force vector or kMeans
+		,dType = $('#colorblindFriendly').is(':checked') ? ('Compromise') : ('Default')
 		,hcondition
 		,ccondition
 		,lcondition
@@ -191,9 +192,9 @@ var drawPalette = function(colors, matchings){
 			+"\nvar colors = paletteGenerator.generate(\n  "+parseInt($('#colorsCount').val())+", // Colors\n  function(color){ // This function filters valid colors"
 			+"\n    var hcl = color.hcl();"
 			+"\n    return "+hcondition+"\n      && "+ccondition+"\n      && "+lcondition+";"
-			+"\n  },\n  "+(useFV.toString())+", // Using Force Vector instead of k-Means\n  "+q+" // Steps (quality)\n);"
+			+"\n  },\n  "+(useFV.toString())+", // Using Force Vector instead of k-Means\n  '"+(dType.toString())+"', // Color distance type (colorblindness)\n  "+q+" // Steps (quality)\n);"
 			+"\n// Sort colors by differenciation first"
-			+"\ncolors = paletteGenerator.diffSort(colors);"
+			+"\ncolors = paletteGenerator.diffSort(colors, '"+(dType.toString())+"');"
 		).after(
 			$('<div/>').html('<strong>Requirements:</strong> This code snippet needs <a href="https://github.com/gka/chroma.js">Chroma.js</a> and our own <a href="js/libs/chroma.palette-gen.js">Palette-Gen</a> lib.')
 		)
@@ -224,6 +225,7 @@ var reduceToPalette = function(){
 		,lmax = +$('#lmax').val()
 		,q = 50	// quality
 		,useFV = ($('#algo').val()=="forcevector")	// Force vector or kMeans
+		,dType = $('#colorblindFriendly').is(':checked') ? ('Compromise') : ('Default')
 	if(palette && palette.length>0)
 		old_palette = palette.slice(0)
 
@@ -249,7 +251,7 @@ var reduceToPalette = function(){
 	}
 	
 	// Generate colors
-	var colors = paletteGenerator.generate(parseInt($('#colorsCount').val()), colorspaceSelector, useFV, q)
+	var colors = paletteGenerator.generate(parseInt($('#colorsCount').val()), colorspaceSelector, useFV, q, dType)
 	colors = paletteGenerator.diffSort(colors)
 	palette = colors.map( function( color ){ return { color:color, hex:color.hex(), hcl:color.hcl(), lab:color.lab() } } )
 	
@@ -462,4 +464,11 @@ function paletteItem_edit(i){
 		updateColorSpace(palette.map(function(c){return c.color;}), true)
 		initFitting()
 	})
+}
+
+function setting_toggle(){
+	if (palette) {
+		updateColorSpace(palette.map(function(c){return c.color;}), true)
+		initFitting()
+	}
 }

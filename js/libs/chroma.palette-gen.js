@@ -23,7 +23,7 @@
 var paletteGenerator = (function(undefined){
 	ns = {}
 
-	ns.generate = function(colorsCount, checkColor, forceMode, quality, ultra_precision){
+	ns.generate = function(colorsCount, checkColor, forceMode, quality, ultra_precision, distanceType){
 		// Default
 		if(colorsCount === undefined)
 			colorsCount = 8;
@@ -76,7 +76,7 @@ var paletteGenerator = (function(undefined){
 						var dl = colorA[0]-colorB[0];
 						var da = colorA[1]-colorB[1];
 						var db = colorA[2]-colorB[2];
-						var d = ns.getColorDistance(colorA, colorB)
+						var d = ns.getColorDistance(colorA, colorB, distanceType)
 						if(d>0){
 							var force = repulsion/Math.pow(d,2);
 							
@@ -165,7 +165,7 @@ var paletteGenerator = (function(undefined){
 					var minDistance = 1000000;
 					for(j=0; j<kMeans.length; j++){
 						var kMean = kMeans[j];
-						var distance = ns.getColorDistance(lab, kMean);
+						var distance = ns.getColorDistance(lab, kMean, distanceType);
 						if(distance < minDistance){
 							minDistance = distance;
 							samplesClosest[i] = j;
@@ -201,7 +201,7 @@ var paletteGenerator = (function(undefined){
 							var minDistance = 10000000000;
 							var closest = -1;
 							for(i=0; i<freeColorSamples.length; i++){
-								var distance = ns.getColorDistance(freeColorSamples[i], candidateKMean);
+								var distance = ns.getColorDistance(freeColorSamples[i], candidateKMean, distanceType);
 								if(distance < minDistance){
 									minDistance = distance;
 									closest = i;
@@ -214,7 +214,7 @@ var paletteGenerator = (function(undefined){
 							var minDistance = 10000000000;
 							var closest = -1;
 							for(i=0; i<colorSamples.length; i++){
-								var distance = ns.getColorDistance(colorSamples[i], candidateKMean)
+								var distance = ns.getColorDistance(colorSamples[i], candidateKMean, distanceType)
 								if(distance < minDistance){
 									minDistance = distance;
 									closest = i;
@@ -234,7 +234,7 @@ var paletteGenerator = (function(undefined){
 		}
 	}
 
-	ns.diffSort = function(colorsToSort){
+	ns.diffSort = function(colorsToSort, distanceType){
 		// Sort
 		var diffColors = [colorsToSort.shift()];
 		while(colorsToSort.length>0){
@@ -245,7 +245,7 @@ var paletteGenerator = (function(undefined){
 				for(i=0; i<diffColors.length; i++){
 					var colorA = colorsToSort[candidate_index].lab();
 					var colorB = diffColors[i].lab();
-					var d = ns.getColorDistance(colorA, colorB);
+					var d = ns.getColorDistance(colorA, colorB, distanceType);
 				}
 				if(d > maxDistance){
 					maxDistance = d;
@@ -261,16 +261,13 @@ var paletteGenerator = (function(undefined){
 
 	ns.getColorDistance = function(lab1, lab2, _type) {
 
-		var type = _type || 'Compromise'
+		var type = _type || 'Default'
 
-		if (type == 'Default') return defaultDistance(lab1, lab2)
+		if (type == 'Default') return _euclidianDistance(lab1, lab2)
+		if (type == 'Euclidian') return _euclidianDistance(lab1, lab2)
+		if (type == 'CMC') return _cmcDistance(lab1, lab2, 2, 1)
 		if (type == 'Compromise') return compromiseDistance(lab1, lab2)
 		else return distanceColorblind(lab1, lab2, type)
-
-		function defaultDistance(lab1, lab2) {
-			return _cmcDistance(lab1, lab2, 2, 1);
-			// return _euclidianDistance(lab1, lab2, 2, 1);
-		}
 
 		function distanceColorblind(lab1, lab2, type) {
 			var lab1_cb = ns.simulate(lab1, type);
@@ -282,16 +279,28 @@ var paletteGenerator = (function(undefined){
 			var distances = []
 			var coeffs = []
 			distances.push(_cmcDistance(lab1, lab2, 2, 1))
-			coeffs.push(3)
+			coeffs.push(2)
 			var types = ['Protanope', 'Deuteranope', 'Tritanope']
 			types.forEach(function(type){
 				var lab1_cb = ns.simulate(lab1, type);
 				var lab2_cb = ns.simulate(lab2, type);
-				distances.push(_cmcDistance(lab1_cb, lab2_cb, 2, 1))
+				if( !(lab1_cb.some(isNaN) || lab2_cb.some(isNaN)) ) {
+					var c
+					switch (type) {
+						case('Protanope'):
+							c = 3;
+							break;
+						case('Deuteranope'):
+							c = 1;
+							break;
+						case('Tritanope'):
+							c = 1;
+							break;
+					}
+					distances.push(_cmcDistance(lab1_cb, lab2_cb, 2, 1))
+					coeffs.push(c)
+				}
 			})
-			coeffs.push(2)
-			coeffs.push(2)
-			coeffs.push(1)
 			var total = 0
 			var count = 0
 			distances.forEach(function(d, i){
@@ -327,7 +336,12 @@ var paletteGenerator = (function(undefined){
 			var S_L = (lab1[0]<16) ? (0.511) : (0.040975 * L1 / (1 + 0.01765 * L1) )
 			var S_C = (0.0638 * C1 / (1 + 0.0131 * C1)) + 0.638
 			var S_H = S_C * (F*T + 1 - F)
-			return Math.sqrt( Math.pow(deltaL/(l*S_L), 2) + Math.pow(deltaC/(c*S_C), 2) + Math.pow(deltaH/S_H, 2) ) / 100
+			var result = Math.sqrt( Math.pow(deltaL/(l*S_L), 2) + Math.pow(deltaC/(c*S_C), 2) + Math.pow(deltaH/S_H, 2) ) / 100
+			// if (isNaN(result)) {
+			// 	// Fallback: euclidian distance
+			// 	return _euclidianDistance(lab1, lab2)
+			// }
+			return result
 		}
 
 	}
@@ -354,6 +368,7 @@ var paletteGenerator = (function(undefined){
 	}
 
 	ns.simulate = function(lab, type, _amount) {
+		// WARNING: may return [NaN, NaN, NaN]
 		var amount = _amount || 1
 		// Get data from type
 		var confuse_x = ns.confusionLines[type].x;

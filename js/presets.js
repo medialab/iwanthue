@@ -3,6 +3,7 @@ var presets = [
 	{
 		name: "All colors",
 		dark: false,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
@@ -13,6 +14,7 @@ var presets = [
 	{
 		name: "Default preset",
 		dark: false,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0.9,
@@ -21,8 +23,20 @@ var presets = [
 		lmax: 1.2
 	},
 	{
+		name: "Colorblind friendly",
+		dark: false,
+		clbl: true,
+		hmin: 0,
+		hmax: 360,
+		cmin: 1.2,
+		cmax: 2,
+		lmin: 0.2,
+		lmax: 1.3
+	},
+	{
 		name: "Fancy (light background)",
 		dark: false,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0.4,
@@ -33,6 +47,7 @@ var presets = [
 	{
 		name: "Fancy (dark background)",
 		dark: true,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0.2,
@@ -43,6 +58,7 @@ var presets = [
 	{
 		name: "---",
 		dark: true,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
@@ -53,6 +69,7 @@ var presets = [
 	{
 		name: "Shades",
 		dark: false,
+		clbl: false,
 		hmin: 0,
 		hmax: 240,
 		cmin: 0,
@@ -63,6 +80,7 @@ var presets = [
 	{
 		name: "Tarnish",
 		dark: false,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
@@ -73,6 +91,7 @@ var presets = [
 	{
 		name: "Pastel",
 		dark: false,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
@@ -83,6 +102,7 @@ var presets = [
 	{
 		name: "Pimp",
 		dark: false,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0.9,
@@ -93,6 +113,7 @@ var presets = [
 	{
 		name: "Intense",
 		dark: false,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0.6,
@@ -103,6 +124,7 @@ var presets = [
 	{
 		name: "Fluo",
 		dark: true,
+		clbl: false,
 		hmin: 0,
 		hmax: 300,
 		cmin: 1,
@@ -113,6 +135,7 @@ var presets = [
 	{
 		name: "---",
 		dark: true,
+		clbl: false,
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
@@ -123,6 +146,7 @@ var presets = [
 	{
 		name: "Red Roses",
 		dark: true,
+		clbl: false,
 		hmin: 330,
 		hmax: 20,
 		cmin: 0.3,
@@ -133,6 +157,7 @@ var presets = [
 	{
 		name: "Ochre Sand",
 		dark: true,
+		clbl: false,
 		hmin: 20,
 		hmax: 60,
 		cmin: 0.3,
@@ -143,6 +168,7 @@ var presets = [
 	{
 		name: "Yellow Lime",
 		dark: true,
+		clbl: false,
 		hmin: 60,
 		hmax: 90,
 		cmin: 0.3,
@@ -153,6 +179,7 @@ var presets = [
 	{
 		name: "Green Mint",
 		dark: true,
+		clbl: false,
 		hmin: 90,
 		hmax: 150,
 		cmin: 0.3,
@@ -163,6 +190,7 @@ var presets = [
 	{
 		name: "Ice Cube",
 		dark: true,
+		clbl: false,
 		hmin: 150,
 		hmax: 200,
 		cmin: 0,
@@ -173,6 +201,7 @@ var presets = [
 	{
 		name: "Blue Ocean",
 		dark: true,
+		clbl: false,
 		hmin: 220,
 		hmax: 260,
 		cmin: 0.2,
@@ -183,6 +212,7 @@ var presets = [
 	{
 		name: "Indigo Night",
 		dark: true,
+		clbl: false,
 		hmin: 260,
 		hmax: 290,
 		cmin: 1.2,
@@ -193,6 +223,7 @@ var presets = [
 	{
 		name: "Purple Wine",
 		dark: true,
+		clbl: false,
 		hmin: 290,
 		hmax: 330,
 		cmin: 0,
@@ -221,6 +252,11 @@ var updateSettings = function(){
 	selectorsState.chroma.max = preset.cmax/maxChroma;
 	selectorsState.lightness.min = preset.lmin/maxLightness;
 	selectorsState.lightness.max = preset.lmax/maxLightness;
+	if(preset.clbl){
+		$('#colorblindFriendly').attr('checked', true);
+	} else {
+		$('#colorblindFriendly').attr('checked', false);
+	}
 	if(preset.dark){
 		$('#darkBackground').attr('checked', true);
 	} else {

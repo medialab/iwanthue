@@ -45,15 +45,16 @@ function updateColorSpace(colors, keepPositions){
 		colors.forEach(function(color){
 			matchings[color.hex()] = [];
 		});
-		
+
+		var distanceType = $('#colorblindFriendly').is(':checked') ? ('Compromise') : ('Default');
 		
 		subspaceSamples.forEach(function(color){
 			var lab = color.lab();
 			var bestMatch;
-			var minDistance = 10000000;
+			var minDistance = Infinity;
 			colors.forEach(function(matchingCandidate){
 				var lab2 = matchingCandidate.lab();
-				var distance = Math.sqrt(Math.pow(lab[0]-lab2[0], 2) + Math.pow(lab[1]-lab2[1], 2) + Math.pow(lab[2]-lab2[2], 2));
+				var distance = paletteGenerator.getColorDistance(lab, lab2, distanceType);
 				if(distance < minDistance){
 					minDistance = distance;
 					bestMatch = matchingCandidate;
@@ -86,10 +87,10 @@ function updateColorSpace(colors, keepPositions){
 		subspaceSamples.forEach(function(color){
 			var lab = color.lab();
 			var bestMatch;
-			var minDistance = 10000000;
+			var minDistance = Infinity;
 			palette.forEach(function(matchingCandidate){
 				var lab2 = matchingCandidate.lab;
-				var distance = Math.sqrt(Math.pow(lab[0]-lab2[0], 2) + Math.pow(lab[1]-lab2[1], 2) + Math.pow(lab[2]-lab2[2], 2));
+				var distance = paletteGenerator.getColorDistance(lab, lab2, distanceType);
 				if(distance < minDistance){
 					minDistance = distance;
 					bestMatch = matchingCandidate;
@@ -151,8 +152,8 @@ var getSubColorSpace = function(){
 	var lcondition_txt = "hcl[2]>="+lmin+" && hcl[2]<="+lmax;
 	
 	// General condition for selecting the color space
-	var colorspaceSelector = function(hcl){
-		return hcondition(hcl) && ccondition(hcl) && lcondition(hcl);
+	var colorspaceSelector = function(c){
+		return hcondition(c.hcl) && ccondition(c.hcl) && lcondition(c.hcl);
 	}
 	
 	// Sample the color space (for monitoring)
@@ -160,7 +161,7 @@ var getSubColorSpace = function(){
 	colorSamples.forEach(function(c){
 		if(
 				// Test if the color is in the specified subspace
-				colorspaceSelector(c.hcl)
+				colorspaceSelector(c)
 			){
 			subspaceSamples.push(c.color);
 		}
