@@ -270,7 +270,7 @@
         <script src="js/libs/FileSaver.js"></script>
 
         <script src="js/libs/sigma.min.js"></script>
-        <script src="js/libs/sigma.layout.forceatlas2.min.js"></script>
+        <script src="js/libs/sigma.layout.forceAtlas2.min.js"></script>
 
         <script src="js/background.js"></script>
         <script src="js/colorspace.js"></script>
