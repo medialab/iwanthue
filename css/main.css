@@ -71,7 +71,13 @@
 	border-right: 20px solid #FFF;
 	margin-right: -20px;
 }
-
+#palette_visual_sort {
+	opacity: 0.6;
+	display: none;
+}
+#palette_visual_sort button {
+	padding: 2px;
+}
 
 
 

@@ -121,6 +121,15 @@
                         <div id="palette_visual">
                         </div>
 
+                        <div id="palette_visual_sort">
+                            <small>Sort by</small>
+                            <button class="btn btn-small btn-link" onclick="sortPalette('difference')">diff</button>
+                            <button class="btn btn-small btn-link" onclick="sortPalette('hue')">hue</button>
+                            <button class="btn btn-small btn-link" onclick="sortPalette('chroma')">chroma</button>
+                            <button class="btn btn-small btn-link" onclick="sortPalette('lightness')">lightness</button>
+                            <button class="btn btn-small btn-link" onclick="sortPalette('random')">random</button>
+                        </div>
+
                         <div class="unselectable">
                             <div id="refine" style="/*display:none;*/">
                             </div>                  

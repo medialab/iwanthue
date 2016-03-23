@@ -19,9 +19,67 @@ var initVisualPalette = function(noTransition){
 	$('#palette_visual').html(html);
 	
 	$('#palette_hex_container').hide();
+	$('#palette_visual_sort').hide();
 }
 
-var drawPalette = function(colors, matchings){
+var sortPalette = function (mode) {
+	var colors = palette.map(function(d){
+		return chroma.hex(d.hex)
+	})
+	switch (mode) {
+		case 'difference':
+			var dType = $('#colorblindFriendly').is(':checked') ? ('Compromise') : ('Default')
+			drawPalette(paletteGenerator.diffSort(colors, dType), matchings);
+			break;
+		case 'hue':
+			colors.sort(function(a, b){
+				return a.hcl()[0] - b.hcl()[0]
+			})
+			drawPalette(colors, matchings);
+			break;
+		case 'chroma':
+			colors.sort(function(a, b){
+				return a.hcl()[1] - b.hcl()[1]
+			})
+			drawPalette(colors, matchings);
+			break;
+		case 'lightness':
+			colors.sort(function(a, b){
+				return a.hcl()[2] - b.hcl()[2]
+			})
+			drawPalette(colors, matchings);
+			break;
+		case 'random':
+			drawPalette(shuffle(colors), matchings);
+			break;
+		default:
+			console.log('unknown sort mode')
+			break;
+	}
+
+	function shuffle(array) {
+	  var currentIndex = array.length, temporaryValue, randomIndex;
+
+	  // While there remain elements to shuffle...
+	  while (0 !== currentIndex) {
+
+	    // Pick a remaining element...
+	    randomIndex = Math.floor(Math.random() * currentIndex);
+	    currentIndex -= 1;
+
+	    // And swap it with the current element.
+	    temporaryValue = array[currentIndex];
+	    array[currentIndex] = array[randomIndex];
+	    array[randomIndex] = temporaryValue;
+	  }
+
+	  return array;
+	}
+}
+
+var drawPalette = function(colors, _matchings){
+	matchings = _matchings	// Cache needed for palette reordering
+
 	for(var i=0; i<colors.length; i++){
 		$('#palette_color_'+i).css('background-color', colors[i].hex());
 		$('#palette_color_'+i).attr('title', colors[i].hex());
@@ -72,6 +130,7 @@ var drawPalette = function(colors, matchings){
 	
 	// Showing the result
 	$('#resultColors_container').show()
+	$('#palette_visual_sort').show();
 	$('#resultColors').html('')
 	colors.forEach(function(color){
 		var darkerColor = chroma.rgb(0.85*color.rgb[0], 0.85*color.rgb[1], 0.85*color.rgb[2])
