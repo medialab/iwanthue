@@ -92,7 +92,7 @@
                         </table>
                         <br/>
                         <label class="checkbox">
-                            <input type="checkbox" id="colorblindFriendly" onchange="setting_toggle()"/> Colorblind friendly (slow)
+                            <input type="checkbox" id="colorblindFriendly" onchange="setting_toggle()"/> Improve for the <strong>colorblind</strong> (slow)
                         </label>
                         <label class="checkbox">
                             <input type="checkbox" id="darkBackground"/> Dark background
@@ -326,6 +326,20 @@ $('#hmin, #hmax, #cmin, #cmax, #lmin, #lmax').change(function(){
     selectorsState.chroma.max = parseFloat($('#cmax').val())/maxChroma;
     selectorsState.lightness.min = parseFloat($('#lmin').val())/maxLightness;
     selectorsState.lightness.max = parseFloat($('#lmax').val())/maxLightness;
+
+    // Avoid null ranges
+    if (selectorsState.hue.max - selectorsState.hue.min < 1/360) {
+        selectorsState.hue.max = selectorsState.hue.min + 1/360
+    }
+    if (selectorsState.chroma.max - selectorsState.chroma.min < .2/maxChroma) {
+        selectorsState.chroma.max = selectorsState.chroma.min + .2/maxChroma
+        $('#cmax').val(selectorsState.chroma.max * maxChroma)
+    }
+    if (selectorsState.lightness.max - selectorsState.lightness.min < .1/maxLightness) {
+        selectorsState.lightness.max = selectorsState.lightness.min + .1/maxLightness
+        $('#lmax').val(selectorsState.lightness.max * maxLightness)
+    }
+
     updateSelectors();
     updateColorSpace();
 })

@@ -281,7 +281,7 @@ var paletteGenerator = (function(undefined){
 			var coeffs = []
 			distances.push(_cmcDistance(lab1, lab2, 2, 1))
 			coeffs.push(1000)
-			var types = ['Protanope', 'Deuteranope'/*, 'Tritanope'*/]
+			var types = ['Protanope', 'Deuteranope', 'Tritanope']
 			types.forEach(function(type){
 				var lab1_cb = ns.simulate(lab1, type);
 				var lab2_cb = ns.simulate(lab2, type);
@@ -294,9 +294,9 @@ var paletteGenerator = (function(undefined){
 						case('Deuteranope'):
 							c = 500;
 							break;
-						/*case('Tritanope'):
+						case('Tritanope'):
 							c = 1;
-							break;*/
+							break;
 					}
 					distances.push(_cmcDistance(lab1_cb, lab2_cb, 2, 1))
 					coeffs.push(c)
