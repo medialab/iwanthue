@@ -13,11 +13,11 @@ var colorpicker = {
 
 	// Functions
 	,updateFields: function(){
-		$('#colorpicker_hInput').val(	Math.round(colorpicker.pickedColor.hcl()[0])				)
-		$('#colorpicker_cInput').val(	Math.round(100*colorpicker.pickedColor.hcl()[1])/100		)
-		$('#colorpicker_lInput').val(	Math.round(100*colorpicker.pickedColor.lab()[0])/100		)
-		$('#colorpicker_aInput').val(	Math.round(100*colorpicker.pickedColor.lab()[1])/100		)
-		$('#colorpicker_bInput').val(	Math.round(100*colorpicker.pickedColor.lab()[2])/100		)
+		$('#colorpicker_hInput').val(	Math.round(colorpicker.pickedColor.hcl()[0])	)
+		$('#colorpicker_cInput').val(	Math.round(colorpicker.pickedColor.hcl()[1])	)
+		$('#colorpicker_lInput').val(	Math.round(colorpicker.pickedColor.lab()[0])	)
+		$('#colorpicker_aInput').val(	Math.round(colorpicker.pickedColor.lab()[1])	)
+		$('#colorpicker_bInput').val(	Math.round(colorpicker.pickedColor.lab()[2])	)
 		$('#colorpicker_hexInput').val(colorpicker.pickedColor.hex())
 	}
 
@@ -159,7 +159,7 @@ var colorpicker = {
 				,x = event.pageX - $(cp.abCanvas).offset().left
 				,y = event.pageY - $(cp.abCanvas).offset().top
 			if(cp.radius<=x && x<=cp.radius+cp.squareSize && cp.radius<=y && y<=cp.radius+cp.squareSize){
-				var color = chroma.lab(cp.pickedColor.lab()[0], 1 - 2*(x - cp.radius)/(cp.squareSize), -1 + 2*(y - cp.radius)/(cp.squareSize))
+				var color = chroma.lab(cp.pickedColor.lab()[0], 100 - 200*(x - cp.radius)/(cp.squareSize), -100 + 200*(y - cp.radius)/(cp.squareSize))
 				cp.pick(color)
 			}
 		}
@@ -174,7 +174,7 @@ var colorpicker = {
 				,x = event.pageX - $(cp.abCanvas).offset().left
 				,y = event.pageY - $(cp.abCanvas).offset().top
 			if(cp.radius<=x && x<=cp.radius+cp.squareSize && cp.radius<=y && y<=cp.radius+cp.squareSize){
-				var color = chroma.lab(cp.pickedColor.lab()[0], 1 - 2*(x - cp.radius)/(cp.squareSize), -1 + 2*(y - cp.radius)/(cp.squareSize))
+				var color = chroma.lab(cp.pickedColor.lab()[0], 100 - 200*(x - cp.radius)/(cp.squareSize), -100 + 200*(y - cp.radius)/(cp.squareSize))
 				if(isNaN(color.rgb()[0])){
 					$(colorpicker.abCanvas).css('cursor', 'auto')
 				} else {
@@ -222,7 +222,7 @@ var colorpicker = {
 			var cp = colorpicker
 				,x = event.pageX - $(cp.cCanvas).offset().left
 			if(0<=x && x<=cp.bandSize){
-				var color = chroma.hcl(cp.pickedColor.hcl()[0], 3 * x/cp.bandSize, cp.pickedColor.hcl()[2])
+				var color = chroma.hcl(cp.pickedColor.hcl()[0], 100 * x/cp.bandSize, cp.pickedColor.hcl()[2])
 				cp.pick(color)
 			}
 		}
@@ -236,7 +236,7 @@ var colorpicker = {
 			var cp = colorpicker
 				,x = event.pageX - $(cp.cCanvas).offset().left
 			if(0<=x && x<=cp.bandSize){
-				var color = chroma.hcl(cp.pickedColor.hcl()[0], 3 * x/cp.bandSize, cp.pickedColor.hcl()[2])
+				var color = chroma.hcl(cp.pickedColor.hcl()[0], 100 * x/cp.bandSize, cp.pickedColor.hcl()[2])
 				if(isNaN(color.rgb()[0])){
 					$(colorpicker.cCanvas).css('cursor', 'auto')
 				} else {
@@ -253,7 +253,7 @@ var colorpicker = {
 			var cp = colorpicker
 				,x = event.pageX - $(cp.lCanvas).offset().left
 			if(0<=x && x<=cp.bandSize){
-				var color = color = chroma.lab(x/cp.bandSize, cp.pickedColor.lab()[1], cp.pickedColor.lab()[2])
+				var color = color = chroma.lab(100 * x/cp.bandSize, cp.pickedColor.lab()[1], cp.pickedColor.lab()[2])
 				cp.pick(color)
 			}
 		}
@@ -267,7 +267,7 @@ var colorpicker = {
 			var cp = colorpicker
 				,x = event.pageX - $(cp.lCanvas).offset().left
 			if(0<=x && x<=cp.bandSize){
-				var color = color = chroma.lab(x/cp.bandSize, cp.pickedColor.lab()[1], cp.pickedColor.lab()[2])
+				var color = color = chroma.lab(100 * x/cp.bandSize, cp.pickedColor.lab()[1], cp.pickedColor.lab()[2])
 				if(isNaN(color.rgb()[0])){
 					$(colorpicker.lCanvas).css('cursor', 'auto')
 				} else {
@@ -286,12 +286,7 @@ var colorpicker = {
 	,update: function(){
 		var cp = colorpicker
 
-		// Draw a* x b*
-		// var color = chroma.lab(cp.pickedColor.lab()[0], 1 - 2*(x - cp.radius)/(cp.squareSize), -1 + 2*(y - cp.radius)/(cp.squareSize))
-		//  a = 1 - 2*(x - cp.radius)/(cp.squareSize)
-		// 	(x - cp.radius)/(cp.squareSize) = (1 - a)/2
-		// 	(x - cp.radius) = (cp.squareSize) * (1 - a)/2
-		// 	x = cp.radius + (cp.squareSize) * (1 - a)/2
+		// a x b
 		for(x=0; x<cp.actualSize; x+=cp.resolution){
 			for(y=0; y<cp.actualSize; y+=cp.resolution){
 				cp.abContext.fillStyle = Math.round((x+y)/cp.resolution%2)==0?cp.grey1:cp.grey2
@@ -300,8 +295,10 @@ var colorpicker = {
 		}
 		for(x=0; x<cp.squareSize; x+=cp.resolution){
 			for(y=0; y<cp.squareSize; y+=cp.resolution){
-				var color = chroma.lab(cp.pickedColor.lab()[0], 1 - 2*(x)/(cp.squareSize+cp.radius), -1 + 2*(y)/(cp.squareSize+cp.radius))
-				if(isNaN(color.rgb()[0])){
+				var a = 100 - 200*(x)/(cp.squareSize+cp.radius)
+				var b = -100 + 200*(y)/(cp.squareSize+cp.radius)
+				var color = chroma.lab(cp.pickedColor.lab()[0], a, b)
+				if(!paletteGenerator.validateLab([cp.pickedColor.lab()[0], a, b])){
 					//abContext.fillStyle = Math.round((x+y)/resolution%2)==0?cp.grey1:cp.grey1
 				} else {
 					cp.abContext.fillStyle = color.hex()
@@ -310,7 +307,7 @@ var colorpicker = {
 			}
 		}
 		// Selector
-		cp.drawSelector(cp.abContext, cp.radius + cp.squareSize*(1 - cp.pickedColor.lab()[1])/2, cp.radius + cp.squareSize*(cp.pickedColor.lab()[2] + 1)/2, cp.pickedColor)
+		cp.drawSelector(cp.abContext, cp.radius + cp.squareSize*(100 - cp.pickedColor.lab()[1])/200, cp.radius + cp.squareSize*(cp.pickedColor.lab()[2] + 100)/200, cp.pickedColor)
 
 		// Draw H
 		for(x=0; x<cp.bandSize; x+=cp.resolution){
@@ -330,7 +327,7 @@ var colorpicker = {
 		// Draw C
 		for(x=0; x<cp.bandSize; x+=cp.resolution){
 			for(y=0; y<cp.bandWidth; y+=cp.resolution){
-				var color = chroma.hcl(cp.pickedColor.hcl()[0], 3 * x/cp.bandSize, cp.pickedColor.hcl()[2])
+				var color = chroma.hcl(cp.pickedColor.hcl()[0], 100 * x/cp.bandSize, cp.pickedColor.hcl()[2])
 				if(isNaN(color.rgb()[0])){
 					cp.cContext.fillStyle = Math.round((x+y)/cp.resolution%2)==0?cp.grey1:cp.grey2
 				} else {
@@ -340,12 +337,12 @@ var colorpicker = {
 			}
 		}
 		// Selector
-		cp.drawSelector(cp.cContext, cp.pickedColor.hcl()[1] * cp.bandSize / 3, cp.bandWidth/2, cp.pickedColor)
+		cp.drawSelector(cp.cContext, cp.pickedColor.hcl()[1] * cp.bandSize / 100, cp.bandWidth/2, cp.pickedColor)
 
 		// Draw L
 		for(x=0; x<cp.bandSize; x+=cp.resolution){
 			for(y=0; y<cp.bandWidth; y+=cp.resolution){
-				var color = chroma.lab(x/cp.bandSize, cp.pickedColor.lab()[1], cp.pickedColor.lab()[2])
+				var color = chroma.lab(100 * x/cp.bandSize, cp.pickedColor.lab()[1], cp.pickedColor.lab()[2])
 				if(isNaN(color.rgb()[0])){
 					cp.lContext.fillStyle = Math.round((x+y)/cp.resolution%2)==0?cp.grey1:cp.grey2
 				} else {
@@ -355,7 +352,7 @@ var colorpicker = {
 			}
 		}
 		// Selector
-		cp.drawSelector(cp.lContext, cp.pickedColor.lab()[0] * cp.bandSize, cp.bandWidth/2, cp.pickedColor)
+		cp.drawSelector(cp.lContext, cp.pickedColor.lab()[0] * cp.bandSize / 100, cp.bandWidth/2, cp.pickedColor)
 
 		// Draw render
 		cp.renderContext.fillStyle = cp.pickedColor.hex()
