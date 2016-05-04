@@ -44,23 +44,23 @@ var paletteGenerator = (function(undefined){
 			// It will be necessary to check if a Lab color exists in the rgb space.
 			function checkLab(lab){
 				var color = chroma.lab(lab[0], lab[1], lab[2]);
-				return !isNaN(color.rgb()[0]) && color.rgb()[0]>=0 && color.rgb()[1]>=0 && color.rgb()[2]>=0 && color.rgb()[0]<256 && color.rgb()[1]<256 && color.rgb()[2]<256 && checkColor(color);
+				return ns.validateLab(lab) && checkColor(color);
 			}
 			
 			// Init
 			var vectors = {};
 			for(i=0; i<colorsCount; i++){
 				// Find a valid Lab color
-				var color = [Math.random(),2*Math.random()-1,2*Math.random()-1];
+				var color = [100*Math.random(),100*(2*Math.random()-1),100*(2*Math.random()-1)];
 				while(!checkLab(color)){
-					color = [Math.random(),2*Math.random()-1,2*Math.random()-1];
+					color = [100*Math.random(),100*(2*Math.random()-1),100*(2*Math.random()-1)];
 				}
 				colors.push(color);
 			}
 			
 			// Force vector: repulsion
-			var repulsion = 0.3;
-			var speed = 0.05;
+			var repulsion = 100;
+			var speed = 100;
 			var steps = quality * 20;
 			while(steps-- > 0){
 				// Init
@@ -90,9 +90,9 @@ var paletteGenerator = (function(undefined){
 							vectors[j].db -= db * force / d;
 						} else {
 							// Jitter
-							vectors[j].dl += 0.02 - 0.04 * Math.random();
-							vectors[j].da += 0.02 - 0.04 * Math.random();
-							vectors[j].db += 0.02 - 0.04 * Math.random();
+							vectors[j].dl += 2 - 4 * Math.random();
+							vectors[j].da += 2 - 4 * Math.random();
+							vectors[j].db += 2 - 4 * Math.random();
 						}
 					}
 				}
@@ -114,29 +114,30 @@ var paletteGenerator = (function(undefined){
 		} else {
 			
 			// K-Means Mode
-			function checkColor2(color){
+			function checkColor2(lab){
 				// Check that a color is valid: it must verify our checkColor condition, but also be in the color space
-				var lab = color.lab();
+				var color = chroma.lab(lab);
 				var hcl = color.hcl();
-				return !isNaN(color.rgb()[0]) && color.rgb()[0]>=0 && color.rgb()[1]>=0 && color.rgb()[2]>=0 && color.rgb()[0]<256 && color.rgb()[1]<256 && color.rgb()[2]<256 && checkColor(color);
+				return ns.validateLab(lab) && checkColor(color);
 			}
 			
 			var kMeans = [];
 			for(i=0; i<colorsCount; i++){
-				var lab = [Math.random(),2*Math.random()-1,2*Math.random()-1];
-				while(!checkColor2(chroma.lab(lab))){
-					lab = [Math.random(),2*Math.random()-1,2*Math.random()-1];
+				var lab = [100*Math.random(),100*(2*Math.random()-1),100*(2*Math.random()-1)];
+				while(!checkColor2(lab)){
+					lab = [100*Math.random(),100*(2*Math.random()-1),100*(2*Math.random()-1)];
 				}
 				kMeans.push(lab);
 			}
+
 			
 			var colorSamples = [];
 			var samplesClosest = [];
 			if(ultra_precision){
-				for(l=0; l<=1; l+=0.01){
-					for(a=-1; a<=1; a+=0.05){
-						for(b=-1; b<=1; b+=0.05){
-							if(checkColor2(chroma.lab(l, a, b))){
+				for(l=0; l<=100; l+=1){
+					for(a=-100; a<=100; a+=5){
+						for(b=-100; b<=100; b+=5){
+							if(checkColor2([l, a, b])){
 								colorSamples.push([l, a, b]);
 								samplesClosest.push(null);
 							}
@@ -144,10 +145,10 @@ var paletteGenerator = (function(undefined){
 					}
 				}
 			} else {
-				for(l=0; l<=1; l+=0.05){
-					for(a=-1; a<=1; a+=0.1){
-						for(b=-1; b<=1; b+=0.1){
-							if(checkColor2(chroma.lab(l, a, b))){
+				for(l=0; l<=100; l+=5){
+					for(a=-100; a<=100; a+=10){
+						for(b=-100; b<=100; b+=10){
+							if(checkColor2([l, a, b])){
 								colorSamples.push([l, a, b]);
 								samplesClosest.push(null);
 							}
@@ -155,7 +156,6 @@ var paletteGenerator = (function(undefined){
 					}
 				}
 			}
-			
 			
 			// Steps
 			var steps = quality;
@@ -193,7 +193,7 @@ var paletteGenerator = (function(undefined){
 						candidateKMean[2] /= count;
 					}
 					
-					if(count!=0 && checkColor2(chroma.lab(candidateKMean[0], candidateKMean[1], candidateKMean[2])) && candidateKMean){
+					if(count!=0 && checkColor2([candidateKMean[0], candidateKMean[1], candidateKMean[2]]) && candidateKMean){
 						kMeans[j] = candidateKMean;
 					} else {
 						// The candidate kMean is out of the boundaries of the color space, or unfound.
@@ -317,12 +317,12 @@ var paletteGenerator = (function(undefined){
 
 		// http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html
 		function _cmcDistance(lab1, lab2, l, c) {
-			var L1 = 100 * lab1[0]
-			var L2 = 100 * lab2[0]
-			var a1 = 100 * lab1[1]
-			var a2 = 100 * lab2[1]
-			var b1 = 100 * lab1[2]
-			var b2 = 100 * lab2[2]
+			var L1 = lab1[0]
+			var L2 = lab2[0]
+			var a1 = lab1[1]
+			var a2 = lab2[1]
+			var b1 = lab1[2]
+			var b2 = lab2[2]
 			var C1 = Math.sqrt(Math.pow(a1, 2) + Math.pow(b1, 2))
 			var C2 = Math.sqrt(Math.pow(a2, 2) + Math.pow(b2, 2))
 			var deltaC = C1 - C2
@@ -443,7 +443,6 @@ var paletteGenerator = (function(undefined){
 		dr = sr * (1.0 - amount) + dr * amount; 
 		dg = sg * (1.0 - amount) + dg * amount;
 		db = sb * (1.0 - amount) + db * amount;
-		
 		var dcolor = chroma.rgb(dr, dg, db);
 		var result = dcolor.lab()
 		ns.simulate_cache[key] = result
