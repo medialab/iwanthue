@@ -311,20 +311,24 @@ var colorsIndex = {}
 for(l=0; l<=100; l+=lstep){
     for(a=0; a<=100; a+=astep){
         for(b=0; b<=100; b+=bstep){
-            sampleColor( chroma.lab(l, +a, +b) )
-            sampleColor( chroma.lab(l, -a, +b) )
-            sampleColor( chroma.lab(l, +a, -b) )
-            sampleColor( chroma.lab(l, -a, -b) )
+            sampleColor( [l, +a, +b] )
+            sampleColor( [l, -a, +b] )
+            sampleColor( [l, +a, -b] )
+            sampleColor( [l, -a, -b] )
         }
     }
 }
-function sampleColor(color) {
-    // Test if the color does not exist already (there are weird boundaries to the CIE Labs space)
-    if (colorsIndex[color.hex()]) {
-        // Color already exists
-    } else {
-        colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl(), rgb:color.rgb()})
-        colorsIndex[color.hex()] = true
+function sampleColor(lab) {
+    // Test if color exists in lab space
+    if (paletteGenerator.validateLab(lab)) {
+        var color = chroma.lab(lab)
+        // Test if the color does not exist already (there are weird boundaries to the CIE Labs space)
+        if (colorsIndex[color.hex()]) {
+            // Color already exists
+        } else {
+            colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl(), rgb:color.rgb()})
+            colorsIndex[color.hex()] = true
+        }
     }
 }
 console.log("...done")
