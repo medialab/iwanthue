@@ -133,7 +133,7 @@ var drawPalette = function(colors, _matchings){
 	$('#palette_visual_sort').show();
 	$('#resultColors').html('')
 	colors.forEach(function(color){
-		var darkerColor = chroma.rgb(0.85*color.rgb[0], 0.85*color.rgb[1], 0.85*color.rgb[2])
+		var darkerColor = chroma.rgb(0.85*color.rgb()[0], 0.85*color.rgb()[1], 0.85*color.rgb()[2])
 		$('#resultColors').append(
 			$('<div class="colorResult-top"/>')
 				.css('background-color', color.hex())
@@ -146,7 +146,7 @@ var drawPalette = function(colors, _matchings){
 					$('<tr/>').append(
 						$('<td class="colorResult-value colorResult-hex"/>').text(color.hex())
 					).append(
-						$('<td class="colorResult-value colorResult-rgb"/>').text(color.rgb.join(','))
+						$('<td class="colorResult-value colorResult-rgb"/>').text(color.rgb().join(','))
 					).append(
 						$('<td class="colorResult-filler"/>')
 					)
@@ -179,7 +179,7 @@ var drawPalette = function(colors, _matchings){
 		$('<pre/>').html(
 			JSON.stringify(
 				colors.map( function(color){
-					return color.rgb
+					return color.rgb()
 				} )
 			).replace(/\],/gi, '],<br/>')
 		)
@@ -220,7 +220,7 @@ var drawPalette = function(colors, _matchings){
 	$('#resultColors_rgblist').append(
 		$('<pre/>').html(
 			colors.map( function(color){
-				return 'rgb('+color.rgb[0]+','+color.rgb[1]+','+color.rgb[2]+')<br/>'
+				return 'rgb('+color.rgb()[0]+','+color.rgb()[1]+','+color.rgb()[2]+')<br/>'
 			} )
 		)
 	)
@@ -380,7 +380,7 @@ var updateAdditionalInfo = function (colors) {
 			average += pair.distance
 			count++
 		})
-		average = Math.round( 1000 * average / count ) / 1000
+		average = Math.round( 10 * average / count ) / 10
 		$('#additionalInfo').append(
 			$('<h5>Color pairs by distance (average '+average+')</h5>')
 				.after(pairDistances)
@@ -399,7 +399,7 @@ var updateAdditionalInfo = function (colors) {
 			average += pair.distanceProtanope
 			count++
 		})
-		average = Math.round( 1000 * average / count ) / 1000
+		average = Math.round( 10 * average / count ) / 10
 		$('#additionalInfo').append(
 			$('<h5>Color pairs by <em>Protanope</em> distance (average '+average+')</h5>')
 				.after(pairDistances)
@@ -418,7 +418,7 @@ var updateAdditionalInfo = function (colors) {
 			average += pair.distanceDeuteranope
 			count++
 		})
-		average = Math.round( 1000 * average / count ) / 1000
+		average = Math.round( 10 * average / count ) / 10
 		$('#additionalInfo').append(
 			$('<h5>Color pairs by <em>Deuteranope</em> distance (average '+average+')</h5>')
 				.after(pairDistances)
@@ -437,7 +437,7 @@ var updateAdditionalInfo = function (colors) {
 			average += pair.distanceTritanope
 			count++
 		})
-		average = Math.round( 1000 * average / count ) / 1000
+		average = Math.round( 10 * average / count ) / 10
 		$('#additionalInfo').append(
 			$('<h5>Color pairs by <em>Tritanope</em> distance (average '+average+')</h5>')
 				.after(pairDistances)
@@ -448,7 +448,7 @@ var updateAdditionalInfo = function (colors) {
 	}
 		
 	function displayPair(el, pair, distance) {
-		var n = Math.round(pair[distance] * 1000) / 1000
+		var n = Math.round(pair[distance] * 10) / 10
 		var note = noteDistance(n)
 		el.append(
 			$('<div class="row" style="height:20px; margin-bottom: 12px;"></div>')
@@ -480,10 +480,10 @@ var updateAdditionalInfo = function (colors) {
 	}
 
 	function noteDistance(distance) {
-		if (distance < 0.2) return '&#128556;'
-		if (distance < 0.4) return '&#128577;'
-		if (distance < 0.6) return '&#128528;'
-		if (distance < 0.9) return '&#128578;'
+		if (distance < 20) return '&#128556;'
+		if (distance < 40) return '&#128577;'
+		if (distance < 60) return '&#128528;'
+		if (distance < 90) return '&#128578;'
 		return '&#128516;'
 	}
 

@@ -304,17 +304,30 @@ $(document).ready(function(){
 // Init the color samples once for all
 console.log("Initializing color sampling...")
 var colorSamples = []
-var lstep = 0.03
-var astep = 0.08
-var bstep = 0.08
-for(l=0; l<=1; l+=lstep){
-    for(a=-1; a<=1; a+=astep){
-        for(b=-1; b<=1; b+=bstep){
-            var color = chroma.lab(l, a, b)
-            // Test if the color exists in the RGB color space (there are holes in the CIE Labs space)
-            if(!isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256){
-                colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl(), rgb:color.rgb})
-            }
+var lstep = 3
+var astep = 8
+var bstep = 8
+var colorsIndex = {}
+for(l=0; l<=100; l+=lstep){
+    for(a=0; a<=100; a+=astep){
+        for(b=0; b<=100; b+=bstep){
+            sampleColor( [l, +a, +b] )
+            sampleColor( [l, -a, +b] )
+            sampleColor( [l, +a, -b] )
+            sampleColor( [l, -a, -b] )
+        }
+    }
+}
+function sampleColor(lab) {
+    // Test if color exists in lab space
+    if (paletteGenerator.validateLab(lab)) {
+        var color = chroma.lab(lab)
+        // Test if the color does not exist already (there are weird boundaries to the CIE Labs space)
+        if (colorsIndex[color.hex()]) {
+            // Color already exists
+        } else {
+            colorSamples.push({color:color, hex:color.hex(), lab:color.lab(), hcl:color.hcl(), rgb:color.rgb()})
+            colorsIndex[color.hex()] = true
         }
     }
 }

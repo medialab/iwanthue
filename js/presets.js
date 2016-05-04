@@ -7,9 +7,9 @@ var presets = [
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
-		cmax: 3,
+		cmax: 100,
 		lmin: 0,
-		lmax: 1.5
+		lmax: 100
 	},
 	{
 		name: "Default preset",
@@ -17,10 +17,10 @@ var presets = [
 		clbl: false,
 		hmin: 0,
 		hmax: 360,
-		cmin: 0.9,
-		cmax: 2.4,
-		lmin: 0.5,
-		lmax: 1.2
+		cmin: 30,
+		cmax: 80,
+		lmin: 35,
+		lmax: 80
 	},
 	{
 		name: "Colorblind friendly",
@@ -28,10 +28,10 @@ var presets = [
 		clbl: true,
 		hmin: 0,
 		hmax: 360,
-		cmin: 1.2,
-		cmax: 2,
-		lmin: 0.2,
-		lmax: 1.3
+		cmin: 40,
+		cmax: 70,
+		lmin: 15,
+		lmax: 85
 	},
 	{
 		name: "Fancy (light background)",
@@ -39,10 +39,10 @@ var presets = [
 		clbl: false,
 		hmin: 0,
 		hmax: 360,
-		cmin: 0.4,
-		cmax: 1.2,
-		lmin: 1,
-		lmax: 1.5
+		cmin: 15,
+		cmax: 40,
+		lmin: 70,
+		lmax: 100
 	},
 	{
 		name: "Fancy (dark background)",
@@ -50,10 +50,10 @@ var presets = [
 		clbl: false,
 		hmin: 0,
 		hmax: 360,
-		cmin: 0.2,
-		cmax: 1.2,
-		lmin: 0.1,
-		lmax: 0.6
+		cmin: 8,
+		cmax: 40,
+		lmin: 7,
+		lmax: 40
 	},
 	{
 		name: "---",
@@ -62,9 +62,9 @@ var presets = [
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
-		cmax: 3,
+		cmax: 100,
 		lmin: 0,
-		lmax: 1.5
+		lmax: 100
 	},
 	{
 		name: "Shades",
@@ -73,9 +73,9 @@ var presets = [
 		hmin: 0,
 		hmax: 240,
 		cmin: 0,
-		cmax: 0.4,
+		cmax: 15,
 		lmin: 0,
-		lmax: 1.5
+		lmax: 100
 	},
 	{
 		name: "Tarnish",
@@ -84,9 +84,9 @@ var presets = [
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
-		cmax: 0.4,
-		lmin: 0.4,
-		lmax: 1.1
+		cmax: 15,
+		lmin: 30,
+		lmax: 70
 	},
 	{
 		name: "Pastel",
@@ -95,9 +95,9 @@ var presets = [
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
-		cmax: 0.9,
-		lmin: 1,
-		lmax: 1.5
+		cmax: 30,
+		lmin: 70,
+		lmax: 100
 	},
 	{
 		name: "Pimp",
@@ -105,10 +105,10 @@ var presets = [
 		clbl: false,
 		hmin: 0,
 		hmax: 360,
-		cmin: 0.9,
-		cmax: 3,
-		lmin: 0.4,
-		lmax: 1
+		cmin: 30,
+		cmax: 100,
+		lmin: 25,
+		lmax: 70
 	},
 	{
 		name: "Intense",
@@ -116,10 +116,10 @@ var presets = [
 		clbl: false,
 		hmin: 0,
 		hmax: 360,
-		cmin: 0.6,
-		cmax: 3,
-		lmin: 0.2,
-		lmax: 1.1
+		cmin: 20,
+		cmax: 100,
+		lmin: 15,
+		lmax: 80
 	},
 	{
 		name: "Fluo",
@@ -127,10 +127,10 @@ var presets = [
 		clbl: false,
 		hmin: 0,
 		hmax: 300,
-		cmin: 1,
-		cmax: 3,
-		lmin: 1.1,
-		lmax: 1.5
+		cmin: 35,
+		cmax: 100,
+		lmin: 75,
+		lmax: 100
 	},
 	{
 		name: "---",
@@ -139,9 +139,9 @@ var presets = [
 		hmin: 0,
 		hmax: 360,
 		cmin: 0,
-		cmax: 3,
+		cmax: 100,
 		lmin: 0,
-		lmax: 1.5
+		lmax: 100
 	},
 	{
 		name: "Red Roses",
@@ -149,10 +149,10 @@ var presets = [
 		clbl: false,
 		hmin: 330,
 		hmax: 20,
-		cmin: 0.3,
-		cmax: 3,
-		lmin: 0.5,
-		lmax: 1.5
+		cmin: 10,
+		cmax: 100,
+		lmin: 35,
+		lmax: 100
 	},
 	{
 		name: "Ochre Sand",
@@ -160,10 +160,10 @@ var presets = [
 		clbl: false,
 		hmin: 20,
 		hmax: 60,
-		cmin: 0.3,
-		cmax: 1.6,
-		lmin: 0.5,
-		lmax: 1.5
+		cmin: 20,
+		cmax: 50,
+		lmin: 35,
+		lmax: 100
 	},
 	{
 		name: "Yellow Lime",
@@ -171,10 +171,10 @@ var presets = [
 		clbl: false,
 		hmin: 60,
 		hmax: 90,
-		cmin: 0.3,
-		cmax: 3,
-		lmin: 0.5,
-		lmax: 1.5
+		cmin: 10,
+		cmax: 100,
+		lmin: 35,
+		lmax: 100
 	},
 	{
 		name: "Green Mint",
@@ -182,10 +182,10 @@ var presets = [
 		clbl: false,
 		hmin: 90,
 		hmax: 150,
-		cmin: 0.3,
-		cmax: 3,
-		lmin: 0.5,
-		lmax: 1.5
+		cmin: 10,
+		cmax: 100,
+		lmin: 35,
+		lmax: 100
 	},
 	{
 		name: "Ice Cube",
@@ -194,9 +194,9 @@ var presets = [
 		hmin: 150,
 		hmax: 200,
 		cmin: 0,
-		cmax: 3,
-		lmin: 0.5,
-		lmax: 1.5
+		cmax: 100,
+		lmin: 35,
+		lmax: 100
 	},
 	{
 		name: "Blue Ocean",
@@ -204,10 +204,10 @@ var presets = [
 		clbl: false,
 		hmin: 220,
 		hmax: 260,
-		cmin: 0.2,
-		cmax: 2.5,
+		cmin: 8,
+		cmax: 80,
 		lmin: 0,
-		lmax: 0.8
+		lmax: 50
 	},
 	{
 		name: "Indigo Night",
@@ -215,10 +215,10 @@ var presets = [
 		clbl: false,
 		hmin: 260,
 		hmax: 290,
-		cmin: 1.2,
-		cmax: 3,
-		lmin: 0.5,
-		lmax: 1.5
+		cmin: 40,
+		cmax: 100,
+		lmin: 35,
+		lmax: 100
 	},
 	{
 		name: "Purple Wine",
@@ -227,9 +227,9 @@ var presets = [
 		hmin: 290,
 		hmax: 330,
 		cmin: 0,
-		cmax: 3,
+		cmax: 100,
 		lmin: 0,
-		lmax: 0.6
+		lmax: 40
 	}
 
 	

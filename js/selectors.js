@@ -36,8 +36,8 @@ var selectorsState = {
 	activeWidth: 15
 };
 
-var maxLightness = 1.5;
-var maxChroma = 3;
+var maxLightness = 100;
+var maxChroma = 100;
 
 var hue_context;
 var chroma_context;
@@ -342,6 +342,9 @@ var updateSelectors = function(){
 	var h = $("#hue_canvas").height();
 	var xResolution = 8;
 	var yResolution = 2;
+	var h_default = 340;
+	var c_default = 40;
+	var l_default = 70;
 	
 	/// Hue
 	// Draw
@@ -349,23 +352,23 @@ var updateSelectors = function(){
 	if(selectorsState.hue.extravar == 'none'){
 		if(selectorsState.hue.min < selectorsState.hue.max){
 			for(x=Math.round(w*selectorsState.hue.min); x<Math.round(w*selectorsState.hue.max); x+=1){
-				var color = chroma.hcl((selectorsState.hue.offset + 360*x/w)%360, 1, 1);
-				if(!isNaN(color.rgb[0])){
+				var color = chroma.hcl((selectorsState.hue.offset + 360*x/w)%360, c_default, l_default);
+				if(!isNaN(color.rgb()[0])){
 					hue_context.fillStyle = color.hex();
 					hue_context.fillRect(x, 0, 1, h);
 				}
 			}
 		} else {
 			for(x=0; x<Math.round(w*selectorsState.hue.max); x+=1){
-				var color = chroma.hcl((selectorsState.hue.offset + 360*x/w)%360, 1, 1);
-				if(!isNaN(color.rgb[0])){
+				var color = chroma.hcl((selectorsState.hue.offset + 360*x/w)%360, c_default, l_default);
+				if(!isNaN(color.rgb()[0])){
 					hue_context.fillStyle = color.hex();
 					hue_context.fillRect(x, 0, 1, h);
 				}
 			}
 			for(x=Math.round(w*selectorsState.hue.min); x<w; x+=1){
-				var color = chroma.hcl((selectorsState.hue.offset + 360*x/w)%360, 1, 1);
-				if(!isNaN(color.rgb[0])){
+				var color = chroma.hcl((selectorsState.hue.offset + 360*x/w)%360, c_default, l_default);
+				if(!isNaN(color.rgb()[0])){
 					hue_context.fillStyle = color.hex();
 					hue_context.fillRect(x, 0, 1, h);
 				}
@@ -375,7 +378,7 @@ var updateSelectors = function(){
 		for(x=0; x<w; x+=xResolution){
 			for(y=0; y<h; y+=yResolution){
 				var color = chroma.hcl((selectorsState.hue.offset + 360*x/w)%360, selectorsState.currentValues.chroma, maxLightness*(selectorsState.lightness.min + (selectorsState.lightness.max - selectorsState.lightness.min)*(h-y)/h));
-				if(!isNaN(color.rgb[0])){
+				if(!isNaN(color.rgb()[0])){
 					hue_context.fillStyle = color.hex();
 					hue_context.fillRect(x, y, xResolution, yResolution);
 				}
@@ -385,7 +388,7 @@ var updateSelectors = function(){
 		for(x=0; x<w; x+=xResolution){
 			for(y=0; y<h; y+=yResolution){
 				var color = chroma.hcl((selectorsState.hue.offset + 360*x/w)%360, maxChroma*(selectorsState.chroma.min + (selectorsState.chroma.max - selectorsState.chroma.min)*(h-y)/h), selectorsState.currentValues.lightness);
-				if(!isNaN(color.rgb[0])){
+				if(!isNaN(color.rgb()[0])){
 					hue_context.fillStyle = color.hex();
 					hue_context.fillRect(x, y, xResolution, yResolution);
 				}
@@ -401,8 +404,8 @@ var updateSelectors = function(){
 	chroma_context.clearRect (0, 0, w, h);
 	if(selectorsState.chroma.extravar == 'none'){
 		for(x=Math.round(w*selectorsState.chroma.min); x<Math.round(w*selectorsState.chroma.max); x+=1){
-			var color = chroma.hcl(290, maxChroma*x/w, 0.85);
-			if(!isNaN(color.rgb[0])){
+			var color = chroma.hcl(h_default, maxChroma*x/w, l_default);
+			if(!isNaN(color.rgb()[0])){
 				chroma_context.fillStyle = color.hex();
 				chroma_context.fillRect(x, 0, 1, h);
 			}
@@ -411,7 +414,7 @@ var updateSelectors = function(){
 		for(x=0; x<w; x+=xResolution){
 			for(y=0; y<h; y+=yResolution){
 				var color = chroma.hcl(selectorsState.currentValues.hue, maxChroma*x/w, maxLightness*(selectorsState.lightness.min + (selectorsState.lightness.max - selectorsState.lightness.min)*(h-y)/h));
-				if(!isNaN(color.rgb[0])){
+				if(!isNaN(color.rgb()[0])){
 					chroma_context.fillStyle = color.hex();
 					chroma_context.fillRect(x, y, xResolution, yResolution);
 				}
@@ -421,7 +424,7 @@ var updateSelectors = function(){
 		for(x=0; x<w; x+=xResolution){
 			for(y=0; y<h; y+=yResolution){
 				var color = chroma.hcl((selectorsState.hue.min + (selectorsState.hue.max-selectorsState.hue.min)*y/h)*360, maxChroma*x/w, selectorsState.currentValues.lightness);
-				if(!isNaN(color.rgb[0])){
+				if(!isNaN(color.rgb()[0])){
 					chroma_context.fillStyle = color.hex();
 					chroma_context.fillRect(x, y, xResolution, yResolution);
 				}
@@ -437,8 +440,8 @@ var updateSelectors = function(){
 	lightness_context.clearRect (0, 0, w, h);
 	if(selectorsState.lightness.extravar == 'none'){
 		for(x=Math.round(w*selectorsState.lightness.min); x<Math.round(w*selectorsState.lightness.max); x+=1){
-			var color = chroma.hcl(200, 0.2, maxLightness*x/w);
-			if(!isNaN(color.rgb[0])){
+			var color = chroma.hcl(0, 0, maxLightness*x/w);
+			if(!isNaN(color.rgb()[0])){
 				lightness_context.fillStyle = color.hex();
 				lightness_context.fillRect(x, 0, 1, h);
 			}
@@ -447,7 +450,7 @@ var updateSelectors = function(){
 		for(x=0; x<w; x+=xResolution){
 			for(y=0; y<h; y+=yResolution){
 				var color = chroma.hcl(selectorsState.currentValues.hue, maxChroma*(selectorsState.chroma.min + (selectorsState.chroma.max - selectorsState.chroma.min)*(h-y)/h), maxLightness*x/w);
-				if(!isNaN(color.rgb[0])){
+				if(!isNaN(color.rgb()[0])){
 					lightness_context.fillStyle = color.hex();
 					lightness_context.fillRect(x, y, xResolution, yResolution);
 				}
@@ -457,7 +460,7 @@ var updateSelectors = function(){
 		for(x=0; x<w; x+=xResolution){
 			for(y=0; y<h; y+=yResolution){
 				var color = chroma.hcl((selectorsState.hue.min + (selectorsState.hue.max-selectorsState.hue.min)*y/h)*360, selectorsState.currentValues.chroma, maxLightness*x/w);
-				if(!isNaN(color.rgb[0])){
+				if(!isNaN(color.rgb()[0])){
 					lightness_context.fillStyle = color.hex();
 					lightness_context.fillRect(x, y, xResolution, yResolution);
 				}

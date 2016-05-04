@@ -4,7 +4,7 @@
 
 <script src="js/libs/bootstrap.min.js"></script>
 
-<script src="js/libs/chroma.js"></script>
+<script src="js/libs/chroma.min.js"></script>
 <script src="js/libs/chroma.palette-gen.js"></script>
 
 <?php
