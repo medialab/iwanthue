@@ -44,7 +44,7 @@ var paletteGenerator = (function(undefined){
 			// It will be necessary to check if a Lab color exists in the rgb space.
 			function checkLab(lab){
 				var color = chroma.lab(lab[0], lab[1], lab[2]);
-				return !isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256 && checkColor(color);
+				return !isNaN(color.rgb()[0]) && color.rgb()[0]>=0 && color.rgb()[1]>=0 && color.rgb()[2]>=0 && color.rgb()[0]<256 && color.rgb()[1]<256 && color.rgb()[2]<256 && checkColor(color);
 			}
 			
 			// Init
@@ -118,7 +118,7 @@ var paletteGenerator = (function(undefined){
 				// Check that a color is valid: it must verify our checkColor condition, but also be in the color space
 				var lab = color.lab();
 				var hcl = color.hcl();
-				return !isNaN(color.rgb[0]) && color.rgb[0]>=0 && color.rgb[1]>=0 && color.rgb[2]>=0 && color.rgb[0]<256 && color.rgb[1]<256 && color.rgb[2]<256 && checkColor(color);
+				return !isNaN(color.rgb()[0]) && color.rgb()[0]>=0 && color.rgb()[1]>=0 && color.rgb()[2]>=0 && color.rgb()[0]<256 && color.rgb()[1]<256 && color.rgb()[2]<256 && checkColor(color);
 			}
 			
 			var kMeans = [];
@@ -384,9 +384,9 @@ var paletteGenerator = (function(undefined){
 
 		// Code adapted from http://galacticmilk.com/labs/Color-Vision/Javascript/Color.Vision.Simulate.js
 		var color = chroma.lab(lab[0], lab[1], lab[2]);
-		var sr = color.rgb[0];
-		var sg = color.rgb[1];
-		var sb = color.rgb[2];
+		var sr = color.rgb()[0];
+		var sg = color.rgb()[1];
+		var sb = color.rgb()[2];
 		var dr = sr; // destination color
 		var dg = sg;
 		var db = sb;
