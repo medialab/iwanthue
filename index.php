@@ -398,7 +398,7 @@ var initSigma = function(){
         defaultEdgeType: 'line',
         drawEdges: false,
 
-        maxNodeSize: 7,
+        maxNodeSize: 8,
 
         mouseEnabled: false,
         blockScroll: true,

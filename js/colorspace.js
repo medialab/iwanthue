@@ -22,7 +22,7 @@ function updateColorSpace(colors, keepPositions){
 			id: color.hex(),
 			x: 10 - 10 * (color.lab()[1] - 0.25 * color.lab()[0] - 0.3 * color.lab()[2]) ,
 			y: 8 * (color.lab()[2] - 1.1 * color.lab()[0] + 0.1 * color.lab()[1]),
-			size: 30 + color.lab()[0],
+			size: 30 + (100 - color.lab()[0]),
 			label: color.hex(),
 			color: color.hex()
 		});
