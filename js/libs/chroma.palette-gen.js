@@ -337,7 +337,7 @@ var paletteGenerator = (function(undefined){
 			var S_L = (lab1[0]<16) ? (0.511) : (0.040975 * L1 / (1 + 0.01765 * L1) )
 			var S_C = (0.0638 * C1 / (1 + 0.0131 * C1)) + 0.638
 			var S_H = S_C * (F*T + 1 - F)
-			var result = Math.sqrt( Math.pow(deltaL/(l*S_L), 2) + Math.pow(deltaC/(c*S_C), 2) + Math.pow(deltaH/S_H, 2) ) / 100
+			var result = Math.sqrt( Math.pow(deltaL/(l*S_L), 2) + Math.pow(deltaC/(c*S_C), 2) + Math.pow(deltaH/S_H, 2) )
 			return result
 		}
 
