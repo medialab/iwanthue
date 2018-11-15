@@ -24,7 +24,6 @@ var paletteGenerator = (function(undefined){
 	ns = {}
 
 	ns.generate = function(colorsCount, checkColor, forceMode, quality, ultra_precision, distanceType){
-		console.log('Generate palettes for '+colorsCount+' colors using color distance "'+distanceType+'"')
 		// Default
 		if(colorsCount === undefined)
 			colorsCount = 8;
@@ -34,7 +33,11 @@ var paletteGenerator = (function(undefined){
 			forceMode = false;
 		if(quality === undefined)
 			quality = 50;
+		if(distanceType === undefined)
+			distanceType = 'Default';
 		ultra_precision = ultra_precision || false
+
+		console.log('Generate palettes for '+colorsCount+' colors using color distance "'+distanceType+'"')
 
 		if(forceMode){
 			// Force Vector Mode
@@ -124,7 +127,8 @@ var paletteGenerator = (function(undefined){
 			var kMeans = [];
 			for(i=0; i<colorsCount; i++){
 				var lab = [100*Math.random(),100*(2*Math.random()-1),100*(2*Math.random()-1)];
-				while(!checkColor2(lab)){
+				var failsafe=10;
+				while(!checkColor2(lab) && failsafe-->0){
 					lab = [100*Math.random(),100*(2*Math.random()-1),100*(2*Math.random()-1)];
 				}
 				kMeans.push(lab);
@@ -156,7 +160,7 @@ var paletteGenerator = (function(undefined){
 					}
 				}
 			}
-			
+
 			// Steps
 			var steps = quality;
 			while(steps-- > 0){
@@ -208,7 +212,8 @@ var paletteGenerator = (function(undefined){
 									closest = i;
 								}
 							}
-							kMeans[j] = colorSamples[closest];
+							if (closest>=0)
+								kMeans[j] = colorSamples[closest];
 
 						} else {
 							// Then we just search for the closest color of the candidate kMean
@@ -221,7 +226,8 @@ var paletteGenerator = (function(undefined){
 									closest = i;
 								}
 							}
-							kMeans[j] = colorSamples[closest];
+							if (closest>=0)
+								kMeans[j] = colorSamples[closest];
 						}
 					}
 					freeColorSamples = freeColorSamples.filter(function(color){

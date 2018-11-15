@@ -486,8 +486,8 @@ function traceIWH(){
       function(color){ // This function filters valid colors
         var hcl = color.hcl();
         return hcl[0]>=0 && hcl[0]<=360
-          && hcl[1]>=0 && hcl[1]<=0.8
-          && hcl[2]>=1.0 && hcl[2]<=1.8;
+          && hcl[1]>=0 && hcl[1]<=80
+          && hcl[2]>=70 && hcl[2]<=100;
       },
       false, // Using Force Vector instead of k-Means
       50 // Steps (quality)
@@ -531,10 +531,10 @@ var fancyLight = {
     colorsCount: 5
     ,hmin: 0
     ,hmax: 360
-    ,cmin: 0
-    ,cmax: 0.9
-    ,lmin: 1
-    ,lmax: 1.5
+    ,cmin: 15
+    ,cmax: 40
+    ,lmin: 40
+    ,lmax: 100
     ,colors: [
         chroma.hex('#D2D1B1')
         ,chroma.hex('#C3CBE1')
@@ -563,10 +563,10 @@ var fancyDark = {
     colorsCount: 5
     ,hmin: 0
     ,hmax: 360
-    ,cmin: 0.2
-    ,cmax: 1.2
-    ,lmin: 0.1
-    ,lmax: 0.6
+    ,cmin: 8
+    ,cmax: 40
+    ,lmin: 7
+    ,lmax: 40
     ,colors: [
         chroma.hex('#6A4E2C')
         ,chroma.hex('#585163')
@@ -596,9 +596,9 @@ var tarnish = {
     ,hmin: 0
     ,hmax: 360
     ,cmin: 0
-    ,cmax: 0.4
-    ,lmin: 0.4
-    ,lmax: 1.1
+    ,cmax: 15
+    ,lmin: 30
+    ,lmax: 70
     ,colors: [
         chroma.hex('#949C8D')
         ,chroma.hex('#6E6557')
@@ -629,10 +629,10 @@ var pimp = {
     colorsCount: 8
     ,hmin: 0
     ,hmax: 360
-    ,cmin: 0.9
-    ,cmax: 3
-    ,lmin: 0.4
-    ,lmax: 1
+    ,cmin: 30
+    ,cmax: 100
+    ,lmin: 25
+    ,lmax: 70
     ,colors: [
         chroma.hex('#8568D5')
         ,chroma.hex('#678F39')
@@ -665,10 +665,10 @@ var pimpLighter = {
     colorsCount: 5
     ,hmin: 0
     ,hmax: 360
-    ,cmin: 0.9
-    ,cmax: 3
-    ,lmin: 1
-    ,lmax: 1.5
+    ,cmin: 30
+    ,cmax: 100
+    ,lmin: 55
+    ,lmax: 100
     ,colors: [
         chroma.hex('#CADA45')
         ,chroma.hex('#D4A2E1')
@@ -697,10 +697,10 @@ var green = {
     colorsCount: 5
     ,hmin: 90
     ,hmax: 150
-    ,cmin: 0.5
-    ,cmax: 3
-    ,lmin: 0.7
-    ,lmax: 1.3
+    ,cmin: 10
+    ,cmax: 100
+    ,lmin: 35
+    ,lmax: 100
 }
 function update_green(){
     green.hmin = Math.round(360 + 360*Math.random())%360
@@ -726,9 +726,9 @@ var large = {
     ,hmin: 0
     ,hmax: 360
     ,cmin: 0
-    ,cmax: 1.8
-    ,lmin: 0.5
-    ,lmax: 1.5
+    ,cmax: 85
+    ,lmin: 30
+    ,lmax: 95
     ,colors: [
         chroma.hex('#99D78B')
         ,chroma.hex('#C089D0')
@@ -884,9 +884,9 @@ var fiftyShades = {
     ,hmin: 0
     ,hmax: 360
     ,cmin: 0
-    ,cmax: 0.1
-    ,lmin: 0
-    ,lmax: 1.5
+    ,cmax: 3
+    ,lmin: 40
+    ,lmax: 90
     ,useFV: true
     ,colors:[
         chroma.hex('#5C5547')
