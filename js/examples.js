@@ -37,7 +37,11 @@ function makePre(elementId, settings){
 
 function makeSelectors(elementId, settings){
 	var width = $('#'+elementId).width() - 114
-		,height = 28
+	var height = 28
+	var h_default = 340
+	var c_default = 40
+	var l_default = 70
+
 
 	$('#'+elementId).html(
 		'<table style="width: 100%;">'
@@ -73,23 +77,23 @@ function makeSelectors(elementId, settings){
 	h_context.clearRect(0, 0, w, h);
 	if(settings.hmin < settings.hmax){
 		for(x=Math.round(w*settings.hmin/360); x<Math.round(w*settings.hmax/360); x+=1){
-			var color = chroma.hcl((360*x/w)%360, 1, 1);
-			if(!isNaN(color.rgb[0])){
+			var color = chroma.hcl((360*x/w)%360, c_default, l_default);
+			if(!isNaN(color.rgb()[0])){
 				h_context.fillStyle = color.hex();
 				h_context.fillRect(x, 0, 1, h);
 			}
 		}
 	} else {
 		for(x=0; x<Math.round(w*settings.hmax/360); x+=1){
-			var color = chroma.hcl((360*x/w)%360, 1, 1);
-			if(!isNaN(color.rgb[0])){
+			var color = chroma.hcl((360*x/w)%360, c_default, l_default);
+			if(!isNaN(color.rgb()[0])){
 				h_context.fillStyle = color.hex();
 				h_context.fillRect(x, 0, 1, h);
 			}
 		}
 		for(x=Math.round(w*settings.hmin/360); x<w; x+=1){
-			var color = chroma.hcl((360*x/w)%360, 1, 1);
-			if(!isNaN(color.rgb[0])){
+			var color = chroma.hcl((360*x/w)%360, c_default, l_default);
+			if(!isNaN(color.rgb()[0])){
 				h_context.fillStyle = color.hex();
 				h_context.fillRect(x, 0, 1, h);
 			}
@@ -101,8 +105,8 @@ function makeSelectors(elementId, settings){
 	// Chroma
 	c_context.clearRect(0, 0, w, h);
 	for(x=Math.round(w*settings.cmin/maxChroma); x<Math.round(w*settings.cmax/maxChroma); x+=1){
-		var color = chroma.hcl(290, maxChroma*x/w, 0.85);
-		if(!isNaN(color.rgb[0])){
+		var color = chroma.hcl(h_default, maxChroma*x/w, l_default);
+		if(!isNaN(color.rgb()[0])){
 			c_context.fillStyle = color.hex();
 			c_context.fillRect(x, 0, 1, h);
 		}
@@ -113,8 +117,8 @@ function makeSelectors(elementId, settings){
 	// Lightness
 	l_context.clearRect(0, 0, w, h);
 	for(x=Math.round(w*settings.lmin/maxLightness); x<Math.round(w*settings.lmax/maxLightness); x+=1){
-		var color = chroma.hcl(200, 0.2, maxLightness*x/w);
-		if(!isNaN(color.rgb[0])){
+		var color = chroma.hcl(h_default, 0, maxLightness*x/w);
+		if(!isNaN(color.rgb()[0])){
 			l_context.fillStyle = color.hex();
 			l_context.fillRect(x, 0, 1, h);
 		}
