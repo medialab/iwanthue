@@ -27,6 +27,6 @@
   "iwanthue": {
     "ga": "UA-37695848-1",
     "tweet": "iWantHue: make clever color palettes",
-    "prefix": "https://medialab.github.io/iwanthue/"
+    "prefix": "/iwanthue/"
   }
 }
