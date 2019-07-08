@@ -1,5 +1,6 @@
 const glob = require('glob');
 const path = require('path');
+const escapeRegex = require('escape-string-regexp');
 const fs = require('fs-extra');
 
 const INCLUDES_RE = /<\?php\s+include\(['"]([^'"]+\.php)['"]\);?\s*\?>/gi;
@@ -24,15 +25,22 @@ const ASSETS = [
 const phpFiles = glob.sync('*.php');
 fs.ensureDirSync('./build');
 
-function solveIncludes(code) {
+function solveIncludes(code, links) {
   let solved =  code.replace(INCLUDES_RE, function(m, p) {
     return fs.readFileSync(p, 'utf-8');
   })
 
-  return solved
+  solved = solved
     .replace(/\$GOOGLE_ANALYTICS/g, GOOGLE_ANALYTICS)
     .replace(/\$TWEET/g, TWEET)
     .replace(ASSET_URL_RE, `$1${PREFIX}$2$1`);
+
+  links.forEach(link => {
+    solved = solved
+      .replace(new RegExp(escapeRegex(link), 'g'), PREFIX + link);
+  });
+
+  return solved;
 }
 
 // Resolving PHP files
@@ -41,7 +49,7 @@ phpFiles.forEach(file => {
 
   let code = fs.readFileSync(file, 'utf-8')
 
-  code = solveIncludes(code);
+  code = solveIncludes(code, phpFiles);
 
   code = `---\nredirect_from: /${file}.html\n---\n` + code;
 

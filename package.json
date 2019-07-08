@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/medialab/iwanthue#readme",
   "dependencies": {
+    "escape-string-regexp": "^2.0.0",
     "fs-extra": "^8.1.0",
     "gh-pages": "^2.0.1",
     "glob": "^7.1.4"
