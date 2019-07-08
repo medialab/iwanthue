@@ -34,10 +34,18 @@ phpFiles.forEach(file => {
 
   code = solveIncludes(code);
 
-  fs.writeFileSync(path.join('./build', file), code, 'utf-8');
-
   if (file.endsWith('index.php')) {
     fs.writeFileSync(path.join('./build', 'index.html'), code, 'utf-8');
+
+    fs.symlinkSync(path.join('./build', 'index.html'), path.join('build', 'index.php'));
+  }
+  else {
+    const dir = path.join('./build', path.basename(file, '.php'));
+
+    fs.ensureDirSync(dir);
+    fs.writeFileSync(path.join(dir, 'index.html'), code, 'utf-8');
+
+    fs.symlinkSync(path.join(dir, 'index.html'), path.join('./build', file));
   }
 });
 
@@ -67,5 +75,7 @@ GLOB_ASSETS.forEach(g => {
     fs.copyFileSync(p, path.join('./build', p));
   });
 });
+
+fs.ensureFileSync(path.join('./build', '.nojekyll'));
 
 console.log('Success!');
