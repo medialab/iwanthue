@@ -5,7 +5,7 @@
   "description": "Scripts to build static site.",
   "main": "build.js",
   "scripts": {
-    "build": "rm -rf build && GOOGLE_ANALYTICS=$npm_package_iwanthue_ga TWEET=$npm_package_iwanthue_tweet node build.js",
+    "build": "rm -rf build && GOOGLE_ANALYTICS=$npm_package_iwanthue_ga TWEET=$npm_package_iwanthue_tweet PREFIX=$npm_package_iwanthue_prefix node build.js",
     "deploy": "npm run build && gh-pages -d ./build"
   },
   "repository": {
@@ -25,6 +25,7 @@
   },
   "iwanthue": {
     "ga": "UA-37695848-1",
-    "tweet": "iWantHue: make clever color palettes"
+    "tweet": "iWantHue: make clever color palettes",
+    "prefix": "https://medialab.github.io/iwanthue/"
   }
 }

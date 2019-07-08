@@ -3,27 +3,36 @@ const path = require('path');
 const fs = require('fs-extra');
 
 const INCLUDES_RE = /<\?php\s+include\(['"]([^'"]+\.php)['"]\);?\s*\?>/gi;
+const ASSET_URL_RE = /(["'])((?:css|img|js|res)\/[^"']+)["']/g;
 
 const GOOGLE_ANALYTICS = process.env.GOOGLE_ANALYTICS,
-      TWEET = process.env.TWEET;
+      TWEET = process.env.TWEET,
+      PREFIX = process.env.PREFIX;
 
-if (!GOOGLE_ANALYTICS || !TWEET) {
+if (!GOOGLE_ANALYTICS || !TWEET || !PREFIX) {
   console.error('Missing env var!');
   process.exit(1);
 }
+
+const ASSETS = [
+  'css',
+  'img',
+  'js',
+  'res'
+];
 
 const phpFiles = glob.sync('*.php');
 fs.ensureDirSync('./build');
 
 function solveIncludes(code) {
-  return code.replace(INCLUDES_RE, function(m, p) {
+  let solved =  code.replace(INCLUDES_RE, function(m, p) {
+    return fs.readFileSync(p, 'utf-8');
+  })
 
-    const includedCode = fs.readFileSync(p, 'utf-8')
-      .replace(/\$GOOGLE_ANALYTICS/g, GOOGLE_ANALYTICS)
-      .replace(/\$TWEET/g, TWEET);
-
-    return includedCode;
-  });
+  return solved
+    .replace(/\$GOOGLE_ANALYTICS/g, GOOGLE_ANALYTICS)
+    .replace(/\$TWEET/g, TWEET)
+    .replace(ASSET_URL_RE, `$1${PREFIX}$2$1`);
 }
 
 // Resolving PHP files
@@ -48,13 +57,6 @@ phpFiles.forEach(file => {
 });
 
 // Copying assets
-const ASSETS = [
-  'css',
-  'img',
-  'js',
-  'res'
-];
-
 console.log('Copying assets...');
 ASSETS.forEach(dir => {
   fs.copySync(dir, path.join('./build', dir));
