@@ -1,0 +1,10 @@
+{
+  "name": "I Want Hue",
+  "authors": ["Mathieu Jacomy"],
+  "url": "http://tools.medialab.sciences-po.fr/iwanthue/",
+  "source": "https://github.com/medialab/iwanthue",
+  "licence": "LGPL/CECILL-C",
+  "visual": "http://tools.medialab.sciences-po.fr/iwanthue/res/visual.jpg",
+  "description": "Colors for data scientists. Generate and refine palettes of optimally distinct colors.",
+  "doc": "http://tools.medialab.sciences-po.fr/iwanthue/examples.php"
+}
