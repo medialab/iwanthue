@@ -13,13 +13,13 @@ redirect_from: /examples.php.html
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
-        <link rel="stylesheet" href="css/prettify.css">
+		<link rel="stylesheet" href="https://medialab.github.io/iwanthue/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://medialab.github.io/iwanthue/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="https://medialab.github.io/iwanthue/css/prettify.css">
 
-        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="https://medialab.github.io/iwanthue/css/main.css">
 
-        <script src="js/libs/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/libs/modernizr-2.6.1-respond-1.1.0.min.js"></script>
 
 
         <style>
@@ -121,7 +121,7 @@ redirect_from: /examples.php.html
             <div class="splash-unit row">
                 <div class="span7">
                     <div class="image">
-                        <a href="index.php"><img src="res/header.png"/></a>
+                        <a href="index.php"><img src="https://medialab.github.io/iwanthue/res/header.png"/></a>
                     </div>
                     <div class="title">
                         i want hue
@@ -162,7 +162,7 @@ redirect_from: /examples.php.html
                 </div>
                 <div class="span4">
                     <div style="text-align: center" id="treemap_rand">
-                        <!-- <img src="res/carto_rgbrand.png"/> -->
+                        <!-- <img src="https://medialab.github.io/iwanthue/res/carto_rgbrand.png"/> -->
                     </div>
                     <br/>
                     <div class="alert alert-error">
@@ -172,7 +172,7 @@ redirect_from: /examples.php.html
                 </div>
                 <div class="span4">
                     <div style="text-align: center" id="treemap_iwh">
-                        <!-- <img src="res/carto_goodgen.png"/> -->
+                        <!-- <img src="https://medialab.github.io/iwanthue/res/carto_goodgen.png"/> -->
                     </div>
                     <br/>
                     <div class="alert alert-success">
@@ -446,7 +446,7 @@ redirect_from: /examples.php.html
                     <h5>Example</h5>
                     <div id="fiftyShades_chart"></div>
                     <h5>Another example</h5>
-                    <img src="res/50shades.png"/>
+                    <img src="https://medialab.github.io/iwanthue/res/50shades.png"/>
                 </div>
             </div>
 
@@ -456,12 +456,12 @@ redirect_from: /examples.php.html
 
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/libs/jquery-1.8.0.min.js"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="https://medialab.github.io/iwanthue/js/libs/jquery-1.8.0.min.js"><\/script>')</script>
 
-<script src="js/libs/bootstrap.min.js"></script>
+<script src="https://medialab.github.io/iwanthue/js/libs/bootstrap.min.js"></script>
 
-<script src="js/libs/chroma.min.js"></script>
-<script src="js/libs/chroma.palette-gen.js"></script>
+<script src="https://medialab.github.io/iwanthue/js/libs/chroma.min.js"></script>
+<script src="https://medialab.github.io/iwanthue/js/libs/chroma.palette-gen.js"></script>
 
 <script type="text/javascript">
   var _gaq = _gaq || [];
@@ -476,17 +476,17 @@ redirect_from: /examples.php.html
 </script>
 
 
-        <script src="js/libs/d3.v3.min.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/libs/d3.v3.min.js"></script>
 
-        <script src="js/background.js"></script>
-        <script src="js/colorspace.js"></script>
-        <script src="js/presets.js"></script>
-        <script src="js/selectors.js"></script>
-        <script src="js/fitting.js"></script>
-        <script src="js/palettegeneration.js"></script>
-        <script src="js/examples.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/background.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/colorspace.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/presets.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/selectors.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/fitting.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/palettegeneration.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/examples.js"></script>
 
-        <script src="js/sandbox.js"></script>
+        <script src="https://medialab.github.io/iwanthue/js/sandbox.js"></script>
 
         <script>
 
@@ -513,7 +513,7 @@ function traceRand(){
 
     var colorRand = d3.scale.ordinal().range(d3.range(0,20).map(function(i){return chroma.rgb(255*Math.random(),255*Math.random(),255*Math.random()).hex()}));
 
-    d3.json("res/flare.json", function(error, root) {
+    d3.json("https://medialab.github.io/iwanthue/res/flare.json", function(error, root) {
       var node = divRand.datum(root).selectAll(".node")
           .data(treemap.nodes)
         .enter().append("div")
@@ -559,7 +559,7 @@ function traceIWH(){
       50 // Steps (quality)
     ).map(function(color){return color.hex()}));
 
-    d3.json("res/flare.json", function(error, root) {
+    d3.json("https://medialab.github.io/iwanthue/res/flare.json", function(error, root) {
       var node = divIWH.datum(root).selectAll(".node")
           .data(treemap.nodes)
         .enter().append("div")
