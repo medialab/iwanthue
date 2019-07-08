@@ -1,0 +1,29 @@
+{
+  "name": "iwanthue",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scripts to build static site.",
+  "main": "index.js",
+  "scripts": {
+    "build": "GOOGLE_ANALYTICS=$npm_package_iwanthue_ga TWEET=$npm_package_iwanthue_tweet node build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/medialab/iwanthue.git"
+  },
+  "author": "yomguithereal <kropotkinepiotr@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/medialab/iwanthue/issues"
+  },
+  "homepage": "https://github.com/medialab/iwanthue#readme",
+  "dependencies": {
+    "fs-extra": "^8.1.0",
+    "gh-pages": "^2.0.1",
+    "glob": "^7.1.4"
+  },
+  "iwanthue": {
+    "ga": "UA-37695848-1",
+    "tweet": "iWantHue: make clever color palettes"
+  }
+}

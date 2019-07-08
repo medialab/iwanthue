@@ -7,13 +7,9 @@
 <script src="js/libs/chroma.min.js"></script>
 <script src="js/libs/chroma.palette-gen.js"></script>
 
-<?php
-if(isset($googleAnalyticsId) && $googleAnalyticsId != ""){
-?>
-
 <script type="text/javascript">
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', '<?php echo $googleAnalyticsId; ?>']);
+  _gaq.push(['_setAccount', '$GOOGLE_ANALYTICS']);
   _gaq.push(['_trackPageview']);
 
   (function() {
@@ -22,7 +18,3 @@ if(isset($googleAnalyticsId) && $googleAnalyticsId != ""){
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 </script>
-
-<?php
-}
-?>
