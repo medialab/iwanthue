@@ -39,7 +39,10 @@ function solveIncludes(code, links) {
 
   links.forEach(link => {
     solved = solved
-      .replace(new RegExp(escapeRegex(link), 'g'), PREFIX + link.replace(/\.php$/, '/'));
+      .replace(
+        new RegExp(escapeRegex(link), 'g'),
+        PREFIX + (link.endsWith('index.php') ? '' : link.replace(/\.php$/, '/'))
+      );
   });
 
   return solved;

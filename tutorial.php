@@ -18,9 +18,9 @@
                 padding-bottom: 40px;
             }
 
-            
+
         </style>
-        
+
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        
+
         <div class="container">
             <div class="row">
                 <div class="span12">
@@ -59,11 +59,11 @@
             <div class="row">
                 <div class="span6">
                     <h3>1. How to generate a palette</h3>
-                    <iframe src="http://player.vimeo.com/video/58528275?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    <iframe src="//player.vimeo.com/video/58528275?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                 </div>
                 <div class="span6">
                     <h3>2. How to generate a custom palette</h3>
-                    <iframe src="http://player.vimeo.com/video/58528269?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    <iframe src="//player.vimeo.com/video/58528269?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                 </div>
             </div>
             <br/>
@@ -71,11 +71,11 @@
             <div class="row">
                 <div class="span6">
                     <h3>3. Filtering the color space</h3>
-                    <iframe src="http://player.vimeo.com/video/58528258?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    <iframe src="//player.vimeo.com/video/58528258?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                 </div>
                 <div class="span6">
                     <h3>4. Colors have different properties</h3>
-                    <iframe src="http://player.vimeo.com/video/58528254?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    <iframe src="//player.vimeo.com/video/58528254?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                 </div>
             </div>
             <br/>
@@ -83,11 +83,11 @@
             <div class="row">
                 <div class="span6">
                     <h3>5. The curves in the selectors</h3>
-                    <iframe src="http://player.vimeo.com/video/58528218?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    <iframe src="//player.vimeo.com/video/58528218?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                 </div>
                 <div class="span6">
                     <h3>6. Refining your palette</h3>
-                    <iframe src="http://player.vimeo.com/video/58528236?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    <iframe src="//player.vimeo.com/video/58528236?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                 </div>
             </div>
             <br/>
@@ -95,7 +95,7 @@
             <div class="row">
                 <div class="span6">
                     <h3>7. Soft mode vs. Hard mode</h3>
-                    <iframe src="http://player.vimeo.com/video/58528223?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    <iframe src="//player.vimeo.com/video/58528223?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                 </div>
                 <div class="span6">
                     <h3>More...</h3>
@@ -107,6 +107,6 @@
 <?php include('includes/codebottom.php'); ?>
 
         <script src="js/libs/d3.v3.min.js"></script>
-        
+
     </body>
 </html>
