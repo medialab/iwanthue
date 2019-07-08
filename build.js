@@ -35,6 +35,10 @@ phpFiles.forEach(file => {
   code = solveIncludes(code);
 
   fs.writeFileSync(path.join('./build', file), code, 'utf-8');
+
+  if (file.endsWith('index.php')) {
+    fs.writeFileSync(path.join('./build', 'index.html'), code, 'utf-8');
+  }
 });
 
 // Copying assets
