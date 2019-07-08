@@ -1,9 +1,9 @@
 {
-  "name": "iwanthue",
+  "name": "iwanthue-build",
   "version": "1.0.0",
   "private": true,
   "description": "Scripts to build static site.",
-  "main": "index.js",
+  "main": "build.js",
   "scripts": {
     "build": "rm -rf build && GOOGLE_ANALYTICS=$npm_package_iwanthue_ga TWEET=$npm_package_iwanthue_tweet node build.js",
     "deploy": "npm run build && gh-pages -d ./build"

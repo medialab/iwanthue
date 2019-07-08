@@ -18,7 +18,7 @@ fs.ensureDirSync('./build');
 function solveIncludes(code) {
   return code.replace(INCLUDES_RE, function(m, p) {
 
-    const includedCode = fs.readFileSync(p, 'utf-8')
+    const includedCode = fs.readFileSync(path.join('..', p), 'utf-8')
       .replace(/\$GOOGLE_ANALYTICS/g, GOOGLE_ANALYTICS)
       .replace(/\$TWEET/g, TWEET);
 
@@ -27,27 +27,31 @@ function solveIncludes(code) {
 }
 
 // Resolving PHP files
+process.chdir('./build');
+
 phpFiles.forEach(file => {
   console.log(`Processing ${file}...`);
 
-  let code = fs.readFileSync(file, 'utf-8');
+  let code = fs.readFileSync(path.join('..', file), 'utf-8');
 
   code = solveIncludes(code);
 
   if (file.endsWith('index.php')) {
-    fs.writeFileSync(path.join('./build', 'index.html'), code, 'utf-8');
+    fs.writeFileSync('index.html', code, 'utf-8');
 
-    fs.symlinkSync(path.join('./build', 'index.html'), path.join('build', 'index.php'));
+    fs.symlinkSync('index.html', 'index.php');
   }
   else {
-    const dir = path.join('./build', path.basename(file, '.php'));
+    const dir = path.basename(file, '.php');
 
     fs.ensureDirSync(dir);
     fs.writeFileSync(path.join(dir, 'index.html'), code, 'utf-8');
 
-    fs.symlinkSync(path.join(dir, 'index.html'), path.join('./build', file));
+    fs.symlinkSync(path.join(dir, 'index.html'), file);
   }
 });
+
+process.chdir('..');
 
 // Copying assets
 const ASSETS = [
