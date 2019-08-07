@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <style>
+      html, body {
+        height: 100%;
+        width: 100%;
+      }
+
+      li {
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{{title}}</h1>
+    {{#palettes}}
+      <div>
+        <h2>For {{count}} colors:</h2>
+        <ul>
+          {{#palette}}
+            <li>{{color}}<div style="background-color: {{color}}; width: 200px;">&nbsp;</div></li>
+          {{/palette}}
+        </ul>
+      </div>
+    {{/palettes}}
+  </body>
+</html>

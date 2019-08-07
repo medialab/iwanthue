@@ -14,6 +14,7 @@
     "url": "git+https://github.com/medialab/iwanthue.git"
   },
   "files": [
+    "precomputed",
     "index.js",
     "rng.js"
   ],
@@ -41,6 +42,7 @@
     "@yomguithereal/eslint-config": "^4.0.0",
     "eslint": "^6.1.0",
     "fs-extra": "^8.1.0",
+    "handlebars": "^4.1.2",
     "lodash": "^4.17.15",
     "mocha": "^6.2.0"
   },
