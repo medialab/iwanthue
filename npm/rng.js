@@ -9,7 +9,14 @@
  * http://www.firstpr.com.au/dsp/rand31/
  *
  */
+function randomInteger(a, b) {
+  return a + Math.floor(Math.random() * (b - a + 1));
+}
+
 function Random(seed) {
+  if (!seed)
+    seed = randomInteger(0, Math.pow(2, 31) - 1);
+
   this.seed = seed % 2147483647;
 
   if (this.seed <= 0)
