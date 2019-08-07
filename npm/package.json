@@ -1,0 +1,53 @@
+{
+  "name": "iwanthue",
+  "version": "1.0.0",
+  "description": "Colors for data scientists. Generate and refine palettes of optimally distinct colors.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint **/*.js",
+    "prepublish": "npm run lint && npm test",
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/medialab/iwanthue.git"
+  },
+  "files": [
+    "index.js",
+    "rng.js"
+  ],
+  "keywords": [
+    "colors",
+    "palette"
+  ],
+  "contributors": [
+    {
+      "name": "Mathieu Jacomy",
+      "url": "http://github.com/jacomyma"
+    },
+    {
+      "name": "Guillaume Plique",
+      "url": "http://github.com/Yomguithereal"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/medialab/iwanthue/issues"
+  },
+  "homepage": "https://github.com/medialab/iwanthue#readme",
+  "devDependencies": {
+    "@yomguithereal/eslint-config": "^4.0.0",
+    "eslint": "^6.1.0",
+    "lodash": "^4.17.15",
+    "mocha": "^6.2.0"
+  },
+  "eslintConfig": {
+    "extends": "@yomguithereal/eslint-config",
+    "parserOptions": {
+      "ecmaVersion": 6
+    },
+    "globals": {
+      "Set": true
+    }
+  }
+}
