@@ -23,6 +23,8 @@ describe('iwanthue', function() {
   });
 
   it('should return suitable palettes.', function() {
-    iwanthue(5);
+    var palette = iwanthue(5, {seed: 123});
+
+    assert.deepEqual(palette, ['#cbc2af', '#4d7683', '#ebf65b', '#976ecf', '#7ad13b']);
   });
 });

@@ -5,6 +5,7 @@
  * Exporting the main utilities of the library.
  */
 var Random = require('./rng.js');
+var distances = require('./distances.js');
 
 /**
  * Constants.
@@ -14,17 +15,19 @@ var DEFAULT_SETTINGS = {
   clustering: 'k-means',
   quality: 50,
   ultraPrecision: false,
-  distance: 'colorblind',
+  distance: 'euclidean',
   seed: null
 };
 
 var VALID_CLUSTERINGS = new Set(['force-vector', 'k-means']);
 
 var VALID_DISTANCES = new Set([
-  'colorblind',
   'euclidean',
   'cmc',
-  'compromise'
+  'compromise',
+  'protanope',
+  'deuteranope',
+  'tritanope'
 ]);
 
 var LAB_CONSTANTS = {
@@ -122,6 +125,7 @@ function validateRgb(rgb) {
   return r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255;
 }
 
+// NOTE: this function has complexity O(∞).
 function sampleLabColors(rng, count, colorFilter) {
   var colors = new Array(count),
       lab,
@@ -146,6 +150,102 @@ function sampleLabColors(rng, count, colorFilter) {
   return colors;
 }
 
+var REPULSION = 100;
+var SPEED = 100;
+
+function forceVector(rng, colors, settings) {
+  var vectors = new Array(colors.length);
+  var steps = settings.quality * 20;
+  var distance = distances[settings.distance];
+
+  var i, j, l = colors.length;
+
+  var A, B;
+
+  var d, dl, da, db, force, candidateLab, color, ratio, displacement, rgb;
+
+  while (steps-- > 0) {
+
+    // Initializing vectors
+    for (i = 0; i < l; i++)
+      vectors[i] = {dl: 0, da: 0, db: 0};
+
+    // Computing force
+    for (i = 0; i < l; i++) {
+      A = colors[i];
+
+      for (j = 0; j < i; j++) {
+        B = colors[j];
+
+        // Repulsion
+        d = distance(A, B);
+
+        if (d > 0) {
+          dl = A[0] - B[0];
+          da = A[1] - B[1];
+          db = A[2] - B[2];
+
+          force = REPULSION / Math.pow(d, 2);
+
+          vectors[i].dl += (dl * force) / d;
+          vectors[i].da += (da * force) / d;
+          vectors[i].db += (db * force) / d;
+
+          vectors[j].dl -= (dl * force) / d;
+          vectors[j].da -= (da * force) / d;
+          vectors[j].db -= (db * force) / d;
+        }
+        else {
+
+          // Jitter
+          vectors[j].dl += 2 - 4 * rng()
+          vectors[j].da += 2 - 4 * rng()
+          vectors[j].db += 2 - 4 * rng()
+        }
+      }
+    }
+
+    // Applying force
+    for (i = 0; i < l; i++) {
+      color = colors[i];
+      displacement = SPEED * Math.sqrt(
+        Math.pow(vectors[i].dl, 2) +
+        Math.pow(vectors[i].da, 2) +
+        Math.pow(vectors[i].db, 2)
+      );
+
+      if (displacement > 0) {
+        ratio = (SPEED * Math.min(0.1, displacement)) / displacement;
+        candidateLab = [
+          color[0] + vectors[i].dl * ratio,
+          color[1] + vectors[i].da * ratio,
+          color[2] + vectors[i].db * ratio
+        ];
+
+        rgb = labToRgb(candidateLab);
+
+        if (validateRgb(rgb) && (!settings.colorFilter || settings.colorFilter(rgb)))
+          colors[i] = candidateLab;
+      }
+    }
+  }
+}
+
+function hexPad(x) {
+  return ('0' + x.toString(16)).slice(-2);
+}
+
+function labToRgbHex(lab) {
+  var rgb = labToRgb(lab);
+
+  return (
+    '#' +
+    hexPad(rgb[0]) +
+    hexPad(rgb[1]) +
+    hexPad(rgb[2])
+  );
+}
+
 /**
  * Function generating a iwanthue palette.
  *
@@ -166,11 +266,15 @@ module.exports = function generatePalette(count, settings) {
   settings = resolveAndValidateSettings(settings);
 
   var random = new Random(settings.seed);
+
   var rng = function() {
     return random.nextFloat();
   };
 
   var colors = sampleLabColors(rng, count, settings.colorFilter);
 
-  console.log(colors);
+  if (settings.clustering === 'force-vector')
+    forceVector(rng, colors, settings);
+
+  return colors.map(labToRgbHex);
 };
