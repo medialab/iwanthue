@@ -50,12 +50,44 @@ function templateHtml(title, palettes) {
 
 fs.ensureDirSync(PRECOMPUTED_PATH);
 
-var forceVectorPalettes = COUNTS.map(count => {
-  return iwanthue(count, {
-    seed: SEED,
-    clustering: 'force-vector'
+var FILES = [
+  {
+    name: 'force-vector',
+    title: 'Precomputed Force Vector Palettes',
+    settings: {
+      clustering: 'force-vector'
+    }
+  },
+  {
+    name: 'index',
+    title: 'Precomputed K-Means Palettes',
+    settings: {
+      clustering: 'k-means'
+    }
+  },
+  {
+    name: 'k-means',
+    title: 'Precomputed K-Means Palettes',
+    settings: {
+      clustering: 'k-means'
+    }
+  }
+];
+
+FILES.forEach(file => {
+  var palettes = COUNTS.map(count => {
+    var settings = Object.assign({}, {seed: SEED}, file.settings);
+
+    return iwanthue(count, settings);
   });
+
+  fs.writeFileSync(
+    path.join(PRECOMPUTED_PATH, file.name + '.js'),
+    templateModule(palettes)
+  );
+  fs.writeFileSync(
+    path.join(PRECOMPUTED_PATH, file.name + '.html'),
+    templateHtml(file.title, palettes)
+  );
 });
 
-fs.writeFileSync(path.join(PRECOMPUTED_PATH, 'force-vector.js'), templateModule(forceVectorPalettes));
-fs.writeFileSync(path.join(PRECOMPUTED_PATH, 'force-vector.html'), templateHtml('Force Vector Palettes', forceVectorPalettes));

@@ -114,6 +114,7 @@ function labToRgb(lab) {
   var g = xyzToRgb(-0.969266 * x + 1.8760108 * y + 0.041556 * z);
   var b = xyzToRgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z);
 
+  // r, g or b can be -0, beware...
   return [r, g, b];
 }
 
@@ -142,7 +143,7 @@ function sampleLabColors(rng, count, colorFilter) {
 
       rgb = labToRgb(lab);
 
-    } while (!validateRgb(rgb) && (!colorFilter || !colorFilter(rgb)));
+    } while (!validateRgb(rgb) || (colorFilter && !colorFilter(rgb)));
 
     colors[i] = lab;
   }
@@ -231,6 +232,158 @@ function forceVector(rng, colors, settings) {
   }
 }
 
+function kMeans(colors, settings) {
+  var colorSamples = [];
+  var samplesClosest = [];
+
+  var distance = distances[settings.distance];
+
+  var l, a, b;
+
+  var lab, rgb;
+
+  var linc = 5,
+      ainc = 10,
+      binc = 10;
+
+  if (settings.ultraPrecision) {
+    linc = 1;
+    ainc = 5;
+    binc = 5;
+  }
+
+  for (l = 0; l <= 100; l += linc) {
+    for (a = -100; a <= 100; a += ainc) {
+      for (b = -100; b <= 100; b += binc) {
+        lab = [l, a, b];
+        rgb = labToRgb(lab);
+
+        if (
+          !validateRgb(rgb) ||
+          (settings.colorFilter && settings.colorFilter(rgb))
+        )
+          continue;
+
+        colorSamples.push(lab);
+        samplesClosest.push(null);
+      }
+    }
+  }
+
+  // Steps
+  var steps = settings.quality;
+
+  var i, j;
+
+  var A, B;
+
+  var li = colorSamples.length,
+      lj = colors.length;
+
+
+  var d, minDistance, freeColorSamples, count, candidate, closest;
+
+  while (steps-- > 0) {
+
+    // Finding closest color
+    for (i = 0; i < li; i++) {
+      B = colorSamples[i];
+      minDistance = Infinity;
+
+      for (j = 0; j < lj; j++) {
+        A = colors[j];
+
+        d = distance(A, B);
+
+        if (d < minDistance) {
+          minDistance = d;
+          samplesClosest[i] = j;
+        }
+      }
+    }
+
+    freeColorSamples = colorSamples.slice();
+
+    for (j = 0; j < lj; j++) {
+      count = 0;
+      candidate = [0, 0, 0];
+
+      for (i = 0; i < li; i++) {
+        if (samplesClosest[i] === j) {
+          count++;
+          candidate[0] += colorSamples[i][0];
+          candidate[1] += colorSamples[i][1];
+          candidate[2] += colorSamples[i][2];
+        }
+      }
+
+      if (count !== 0) {
+        candidate[0] /= count;
+        candidate[1] /= count;
+        candidate[2] /= count;
+
+        rgb = labToRgb(candidate);
+
+        if (
+          validateRgb(rgb) &&
+          (!settings.colorFilter || settings.colorFilter(rgb))
+        ) {
+          colors[j] = candidate;
+        }
+        else {
+          // The candidate is out of the boundaries of our color space or unfound
+
+          if (freeColorSamples.length > 0) {
+
+            // We just search for the closest free color
+            minDistance = Infinity;
+            closest = -1;
+
+            for (i = 0; i < freeColorSamples.length; i++) {
+              d = distance(freeColorSamples[i], candidate);
+
+              if (d < minDistance) {
+                minDistance = d;
+                closest = i;
+              }
+            }
+
+            colors[j] = colorSamples[closest];
+          }
+          else {
+
+            // Then we just search for the closest color
+            minDistance = Infinity;
+            closest = -1;
+
+            for (i = 0; i < colorSamples.length; i++) {
+              d = distance(colorSamples[i], candidate);
+
+              if (d < minDistance) {
+                minDistance = d;
+                closest = i;
+              }
+            }
+
+            colors[j] = colorSamples[closest];
+          }
+
+          // Cleaning up free samples
+          freeColorSamples = freeColorSamples.filter(function(color) {
+            return (
+              color[0] !== colors[j][0] ||
+              color[1] !== colors[j][1] ||
+              color[2] !== colors[j][2]
+            )
+          });
+        }
+      }
+    }
+  }
+
+  return colors;
+}
+
 function hexPad(x) {
   return ('0' + x.toString(16)).slice(-2);
 }
@@ -275,6 +428,8 @@ module.exports = function generatePalette(count, settings) {
 
   if (settings.clustering === 'force-vector')
     forceVector(rng, colors, settings);
+  else
+    kMeans(colors, settings);
 
   return colors.map(labToRgbHex);
 };
