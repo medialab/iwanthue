@@ -15,6 +15,7 @@
   },
   "files": [
     "precomputed",
+    "helpers.js",
     "index.js",
     "rng.js"
   ],
