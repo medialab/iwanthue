@@ -71,6 +71,14 @@ var FILES = [
     settings: {
       clustering: 'k-means'
     }
+  },
+  {
+    name: 'ultra-k-means',
+    title: 'Precomputed K-Means Palettes With Ultra Precision',
+    settings: {
+      clustering: 'k-means',
+      ulraPrecision: true
+    }
   }
 ];
 
