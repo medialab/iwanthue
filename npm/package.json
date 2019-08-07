@@ -41,6 +41,7 @@
   "homepage": "https://github.com/medialab/iwanthue#readme",
   "devDependencies": {
     "@yomguithereal/eslint-config": "^4.0.0",
+    "chai": "^4.2.0",
     "eslint": "^6.1.0",
     "fs-extra": "^8.1.0",
     "handlebars": "^4.1.2",

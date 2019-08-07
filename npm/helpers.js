@@ -26,6 +26,36 @@ function xyzToRgb(r) {
   );
 }
 
+function rgbToXyzHelper(r) {
+  if ((r /= 255) <= 0.04045)
+    return r / 12.92;
+
+  return Math.pow((r + 0.055) / 1.055, 2.4);
+}
+
+function xyzToLab(t) {
+  if (t > LAB_CONSTANTS.t3)
+    return Math.pow(t, 1 / 3);
+
+    return t / LAB_CONSTANTS.t2 + LAB_CONSTANTS.t0;
+}
+
+function rgbToXyz(rgb) {
+  var r = rgb[0],
+      g = rgb[1],
+      b = rgb[2];
+
+  r = rgbToXyzHelper(r);
+  g = rgbToXyzHelper(g);
+  b = rgbToXyzHelper(b);
+
+  var x = xyzToLab((0.4124564 * r + 0.3575761 * g + 0.1804375 * b) / LAB_CONSTANTS.Xn),
+      y = xyzToLab((0.2126729 * r + 0.7151522 * g + 0.0721750 * b) / LAB_CONSTANTS.Yn),
+      z = xyzToLab((0.0193339 * r + 0.1191920 * g + 0.9503041 * b) / LAB_CONSTANTS.Zn);
+
+  return [x, y, z];
+}
+
 function labToXyz(t) {
   return t > LAB_CONSTANTS.t1 ?
     t * t * t :
@@ -51,6 +81,18 @@ function labToRgb(lab) {
 
   // r, g or b can be -0, beware...
   return [r, g, b];
+}
+
+function rgbToLab(rgb) {
+  var xyz = rgbToXyz(rgb);
+
+  var x = xyz[0],
+      y = xyz[1],
+      z = xyz[2];
+
+  var l = 116 * y - 16;
+
+  return [l < 0 ? 0 : l, 500 * (x - y), 200 * (y - z)];
 }
 
 function validateRgb(rgb) {
@@ -79,3 +121,4 @@ function labToRgbHex(lab) {
 exports.validateRgb = validateRgb;
 exports.labToRgb = labToRgb;
 exports.labToRgbHex = labToRgbHex;
+exports.rgbToLab = rgbToLab;
