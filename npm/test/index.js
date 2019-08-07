@@ -50,5 +50,9 @@ describe('iwanthue', function() {
       '#7cafc2',
       '#7d3e33']
     );
+
+    palette = iwanthue(5, {seed: 123, clustering: 'k-means', ultraPrecision: true});
+
+    assert.deepEqual(palette, ['#b1494f', '#707f8a', '#b99650', '#8f4cb5', '#85c967']);
   });
 });

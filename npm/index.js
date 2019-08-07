@@ -112,7 +112,7 @@ function labToRgb(lab) {
 
   var r = xyzToRgb(3.2404542 * x - 1.5371385 * y - 0.4985314 * z); // D65 -> sRGB
   var g = xyzToRgb(-0.969266 * x + 1.8760108 * y + 0.041556 * z);
-  var b = xyzToRgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z);
+  b = xyzToRgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z);
 
   // r, g or b can be -0, beware...
   return [r, g, b];
@@ -199,9 +199,9 @@ function forceVector(rng, colors, settings) {
         else {
 
           // Jitter
-          vectors[j].dl += 2 - 4 * rng()
-          vectors[j].da += 2 - 4 * rng()
-          vectors[j].db += 2 - 4 * rng()
+          vectors[j].dl += 2 - 4 * rng();
+          vectors[j].da += 2 - 4 * rng();
+          vectors[j].db += 2 - 4 * rng();
         }
       }
     }
@@ -369,6 +369,7 @@ function kMeans(colors, settings) {
           }
 
           // Cleaning up free samples
+          /* eslint-disable */
           freeColorSamples = freeColorSamples.filter(function(color) {
             return (
               color[0] !== colors[j][0] ||
@@ -376,6 +377,7 @@ function kMeans(colors, settings) {
               color[2] !== colors[j][2]
             )
           });
+          /* eslint-enable */
         }
       }
     }
