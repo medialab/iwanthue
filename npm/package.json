@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint **/*.js",
+    "precompute": "node scripts/precompute.js",
     "prepublish": "npm run lint && npm test",
     "test": "mocha test"
   },
@@ -39,6 +40,7 @@
   "devDependencies": {
     "@yomguithereal/eslint-config": "^4.0.0",
     "eslint": "^6.1.0",
+    "fs-extra": "^8.1.0",
     "lodash": "^4.17.15",
     "mocha": "^6.2.0"
   },
