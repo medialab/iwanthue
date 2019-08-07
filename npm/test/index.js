@@ -14,11 +14,15 @@ describe('iwanthue', function() {
       [5, {quality: {hello: NaN}}],
       [5, {ultraPrecision: 43}],
       [5, {distance: 'manhattan'}],
-      [5, {seed: 'test'}]
+      [5, {seed: undefined}]
     ];
 
     tests.forEach(args => {
       assert.throws(() => iwanthue.apply(null, args), /iwanthue/);
     });
+  });
+
+  it('should return suitable palettes.', function() {
+    iwanthue(5);
   });
 });
