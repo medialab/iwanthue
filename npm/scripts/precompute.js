@@ -90,7 +90,7 @@ var FILES = [
     settings: {
       clustering: 'force-vector',
       distance: 'compromise',
-      colorSpacePreset: 'colorblind'
+      colorSpace: 'colorblind'
     }
   },
   {
@@ -99,7 +99,7 @@ var FILES = [
     settings: {
       clustering: 'k-means',
       distance: 'compromise',
-      colorSpacePreset: 'colorblind'
+      colorSpace: 'colorblind'
     }
   }
 ];
@@ -113,7 +113,7 @@ for (var name in presets) {
     title: 'Precomputed K-Means Palettes With the `' + name + '` Preset',
     settings: {
       clustering: 'k-means',
-      colorSpacePreset: name
+      colorSpace: name
     }
   });
 
@@ -122,7 +122,7 @@ for (var name in presets) {
     title: 'Precomputed Force Vector Palettes With the `' + name + '` Preset',
     settings: {
       clustering: 'force-vector',
-      colorSpacePreset: name
+      colorSpace: name
     }
   });
 }

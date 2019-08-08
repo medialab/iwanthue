@@ -19,7 +19,7 @@ var labToHcl = helpers.labToHcl;
  */
 var DEFAULT_SETTINGS = {
   colorFilter: null,
-  colorSpacePreset: 'default',
+  colorSpace: 'default',
   clustering: 'k-means',
   quality: 50,
   ultraPrecision: false,
@@ -79,24 +79,24 @@ function resolveAndValidateSettings(userSettings) {
   // Building color filter from preset?
   if (!settings.colorFilter) {
     if (
-      settings.colorSpacePreset &&
-      settings.colorSpacePreset !== 'all'
+      settings.colorSpace &&
+      settings.colorSpace !== 'all'
     ) {
 
       var preset;
 
-      if (typeof settings.colorSpacePreset === 'string') {
-        if (!VALID_PRESETS.has(settings.colorSpacePreset))
-          throw new Error('iwanthue: unknown `colorSpacePreset` "' + settings.colorSpacePreset + '".');
+      if (typeof settings.colorSpace === 'string') {
+        if (!VALID_PRESETS.has(settings.colorSpace))
+          throw new Error('iwanthue: unknown `colorSpace` "' + settings.colorSpace + '".');
 
-        preset = presets[settings.colorSpacePreset];
+        preset = presets[settings.colorSpace];
       }
-      else if (Array.isArray(settings.colorSpacePreset)) {
+      else if (Array.isArray(settings.colorSpace)) {
 
-        if (settings.colorSpacePreset.length !== 6)
-          throw new Error('iwanthue: expecting a `colorSpacePreset` array of length 6 ([hmin, hmax, cmin, cmax, lmin, lmax]).');
+        if (settings.colorSpace.length !== 6)
+          throw new Error('iwanthue: expecting a `colorSpace` array of length 6 ([hmin, hmax, cmin, cmax, lmin, lmax]).');
 
-        preset = settings.colorSpacePreset;
+        preset = settings.colorSpace;
       }
 
       if (preset[0] < preset[1])

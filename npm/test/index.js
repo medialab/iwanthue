@@ -15,7 +15,7 @@ describe('iwanthue', function() {
       [5, {ultraPrecision: 43}],
       [5, {distance: 'manhattan'}],
       [5, {seed: undefined}],
-      [6, {colorSpacePreset: 'tabundeshou'}]
+      [6, {colorSpace: 'tabundeshou'}]
     ];
 
     tests.forEach(args => {
@@ -24,15 +24,15 @@ describe('iwanthue', function() {
   });
 
   it('should return suitable palettes.', function() {
-    var palette = iwanthue(5, {seed: 123, clustering: 'force-vector', colorSpacePreset: null});
+    var palette = iwanthue(5, {seed: 123, clustering: 'force-vector', colorSpace: null});
 
     assert.deepEqual(palette, ['#ffdfd1', '#006172', '#ffff5b', '#933cff', '#00c30c']);
 
-    palette = iwanthue(5, {seed: 123, clustering: 'k-means', colorSpacePreset: null});
+    palette = iwanthue(5, {seed: 123, clustering: 'k-means', colorSpace: null});
 
     assert.deepEqual(palette, ['#b04951', '#717e8a', '#ba9850', '#8d4cb7', '#84c969']);
 
-    palette = iwanthue(15, {seed: 'precomputed', clustering: 'k-means', colorSpacePreset: null});
+    palette = iwanthue(15, {seed: 'precomputed', clustering: 'k-means', colorSpace: null});
 
     assert.deepEqual(palette, [
       '#7a38cf',
@@ -52,15 +52,16 @@ describe('iwanthue', function() {
       '#7d3e33']
     );
 
-    palette = iwanthue(5, {seed: 123, clustering: 'k-means', ultraPrecision: true, colorSpacePreset: null});
+    palette = iwanthue(5, {seed: 123, clustering: 'k-means', ultraPrecision: true, colorSpace: null});
 
     assert.deepEqual(palette, ['#b1494f', '#707f8a', '#b99650', '#8f4cb5', '#85c967']);
   });
 
-  it('should be possible to pass colorSpacePreset as an array.', function() {
+  it('should be possible to pass colorSpace as an array.', function() {
 
-    var palette = iwanthue(5, {seed: 123, colorSpacePreset: [0, 360, 25.59, 55.59, 60.94, 90.94]});
+    var palette = iwanthue(5, {seed: 123, colorSpace: [0, 360, 25.59, 55.59, 60.94, 90.94]});
 
     assert.deepEqual(palette, ['#6ed5b1', '#71b9e7', '#bdc579', '#db9bd3', '#e79d78']);
+
   });
 });
