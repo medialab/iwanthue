@@ -14,7 +14,7 @@
     "url": "git+https://github.com/medialab/iwanthue.git"
   },
   "files": [
-    "precomputed",
+    "precomputed/*.js",
     "helpers.js",
     "index.js",
     "rng.js"
