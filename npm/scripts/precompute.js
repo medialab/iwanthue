@@ -9,8 +9,10 @@ var path = require('path');
 var iwanthue = require('../');
 var range = require('lodash/range');
 var hjs = require('handlebars');
+var presets = require('../presets.js');
 
-var HTML_TEMPLATE = hjs.compile(fs.readFileSync(path.join(__dirname, 'template.handlebars'), 'utf-8'));
+var HTML_TEMPLATE = hjs.compile(fs.readFileSync(path.join(__dirname, 'palettes.handlebars'), 'utf-8'));
+var SUMMARY_TEMPLATE = hjs.compile(fs.readFileSync(path.join(__dirname, 'summary.handlebars'), 'utf-8'));
 
 var MAX_COUNT = 15;
 var COUNTS = range(2, MAX_COUNT + 1);
@@ -102,8 +104,32 @@ var FILES = [
   }
 ];
 
+for (var name in presets) {
+  if (name === 'colorblind' || name === 'default')
+    continue;
+
+  FILES.push({
+    name: 'k-means-' + name,
+    title: 'Precomputed K-Means Palettes With the `' + name + '` Preset',
+    settings: {
+      clustering: 'k-means',
+      colorSpacePreset: name
+    }
+  });
+
+  FILES.push({
+    name: 'force-vector-' + name,
+    title: 'Precomputed Force Vector Palettes With the `' + name + '` Preset',
+    settings: {
+      clustering: 'force-vector',
+      colorSpacePreset: name
+    }
+  });
+}
+
+
 FILES.forEach(file => {
-  console.log('Computing ' + file.name + '...');
+  console.log('Computing ' + file.name + ' palettes...');
 
   var palettes = COUNTS.map(count => {
     var settings = Object.assign({}, {seed: SEED}, file.settings);
@@ -123,3 +149,14 @@ FILES.forEach(file => {
   );
 });
 
+console.log('\n\nFinished computing the following palettes:')
+FILES.forEach(file => {
+  console.log('iwanthue/precomputed/' + file.name);
+});
+
+fs.writeFileSync(
+  path.join(PRECOMPUTED_PATH, 'summary.html'),
+  SUMMARY_TEMPLATE({
+    palettes: FILES.map(file => ({name: file.name}))
+  })
+);

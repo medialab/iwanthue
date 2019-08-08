@@ -7,6 +7,7 @@
 
 // Format is [hmin, hmax, cmin, cmax, lmin, lmax] to save up some space
 var presets = {
+  'all': [0, 360, 0, 100, 0, 100],
   'default': [0, 360, 30, 80, 35, 80],
   'colorblind': [0, 360, 40, 70, 15, 85],
   'fancy-light': [0, 360, 15, 40, 70, 100],

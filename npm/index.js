@@ -88,11 +88,22 @@ function resolveAndValidateSettings(userSettings) {
 
       var preset = presets[settings.colorSpacePreset];
 
+      if (preset[0] < preset[1])
+        settings.colorFilter = function(rgb, lab) {
+          var hcl = labToHcl(lab);
+
+          return (
+            hcl[0] >= preset[0] && hcl[0] <= preset[1] &&
+            hcl[1] >= preset[2] && hcl[1] <= preset[3] &&
+            hcl[2] >= preset[4] && hcl[2] <= preset[5]
+          );
+        };
+      else
       settings.colorFilter = function(rgb, lab) {
         var hcl = labToHcl(lab);
 
         return (
-          hcl[0] >= preset[0] && hcl[0] <= preset[1] &&
+          (hcl[0] >= preset[0] || hcl[0] <= preset[1]) &&
           hcl[1] >= preset[2] && hcl[1] <= preset[3] &&
           hcl[2] >= preset[4] && hcl[2] <= preset[5]
         );
@@ -104,7 +115,7 @@ function resolveAndValidateSettings(userSettings) {
 }
 
 // NOTE: this function has complexity O(∞).
-function sampleLabColors(rng, count, colorFilter) {
+function sampleLabColors(rng, count, validColor) {
   var colors = new Array(count),
       lab,
       rgb;
@@ -120,7 +131,7 @@ function sampleLabColors(rng, count, colorFilter) {
 
       rgb = labToRgb(lab);
 
-    } while (!validateRgb(rgb) || (colorFilter && !colorFilter(rgb, lab)));
+    } while (!validColor(rgb, lab));
 
     colors[i] = lab;
   }
@@ -131,7 +142,7 @@ function sampleLabColors(rng, count, colorFilter) {
 var REPULSION = 100;
 var SPEED = 100;
 
-function forceVector(rng, colors, settings) {
+function forceVector(rng, colors, validColor, settings) {
   var vectors = new Array(colors.length);
   var steps = settings.quality * 20;
 
@@ -204,14 +215,14 @@ function forceVector(rng, colors, settings) {
 
         rgb = labToRgb(candidateLab);
 
-        if (validateRgb(rgb) && (!settings.colorFilter || settings.colorFilter(rgb, candidateLab)))
+        if (validColor(rgb, candidateLab))
           colors[i] = candidateLab;
       }
     }
   }
 }
 
-function kMeans(colors, settings) {
+function kMeans(colors, validColor, settings) {
   var colorSamples = [];
   var samplesClosest = [];
 
@@ -238,10 +249,7 @@ function kMeans(colors, settings) {
         lab = [l, a, b];
         rgb = labToRgb(lab);
 
-        if (
-          !validateRgb(rgb) ||
-          (settings.colorFilter && settings.colorFilter(rgb, lab))
-        )
+        if (!validColor(rgb, lab))
           continue;
 
         colorSamples.push(lab);
@@ -304,10 +312,7 @@ function kMeans(colors, settings) {
 
         rgb = labToRgb(candidate);
 
-        if (
-          validateRgb(rgb) &&
-          (!settings.colorFilter || settings.colorFilter(rgb, candidate))
-        ) {
+        if (validColor(rgb, candidate)) {
           colors[j] = candidate;
         }
         else {
@@ -391,12 +396,28 @@ module.exports = function generatePalette(count, settings) {
     return random.nextFloat();
   };
 
-  var colors = sampleLabColors(rng, count, settings.colorFilter);
+  var validColor = function(rgb, lab) {
+    // if (arguments.length < 2)
+    //   throw new Error('validColor takes both rgb and lab!');
+
+    if (!validateRgb(rgb))
+      return false;
+
+    if (!settings.colorFilter)
+      return true;
+
+    if (!settings.colorFilter(rgb, lab))
+      return false;
+
+    return true;
+  };
+
+  var colors = sampleLabColors(rng, count, validColor);
 
   if (settings.clustering === 'force-vector')
-    forceVector(rng, colors, settings);
+    forceVector(rng, colors, validColor, settings);
   else
-    kMeans(colors, settings);
+    kMeans(colors, validColor, settings);
 
   return colors.map(labToRgbHex);
 };

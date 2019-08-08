@@ -45,6 +45,7 @@ var palette = iwanthue(5, {
 
 * **count** *number*: number of colors in the generated palette.
 * **settings** *?object*: Settings:
+  * **colorSpacePreset** *?string* [`default`]: Color space preset. Check [this](https://github.com/medialab/iwanthue/blob/master/npm/presets.js) file for the full list of preset names, or go to the [website]([iWantHue](http://tools.medialab.sciences-po.fr/iwanthue/)) to try them.
   * **colorFilter** *?function*: Function used to filter suitable colors. Takes a `[r, g, b]` color and the same `[l, a, b]` color as arguments.
   * **clustering** *?string* [`k-means`]: Clustering method to use. Can either be `k-means` or `force-vector`.
   * **quality** *?number* [`50`]: Quality of the clustering: iterations factor for `force-vector`, colorspace sampling for `k-means`.
@@ -76,6 +77,51 @@ var palettes = require('iwanthue/precomputed/force-vector');
 // Colorblind alternatives
 var palettes = require('iwanthue/precomputed/k-means-colorblind');
 var palettes = require('iwanthue/precomputed/force-vector-colorblind');
+```
+
+Here is the full list of precomputed palettes:
+
+```
+iwanthue/precomputed/force-vector
+iwanthue/precomputed/index
+iwanthue/precomputed/k-means
+iwanthue/precomputed/ultra-k-means
+iwanthue/precomputed/force-vector-colorblind
+iwanthue/precomputed/k-means-colorblind
+iwanthue/precomputed/k-means-all
+iwanthue/precomputed/force-vector-all
+iwanthue/precomputed/k-means-fancy-light
+iwanthue/precomputed/force-vector-fancy-light
+iwanthue/precomputed/k-means-fancy-dark
+iwanthue/precomputed/force-vector-fancy-dark
+iwanthue/precomputed/k-means-shades
+iwanthue/precomputed/force-vector-shades
+iwanthue/precomputed/k-means-tarnish
+iwanthue/precomputed/force-vector-tarnish
+iwanthue/precomputed/k-means-pastel
+iwanthue/precomputed/force-vector-pastel
+iwanthue/precomputed/k-means-pimp
+iwanthue/precomputed/force-vector-pimp
+iwanthue/precomputed/k-means-intense
+iwanthue/precomputed/force-vector-intense
+iwanthue/precomputed/k-means-fluo
+iwanthue/precomputed/force-vector-fluo
+iwanthue/precomputed/k-means-red-roses
+iwanthue/precomputed/force-vector-red-roses
+iwanthue/precomputed/k-means-ochre-sand
+iwanthue/precomputed/force-vector-ochre-sand
+iwanthue/precomputed/k-means-yellow-lime
+iwanthue/precomputed/force-vector-yellow-lime
+iwanthue/precomputed/k-means-green-mint
+iwanthue/precomputed/force-vector-green-mint
+iwanthue/precomputed/k-means-ice-cube
+iwanthue/precomputed/force-vector-ice-cube
+iwanthue/precomputed/k-means-blue-ocean
+iwanthue/precomputed/force-vector-blue-ocean
+iwanthue/precomputed/k-means-indigo-night
+iwanthue/precomputed/force-vector-indigo-night
+iwanthue/precomputed/k-means-purple-wine
+iwanthue/precomputed/force-vector-purple-wine
 ```
 
 ## More info
