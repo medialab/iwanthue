@@ -107,7 +107,7 @@ function forceVector(rng, colors, settings) {
   var steps = settings.quality * 20;
 
   var distances = new CachedDistances();
-  var distance = distances[settings.distance].bind(distances);
+  var distance = distances.get(settings.distance);
 
   var i, j, l = colors.length;
 
@@ -187,7 +187,7 @@ function kMeans(colors, settings) {
   var samplesClosest = [];
 
   var distances = new CachedDistances();
-  var distance = distances[settings.distance].bind(distances);
+  var distance = distances.get(settings.distance);
 
   var l, a, b;
 

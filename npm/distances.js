@@ -36,6 +36,42 @@ function euclidean(lab1, lab2) {
   );
 }
 
+function cmc(l, c, lab1, lab2) {
+  var L1 = lab1[0];
+  var L2 = lab2[0];
+  var a1 = lab1[1];
+  var a2 = lab2[1];
+  var b1 = lab1[2];
+  var b2 = lab2[2];
+  var C1 = Math.sqrt(Math.pow(a1, 2) + Math.pow(b1, 2));
+  var C2 = Math.sqrt(Math.pow(a2, 2) + Math.pow(b2, 2));
+  var deltaC = C1 - C2;
+  var deltaL = L1 - L2;
+  var deltaa = a1 - a2;
+  var deltab = b1 - b2;
+  var deltaH = Math.sqrt(
+    Math.pow(deltaa, 2) + Math.pow(deltab, 2) + Math.pow(deltaC, 2)
+  );
+  var H1 = Math.atan2(b1, a1) * (180 / Math.PI);
+  while (H1 < 0) {
+    H1 += 360;
+  }
+  var F = Math.sqrt(Math.pow(C1, 4) / (Math.pow(C1, 4) + 1900));
+  var T =
+    H1 >= 164 && H1 <= 345
+      ? 0.56 + Math.abs(0.2 * Math.cos(H1 + 168))
+      : 0.36 + Math.abs(0.4 * Math.cos(H1 + 35));
+  var S_L = lab1[0] < 16 ? 0.511 : (0.040975 * L1) / (1 + 0.01765 * L1);
+  var S_C = (0.0638 * C1) / (1 + 0.0131 * C1) + 0.638;
+  var S_H = S_C * (F * T + 1 - F);
+  var result = Math.sqrt(
+    Math.pow(deltaL / (l * S_L), 2) +
+      Math.pow(deltaC / (c * S_C), 2) +
+      Math.pow(deltaH / S_H, 2)
+  );
+  return result;
+}
+
 function CachedDistances() {
   this.cache = {};
 }
@@ -126,5 +162,46 @@ CachedDistances.prototype.simulate = function(lab, type, amount) {
 };
 
 CachedDistances.prototype.euclidean = euclidean;
+CachedDistances.prototype.cmc = cmc.bind(null, 2, 1);
+
+CachedDistances.prototype.colorblind = function(type, lab1, lab2) {
+  lab1 = this.simulate(lab1, type);
+  lab2 = this.simulate(lab2, type);
+
+  return this.cmc(lab1, lab2);
+};
+
+Object.keys(CONFUSION_LINES).forEach(function(type) {
+  CachedDistances.prototype[type] = function(lab1, lab2) {
+    return this.colorblind(type, lab1, lab2);
+  };
+});
+
+var COMPROMISE_COUNT = 1000 + 100 + 500 + 1;
+
+CachedDistances.prototype.compromise = function(lab1, lab2) {
+  var total = 0;
+
+  var d = this.cmc(lab1, lab2);
+  total += d * 1000;
+
+  d = this.colorblind('protanope', lab1, lab2);
+  total += d * 100;
+
+  d = this.colorblind('deuteranope', lab1, lab2);
+  total += d * 500;
+
+  d = this.colorblind('tritanope', lab1, lab2);
+  total += d * 1;
+
+  return total / COMPROMISE_COUNT;
+};
+
+CachedDistances.prototype.get = function(name) {
+  if (name in CONFUSION_LINES)
+    return this.colorblind.bind(this, name);
+
+  return this[name].bind(this);
+};
 
 module.exports = CachedDistances;
