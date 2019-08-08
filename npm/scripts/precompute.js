@@ -79,6 +79,22 @@ var FILES = [
       clustering: 'k-means',
       ulraPrecision: true
     }
+  },
+  {
+    name: 'force-vector-colorblind',
+    title: 'Precomputed Colorblind Force Vector Palettes',
+    settings: {
+      clustering: 'force-vector',
+      distance: 'compromise'
+    }
+  },
+  {
+    name: 'k-means-colorblind',
+    title: 'Precomputed Colorblind K-Means Palettes',
+    settings: {
+      clustering: 'k-means',
+      distance: 'compromise'
+    }
   }
 ];
 
@@ -89,12 +105,14 @@ FILES.forEach(file => {
     return iwanthue(count, settings);
   });
 
+  var p = file.path || '';
+
   fs.writeFileSync(
-    path.join(PRECOMPUTED_PATH, file.name + '.js'),
+    path.join(PRECOMPUTED_PATH, p, file.name + '.js'),
     templateModule(palettes)
   );
   fs.writeFileSync(
-    path.join(PRECOMPUTED_PATH, file.name + '.html'),
+    path.join(PRECOMPUTED_PATH, p, file.name + '.html'),
     templateHtml(file.title, palettes)
   );
 });
