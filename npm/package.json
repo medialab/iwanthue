@@ -16,6 +16,7 @@
   },
   "files": [
     "precomputed/*.js",
+    "distances.js",
     "helpers.js",
     "index.js",
     "presets.js",
