@@ -18,6 +18,7 @@
     "precomputed/*.js",
     "helpers.js",
     "index.js",
+    "presets.js",
     "rng.js"
   ],
   "keywords": [

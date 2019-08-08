@@ -14,7 +14,8 @@ describe('iwanthue', function() {
       [5, {quality: {hello: NaN}}],
       [5, {ultraPrecision: 43}],
       [5, {distance: 'manhattan'}],
-      [5, {seed: undefined}]
+      [5, {seed: undefined}],
+      [6, {colorSpacePreset: 'tabundeshou'}]
     ];
 
     tests.forEach(args => {

@@ -87,7 +87,8 @@ var FILES = [
     title: 'Precomputed Colorblind Force Vector Palettes',
     settings: {
       clustering: 'force-vector',
-      distance: 'compromise'
+      distance: 'compromise',
+      colorSpacePreset: 'colorblind'
     }
   },
   {
@@ -95,12 +96,15 @@ var FILES = [
     title: 'Precomputed Colorblind K-Means Palettes',
     settings: {
       clustering: 'k-means',
-      distance: 'compromise'
+      distance: 'compromise',
+      colorSpacePreset: 'colorblind'
     }
   }
 ];
 
 FILES.forEach(file => {
+  console.log('Computing ' + file.name + '...');
+
   var palettes = COUNTS.map(count => {
     var settings = Object.assign({}, {seed: SEED}, file.settings);
 

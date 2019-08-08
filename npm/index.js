@@ -7,16 +7,19 @@
 var Random = require('./rng.js');
 var CachedDistances = require('./distances.js');
 var helpers = require('./helpers.js');
+var presets = require('./presets.js');
 
 var validateRgb = helpers.validateRgb;
 var labToRgb = helpers.labToRgb;
 var labToRgbHex = helpers.labToRgbHex;
+var labToHcl = helpers.labToHcl;
 
 /**
  * Constants.
  */
 var DEFAULT_SETTINGS = {
   colorFilter: null,
+  colorSpacePreset: 'default',
   clustering: 'k-means',
   quality: 50,
   ultraPrecision: false,
@@ -34,6 +37,8 @@ var VALID_DISTANCES = new Set([
   'deuteranope',
   'tritanope'
 ]);
+
+var VALID_PRESETS = new Set(Object.keys(presets));
 
 /**
  * Helpers.
@@ -70,6 +75,30 @@ function resolveAndValidateSettings(userSettings) {
 
   if (settings.seed !== null && typeof settings.seed !== 'number')
     throw new Error('iwanthue: invalid `seed`. Expecting an integer or a string.');
+
+  // Building color filter from preset?
+  if (!settings.colorFilter) {
+    if (
+      typeof settings.colorSpacePreset === 'string' &&
+      settings.colorSpacePreset !== 'all'
+    ) {
+
+      if (!VALID_PRESETS.has(settings.colorSpacePreset))
+        throw new Error('iwanthue: unknown `colorSpacePreset` "' + settings.colorSpacePreset + '".');
+
+      var preset = presets[settings.colorSpacePreset];
+
+      settings.colorFilter = function(rgb, lab) {
+        var hcl = labToHcl(lab);
+
+        return (
+          hcl[0] >= preset[0] && hcl[0] <= preset[1] &&
+          hcl[1] >= preset[2] && hcl[1] <= preset[3] &&
+          hcl[2] >= preset[4] && hcl[2] <= preset[5]
+        );
+      };
+    }
+  }
 
   return settings;
 }
