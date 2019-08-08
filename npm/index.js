@@ -91,7 +91,7 @@ function sampleLabColors(rng, count, colorFilter) {
 
       rgb = labToRgb(lab);
 
-    } while (!validateRgb(rgb) || (colorFilter && !colorFilter(rgb)));
+    } while (!validateRgb(rgb) || (colorFilter && !colorFilter(rgb, lab)));
 
     colors[i] = lab;
   }
@@ -175,7 +175,7 @@ function forceVector(rng, colors, settings) {
 
         rgb = labToRgb(candidateLab);
 
-        if (validateRgb(rgb) && (!settings.colorFilter || settings.colorFilter(rgb)))
+        if (validateRgb(rgb) && (!settings.colorFilter || settings.colorFilter(rgb, candidateLab)))
           colors[i] = candidateLab;
       }
     }
@@ -211,7 +211,7 @@ function kMeans(colors, settings) {
 
         if (
           !validateRgb(rgb) ||
-          (settings.colorFilter && settings.colorFilter(rgb))
+          (settings.colorFilter && settings.colorFilter(rgb, lab))
         )
           continue;
 
@@ -277,7 +277,7 @@ function kMeans(colors, settings) {
 
         if (
           validateRgb(rgb) &&
-          (!settings.colorFilter || settings.colorFilter(rgb))
+          (!settings.colorFilter || settings.colorFilter(rgb, candidate))
         ) {
           colors[j] = candidate;
         }

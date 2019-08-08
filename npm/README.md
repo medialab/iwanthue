@@ -45,7 +45,7 @@ var palette = iwanthue(5, {
 
 * **count** *number*: number of colors in the generated palette.
 * **settings** *?object*: Settings:
-  * **colorFilter** *?function*: Function used to filter suitable colors. Takes a `[r, g, b]` color as sole argument.
+  * **colorFilter** *?function*: Function used to filter suitable colors. Takes a `[r, g, b]` color and the same `[l, a, b]` color as arguments.
   * **clustering** *?string* [`k-means`]: Clustering method to use. Can either be `k-means` or `force-vector`.
   * **quality** *?number* [`50`]: Quality of the clustering: iterations factor for `force-vector`, colorspace sampling for `k-means`.
   * **ultraPrecision** *?boolean* [`false`]: Ultra precision for `k-means` colorspace sampling?
