@@ -17,7 +17,7 @@ var initVisualPalette = function(noTransition){
 		locks.push(false)
 	}
 	$('#palette_visual').html(html);
-	
+
 	$('#palette_hex_container').hide();
 	$('#palette_visual_sort').hide();
 }
@@ -84,7 +84,7 @@ var drawPalette = function(colors, _matchings){
 		$('#palette_color_'+i).css('background-color', colors[i].hex());
 		$('#palette_color_'+i).attr('title', colors[i].hex());
 		$('.palette_color').addClass('colored');
-		
+
 		if(locks[i]){
 			$('#palette_item_lock_icon_'+i).css("opacity",100)
 		} else {
@@ -127,7 +127,7 @@ var drawPalette = function(colors, _matchings){
 			s.render();
 		});
 	}
-	
+
 	// Showing the result
 	$('#resultColors_container').show()
 	$('#palette_visual_sort').show();
@@ -195,7 +195,7 @@ var drawPalette = function(colors, _matchings){
 			).replace(/\],/gi, '],<br/>')
 		)
 	)
-	
+
 	$('#resultColors_labjson').html('')
 	$('#resultColors_labjson').append(
 		$('<pre/>').html(
@@ -256,6 +256,8 @@ var drawPalette = function(colors, _matchings){
 			+"\ncolors = paletteGenerator.diffSort(colors, '"+(dType.toString())+"');"
 		).after(
 			$('<div/>').html('<strong>Requirements:</strong> This code snippet needs <a href="https://github.com/gka/chroma.js">Chroma.js</a> and our own <a href="js/libs/chroma.palette-gen.js">Palette-Gen</a> lib.')
+		).after(
+			$('<div/>').html('<strong>Note:</strong> You can also install the npm package by running <code>npm install iwanthue</code> (docs <a href="https://www.npmjs.com/package/iwanthue#usage">here</a>).')
 		)
 	)
 	prettyPrint()
@@ -271,9 +273,9 @@ var resetPaletteColors = function(){
 
 var reduceToPalette = function(){
 	$('#reduceToPalette').html('<i class="icon-refresh"></i> Reroll palette');
-	
+
 	initVisualPalette();
-	
+
 	// Variables
 	var old_palette = false
 		,hmin = +$('#hmin').val()
@@ -302,18 +304,18 @@ var reduceToPalette = function(){
 	var ccondition_txt = "hcl[1]>="+cmin+" && hcl[1]<="+cmax;
 	var lcondition = function(hcl){return hcl[2]>=lmin && hcl[2]<=lmax};
 	var lcondition_txt = "hcl[2]>="+lmin+" && hcl[2]<="+lmax;
-	
+
 	// General condition for selecting the color space
 	var colorspaceSelector = function(color){
 		var hcl = color.hcl();
 		return hcondition(hcl) && ccondition(hcl) && lcondition(hcl);
 	}
-	
+
 	// Generate colors
 	var colors = paletteGenerator.generate(parseInt($('#colorsCount').val()), colorspaceSelector, useFV, q, false, dType)
 	colors = paletteGenerator.diffSort(colors)
 	palette = colors.map( function( color ){ return { color:color, hex:color.hex(), hcl:color.hcl(), lab:color.lab() } } )
-	
+
 	// Case: locked colors
 	if(old_palette && locks.some( function( d ){ return d } ) ){
 		palette = palette.map( function( colorItem, i ){
@@ -325,7 +327,7 @@ var reduceToPalette = function(){
 	}
 
 	$("#refine").hide()
-	
+
 	updateColorSpace( colors, true )
 }
 
@@ -405,7 +407,7 @@ var updateAdditionalInfo = function (colors) {
 				.after(pairDistances)
 		)
 		logMessage += average+','
-			
+
 		pairs.sort(function(a,b){
 			return b.distanceDeuteranope - a.distanceDeuteranope
 		})
@@ -424,7 +426,7 @@ var updateAdditionalInfo = function (colors) {
 				.after(pairDistances)
 		)
 		logMessage += average+','
-			
+
 		pairs.sort(function(a,b){
 			return b.distanceTritanope - a.distanceTritanope
 		})
@@ -446,7 +448,7 @@ var updateAdditionalInfo = function (colors) {
 
 		console.log('Average distances for different cases\n'+logMessage)
 	}
-		
+
 	function displayPair(el, pair, distance) {
 		var n = Math.round(pair[distance] * 10) / 10
 		var note = noteDistance(n)
@@ -491,7 +493,7 @@ var updateAdditionalInfo = function (colors) {
 
 
 
-// Palette items buttons 
+// Palette items buttons
 function paletteItem_toggleLock(i){
 	locks[i] = !locks[i]
 
@@ -513,7 +515,7 @@ function paletteItem_remove(i){
 	locks = locks.filter(function(d,index){
 		return index != i
 	})
-	
+
 	initVisualPalette(true)
 	drawPalette(palette.map(function(c){return c.color;}), {})
 	updateColorSpace(palette.map(function(c){return c.color;}), true)
