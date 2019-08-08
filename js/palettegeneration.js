@@ -257,7 +257,7 @@ var drawPalette = function(colors, _matchings){
 		).after(
 			$('<div/>').html('<strong>Requirements:</strong> This code snippet needs <a href="https://github.com/gka/chroma.js">Chroma.js</a> and our own <a href="js/libs/chroma.palette-gen.js">Palette-Gen</a> lib.')
 		).after(
-			$('<div/>').html('<strong>Note:</strong> You can also install the npm package by running <code>npm install iwanthue</code> (docs <a href="https://www.npmjs.com/package/iwanthue#usage">here</a>).')
+			$('<div/>').html('<br><strong>Note:</strong> You can also install the <a href="https://www.npmjs.com/package/iwanthue#how-to-use-it-in-your-own-code" target="_blank">npm package</a> by running <code>npm install iwanthue</code>')
 		)
 	)
 	prettyPrint()
