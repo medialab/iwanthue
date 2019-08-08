@@ -186,13 +186,16 @@ CachedDistances.prototype.compromise = function(lab1, lab2) {
   total += d * 1000;
 
   d = this.colorblind('protanope', lab1, lab2);
-  total += d * 100;
+  if (!isNaN(d))
+    total += d * 100;
 
   d = this.colorblind('deuteranope', lab1, lab2);
-  total += d * 500;
+  if (!isNaN(d))
+    total += d * 500;
 
   d = this.colorblind('tritanope', lab1, lab2);
-  total += d * 1;
+  if (!isNaN(d))
+    total += d * 1;
 
   return total / COMPROMISE_COUNT;
 };
