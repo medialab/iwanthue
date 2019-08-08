@@ -24,15 +24,15 @@ describe('iwanthue', function() {
   });
 
   it('should return suitable palettes.', function() {
-    var palette = iwanthue(5, {seed: 123, clustering: 'force-vector'});
+    var palette = iwanthue(5, {seed: 123, clustering: 'force-vector', colorSpacePreset: null});
 
     assert.deepEqual(palette, ['#ffdfd1', '#006172', '#ffff5b', '#933cff', '#00c30c']);
 
-    palette = iwanthue(5, {seed: 123, clustering: 'k-means'});
+    palette = iwanthue(5, {seed: 123, clustering: 'k-means', colorSpacePreset: null});
 
     assert.deepEqual(palette, ['#b04951', '#717e8a', '#ba9850', '#8d4cb7', '#84c969']);
 
-    palette = iwanthue(15, {seed: 'precomputed', clustering: 'k-means'});
+    palette = iwanthue(15, {seed: 'precomputed', clustering: 'k-means', colorSpacePreset: null});
 
     assert.deepEqual(palette, [
       '#7a38cf',
@@ -52,7 +52,7 @@ describe('iwanthue', function() {
       '#7d3e33']
     );
 
-    palette = iwanthue(5, {seed: 123, clustering: 'k-means', ultraPrecision: true});
+    palette = iwanthue(5, {seed: 123, clustering: 'k-means', ultraPrecision: true, colorSpacePreset: null});
 
     assert.deepEqual(palette, ['#b1494f', '#707f8a', '#b99650', '#8f4cb5', '#85c967']);
   });
