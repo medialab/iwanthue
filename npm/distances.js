@@ -5,6 +5,8 @@
  * Bunch of color-related distance functions, some of which take daltonism
  * into account.
  */
+var helpers = require('./helpers.js');
+
 var CONFUSION_LINES = {
   protanope: {
     x: 0.7465,
@@ -54,10 +56,11 @@ CachedDistances.prototype.simulate = function(lab, type, amount) {
   var confuseYint = CONFUSION_LINES[type].yint;
 
   // Code adapted from http://galacticmilk.com/labs/Color-Vision/Javascript/Color.Vision.Simulate.js
-  var color = d3.lab(lab[0], lab[1], lab[2]).rgb();
-  var sr = color.rgb()[0];
-  var sg = color.rgb()[1];
-  var sb = color.rgb()[2];
+  var color = helpers.labToRgb(lab);
+
+  var sr = color[0];
+  var sg = color[1];
+  var sb = color[2];
   var dr = sr; // destination color
   var dg = sg;
   var db = sb;
@@ -86,9 +89,9 @@ CachedDistances.prototype.simulate = function(lab, type, amount) {
   // Difference between simulated color and neutral grey
   var diffX = neutralX - X;
   var diffZ = neutralZ - Z;
-  diffR = diffX * 3.24071 + diffZ * -0.498571; // XYZ->RGB (sRGB:D65)
-  diffG = diffX * -0.969258 + diffZ * 0.0415557;
-  diffB = diffX * 0.0556352 + diffZ * 1.05707;
+  var diffR = diffX * 3.24071 + diffZ * -0.498571; // XYZ->RGB (sRGB:D65)
+  var diffG = diffX * -0.969258 + diffZ * 0.0415557;
+  var diffB = diffX * 0.0556352 + diffZ * 1.05707;
   // Convert to RGB color space
   dr = X * 3.24071 + Y * -1.53726 + Z * -0.498571; // XYZ->RGB (sRGB:D65)
   dg = X * -0.969258 + Y * 1.87599 + Z * 0.0415557;
@@ -115,9 +118,8 @@ CachedDistances.prototype.simulate = function(lab, type, amount) {
   dr = sr * (1.0 - amount) + dr * amount;
   dg = sg * (1.0 - amount) + dg * amount;
   db = sb * (1.0 - amount) + db * amount;
-  var dcolor = d3.rgb(dr, dg, db);
-  var resultd3lab = d3.lab(dcolor);
-  var result = [resultd3lab.l, resultd3lab.a, resultd3lab.b];
+  var dcolor = [dr, dg, db];
+  var result = helpers.rgbToLab(dcolor);
   this.cache[key] = result;
 
   return result;
