@@ -2,7 +2,7 @@
  * Iwanthue Color Presets
  * =======================
  *
- * Website collection presets.
+ * Website's collection of color space presets.
  */
 
 // Format is [hmin, hmax, cmin, cmax, lmin, lmax] to save up some space
