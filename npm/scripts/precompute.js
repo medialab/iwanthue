@@ -26,7 +26,9 @@ function templateModule(palettes) {
   palettes.forEach((palette, i) => {
     var end = i === palettes.length - 1 ? '' : ',';
 
-    lines.push('  ' + palette.length + ': ' + JSON.stringify(palette) + end);
+    var paletteString = palette.map(color => '\'' + color + '\'').join(', ');
+
+    lines.push('  ' + palette.length + ': [' + paletteString + ']' + end);
   });
 
   lines.push('};');
