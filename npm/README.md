@@ -58,7 +58,7 @@ If you don't want to load iwanthue's whole code into your client app or if you j
 
 All of the presets export palettes ranging from `2` to `15` colors.
 
-Here is how to import them:
+Here is how to load them:
 
 ```js
 // Default palettes
