@@ -118,7 +118,24 @@ function labToRgbHex(lab) {
   );
 }
 
+var RAD_TO_DEG = 180 / Math.PI;
+
+function labToHcl(lab) {
+  var l = lab[0];
+  var a = lab[1];
+  var b = lab[2];
+
+  var c = Math.sqrt(a * a + b * b);
+  var h = (Math.atan2(b, a) * RAD_TO_DEG + 360) % 360;
+
+  if (Math.round(c * 10000) === 0)
+    h = NaN;
+
+  return [h, c, l];
+}
+
 exports.validateRgb = validateRgb;
 exports.labToRgb = labToRgb;
 exports.labToRgbHex = labToRgbHex;
 exports.rgbToLab = rgbToLab;
+exports.labToHcl = labToHcl;
