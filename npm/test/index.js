@@ -63,5 +63,8 @@ describe('iwanthue', function() {
 
     assert.deepEqual(palette, ['#6ed5b1', '#71b9e7', '#bdc579', '#db9bd3', '#e79d78']);
 
+    var palette2 = iwanthue(5, {seed: 123, colorSpace: {cmin: 25.59, cmax: 55.59, lmin: 60.94, lmax: 90.94}});
+
+    assert.deepEqual(palette, palette2);
   });
 });

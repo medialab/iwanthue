@@ -98,6 +98,16 @@ function resolveAndValidateSettings(userSettings) {
 
         preset = settings.colorSpace;
       }
+      else {
+        preset = [
+          settings.colorSpace.hmin || 0,
+          settings.colorSpace.hmax || 360,
+          settings.colorSpace.cmin || 0,
+          settings.colorSpace.cmax || 100,
+          settings.colorSpace.lmin || 0,
+          settings.colorSpace.lmax || 100
+        ];
+      }
 
       if (preset[0] < preset[1])
         settings.colorFilter = function(rgb, lab) {
