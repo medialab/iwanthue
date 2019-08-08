@@ -56,4 +56,11 @@ describe('iwanthue', function() {
 
     assert.deepEqual(palette, ['#b1494f', '#707f8a', '#b99650', '#8f4cb5', '#85c967']);
   });
+
+  it('should be possible to pass colorSpacePreset as an array.', function() {
+
+    var palette = iwanthue(5, {seed: 123, colorSpacePreset: [0, 360, 25.59, 55.59, 60.94, 90.94]});
+
+    assert.deepEqual(palette, ['#6ed5b1', '#71b9e7', '#bdc579', '#db9bd3', '#e79d78']);
+  });
 });

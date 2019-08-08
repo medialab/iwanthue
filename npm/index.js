@@ -79,14 +79,25 @@ function resolveAndValidateSettings(userSettings) {
   // Building color filter from preset?
   if (!settings.colorFilter) {
     if (
-      typeof settings.colorSpacePreset === 'string' &&
+      settings.colorSpacePreset &&
       settings.colorSpacePreset !== 'all'
     ) {
 
-      if (!VALID_PRESETS.has(settings.colorSpacePreset))
-        throw new Error('iwanthue: unknown `colorSpacePreset` "' + settings.colorSpacePreset + '".');
+      var preset;
 
-      var preset = presets[settings.colorSpacePreset];
+      if (typeof settings.colorSpacePreset === 'string') {
+        if (!VALID_PRESETS.has(settings.colorSpacePreset))
+          throw new Error('iwanthue: unknown `colorSpacePreset` "' + settings.colorSpacePreset + '".');
+
+        preset = presets[settings.colorSpacePreset];
+      }
+      else if (Array.isArray(settings.colorSpacePreset)) {
+
+        if (settings.colorSpacePreset.length !== 6)
+          throw new Error('iwanthue: expecting a `colorSpacePreset` array of length 6 ([hmin, hmax, cmin, cmax, lmin, lmax]).');
+
+        preset = settings.colorSpacePreset;
+      }
 
       if (preset[0] < preset[1])
         settings.colorFilter = function(rgb, lab) {
