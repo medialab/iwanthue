@@ -438,5 +438,7 @@ module.exports = function generatePalette(count, settings) {
   else
     kMeans(distance, validColor, colors, settings);
 
+  colors = diffSort(distance, colors);
+
   return colors.map(labToRgbHex);
 };
