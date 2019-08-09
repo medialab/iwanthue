@@ -51,7 +51,7 @@ var palette = iwanthue(5, {
   * **quality** *?number* [`50`]: Quality of the clustering: iterations factor for `force-vector`, colorspace sampling for `k-means`.
   * **ultraPrecision** *?boolean* [`false`]: Ultra precision for `k-means` colorspace sampling?
   * **distance** *?string* [`euclidean`]: Distance function to use. Can be `euclidean`, `cmc`, `compromise` (colorblind), `protanope`, `deuteranope` or `tritanope`.
-  * **sedd** *?string|number*: Random number generator seed. Useful to produce the same palette every time based on some data attribute.
+  * **seed** *?string|number*: Random number generator seed. Useful to produce the same palette every time based on some data attribute.
 
 ### Precomputed palettes
 
