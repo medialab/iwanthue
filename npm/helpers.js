@@ -134,8 +134,43 @@ function labToHcl(lab) {
   return [h, c, l];
 }
 
+function diffSort(distance, colors) {
+  colors = colors.slice();
+
+  var diffColors = [colors.shift()];
+
+  var index, maxDistance, candidateIndex;
+
+  var A, B, d, i;
+
+  while (colors.length > 0) {
+    index = -1;
+    maxDistance = -Infinity;
+
+    for (candidateIndex = 0; candidateIndex < colors.length; candidateIndex++) {
+      A = colors[candidateIndex];
+
+      for (i = 0; i < diffColors.length; i++) {
+        B = diffColors[i];
+        d = distance(A, B);
+
+        if (d > maxDistance) {
+          maxDistance = d;
+          index = candidateIndex;
+        }
+      }
+    }
+
+    diffColors.push(colors[index]);
+    colors.splice(index, 1);
+  }
+
+  return diffColors;
+}
+
 exports.validateRgb = validateRgb;
 exports.labToRgb = labToRgb;
 exports.labToRgbHex = labToRgbHex;
 exports.rgbToLab = rgbToLab;
 exports.labToHcl = labToHcl;
+exports.diffSort = diffSort;
