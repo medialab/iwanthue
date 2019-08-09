@@ -13,6 +13,7 @@ var validateRgb = helpers.validateRgb;
 var labToRgb = helpers.labToRgb;
 var labToRgbHex = helpers.labToRgbHex;
 var labToHcl = helpers.labToHcl;
+var diffSort = helpers.diffSort;
 
 /**
  * Constants.
@@ -163,12 +164,9 @@ function sampleLabColors(rng, count, validColor) {
 var REPULSION = 100;
 var SPEED = 100;
 
-function forceVector(rng, colors, validColor, settings) {
+function forceVector(rng, distance, validColor, colors, settings) {
   var vectors = new Array(colors.length);
   var steps = settings.quality * 20;
-
-  var distances = new CachedDistances();
-  var distance = distances.get(settings.distance);
 
   var i, j, l = colors.length;
 
@@ -243,12 +241,9 @@ function forceVector(rng, colors, validColor, settings) {
   }
 }
 
-function kMeans(colors, validColor, settings) {
+function kMeans(distance, validColor, colors, settings) {
   var colorSamples = [];
   var samplesClosest = [];
-
-  var distances = new CachedDistances();
-  var distance = distances.get(settings.distance);
 
   var l, a, b;
 
@@ -417,6 +412,9 @@ module.exports = function generatePalette(count, settings) {
     return random.nextFloat();
   };
 
+  var distances = new CachedDistances();
+  var distance = distances.get(settings.distance);
+
   var validColor = function(rgb, lab) {
     // if (arguments.length < 2)
     //   throw new Error('validColor takes both rgb and lab!');
@@ -436,9 +434,9 @@ module.exports = function generatePalette(count, settings) {
   var colors = sampleLabColors(rng, count, validColor);
 
   if (settings.clustering === 'force-vector')
-    forceVector(rng, colors, validColor, settings);
+    forceVector(rng, distance, validColor, colors, settings);
   else
-    kMeans(colors, validColor, settings);
+    kMeans(distance, validColor, colors, settings);
 
   return colors.map(labToRgbHex);
 };
