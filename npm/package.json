@@ -1,6 +1,6 @@
 {
   "name": "iwanthue",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Colors for data scientists. Generate and refine palettes of optimally distinct colors.",
   "main": "index.js",
   "scripts": {
