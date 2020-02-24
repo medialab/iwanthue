@@ -15,6 +15,7 @@
     "url": "git+https://github.com/medialab/iwanthue.git"
   },
   "files": [
+    "*.d.ts",
     "precomputed/*.js",
     "distances.js",
     "helpers.js",
