@@ -45,11 +45,11 @@
   "devDependencies": {
     "@yomguithereal/eslint-config": "^4.0.0",
     "chai": "^4.2.0",
-    "eslint": "^6.1.0",
+    "eslint": "^6.8.0",
     "fs-extra": "^8.1.0",
-    "handlebars": "^4.1.2",
+    "handlebars": "^4.7.3",
     "lodash": "^4.17.15",
-    "mocha": "^6.2.0"
+    "mocha": "^7.0.1"
   },
   "eslintConfig": {
     "extends": "@yomguithereal/eslint-config",
