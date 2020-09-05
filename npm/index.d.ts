@@ -38,7 +38,7 @@ type ColorSpacePreset =
   | "purple-wine"
 type ColorSpace = ColorSpacePreset | ColorSpaceArray | ColorSpaceObject;
 
-type IWantHueOptions = {
+interface IWantHueOptions {
   colorFilter?: ColorFilterFunction,
   colorSpace?: ColorSpace,
   clustering?: 'k-means' | 'force-vector',
@@ -46,6 +46,6 @@ type IWantHueOptions = {
   ultraPrecision?: boolean,
   distance?: 'euclidean' | 'cmc' | 'compromise' | 'protanope' | 'deuteranope' | 'tritanope',
   seed?: string | null
-};
+}
 
 export default function iwanthue(colors: number, options?: IWantHueOptions): Array<string>;
