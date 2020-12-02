@@ -11,9 +11,34 @@ type ColorSpaceObject = {
   lmin?: number,
   lmax?: number
 };
-type ColorSpace = string | ColorSpaceArray | ColorSpaceObject;
 
-type IWantHueOptions = {
+/**
+ * Available color spaces
+ * @see https://github.com/medialab/iwanthue/blob/master/npm/presets.js
+ */
+type ColorSpacePreset =
+  | "all"
+  | "default"
+  | "colorblind"
+  | "fancy-light"
+  | "fancy-dark"
+  | "shades"
+  | "tarnish"
+  | "pastel"
+  | "pimp"
+  | "intense"
+  | "fluo"
+  | "red-roses"
+  | "ochre-sand"
+  | "yellow-lime"
+  | "green-mint"
+  | "ice-cube"
+  | "blue-ocean"
+  | "indigo-night"
+  | "purple-wine"
+type ColorSpace = ColorSpacePreset | ColorSpaceArray | ColorSpaceObject;
+
+interface IWantHueOptions {
   colorFilter?: ColorFilterFunction,
   colorSpace?: ColorSpace,
   clustering?: 'k-means' | 'force-vector',
@@ -21,6 +46,6 @@ type IWantHueOptions = {
   ultraPrecision?: boolean,
   distance?: 'euclidean' | 'cmc' | 'compromise' | 'protanope' | 'deuteranope' | 'tritanope',
   seed?: string | null
-};
+}
 
 export default function iwanthue(colors: number, options?: IWantHueOptions): Array<string>;
