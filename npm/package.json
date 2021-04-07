@@ -46,6 +46,7 @@
   "devDependencies": {
     "@yomguithereal/eslint-config": "^4.0.0",
     "chai": "^4.3.1",
+    "chalk": "^4.1.0",
     "eslint": "^7.23.0",
     "fs-extra": "^9.1.0",
     "handlebars": "^4.7.7",
