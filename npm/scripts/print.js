@@ -3,10 +3,18 @@ var chalk = require('chalk');
 var repeat = require('lodash/repeat')
 
 var n = +process.argv[2];
-var seed = process.argv[3]; // Examples: carefôjeffff, carefôjefffffg
+var seed = process.argv[3];
+
+var COLOR_SPACE = {
+  cmin: 25.59,
+  cmax: 55.59,
+  lmin: 60.94,
+  lmax: 90.94
+};
 
 var options = {
-  clustering: 'force-vector'
+  clustering: 'force-vector',
+  colorSpace: COLOR_SPACE
 };
 
 if (seed)
