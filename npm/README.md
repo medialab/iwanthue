@@ -25,8 +25,6 @@ You can install `iwanthue` for node.js and the browser using npm:
 npm install iwanthue
 ```
 
-Note that `iwanthue` comes along with its TypeScript declaration files.
-
 ### Usage
 
 ```js
