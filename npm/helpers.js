@@ -168,9 +168,31 @@ function diffSort(distance, colors) {
   return diffColors;
 }
 
+function computeQualityMetrics(distance, colors) {
+  var i, j, l;
+
+  var min = Infinity, d;
+
+  var S = 0;
+
+  for (i = 0, l = colors.length; i < l; i++) {
+    for (j = i + 1; j < l; j++) {
+      d = distance(colors[i], colors[j]);
+
+      if (d < min)
+        min = d;
+
+      S += d;
+    }
+  }
+
+  return {min: min, mean: S / l};
+}
+
 exports.validateRgb = validateRgb;
 exports.labToRgb = labToRgb;
 exports.labToRgbHex = labToRgbHex;
 exports.rgbToLab = rgbToLab;
 exports.labToHcl = labToHcl;
 exports.diffSort = diffSort;
+exports.computeQualityMetrics = computeQualityMetrics;
