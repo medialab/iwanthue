@@ -39,6 +39,7 @@ type ColorSpacePreset =
 type ColorSpace = ColorSpacePreset | ColorSpaceArray | ColorSpaceObject;
 
 interface IWantHueOptions {
+  attempts?: number,
   colorFilter?: ColorFilterFunction,
   colorSpace?: ColorSpace,
   clustering?: 'k-means' | 'force-vector',

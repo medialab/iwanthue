@@ -435,9 +435,12 @@ module.exports = function generatePalette(count, settings) {
     return true;
   };
 
-  var attempts = 1;
+  var attempts = settings.attempts;
 
-  var colors;
+  var colors, metrics;
+
+  var bestMetric = -Infinity,
+      best;
 
   while (attempts > 0) {
     colors = sampleLabColors(rng, count, validColor);
@@ -447,9 +450,17 @@ module.exports = function generatePalette(count, settings) {
     else
       kMeans(distance, validColor, colors, settings);
 
+    metrics = helpers.computeQualityMetrics(distance, colors);
+
+    if (metrics.min > bestMetric) {
+      bestMetric = metrics.min;
+      best = colors;
+    }
+
     attempts--;
   }
 
+  colors = best;
   colors = diffSort(distance, colors);
 
   return colors.map(labToRgbHex);

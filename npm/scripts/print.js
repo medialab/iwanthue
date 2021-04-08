@@ -14,7 +14,8 @@ var COLOR_SPACE = {
 
 var options = {
   clustering: 'force-vector',
-  colorSpace: COLOR_SPACE
+  colorSpace: COLOR_SPACE,
+  attempts: 3
 };
 
 if (seed)
