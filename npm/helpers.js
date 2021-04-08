@@ -173,7 +173,7 @@ function computeQualityMetrics(distance, colors) {
 
   var min = Infinity, d;
 
-  var S = 0;
+  var S = 0, t = 0;
 
   for (i = 0, l = colors.length; i < l; i++) {
     for (j = i + 1; j < l; j++) {
@@ -183,10 +183,11 @@ function computeQualityMetrics(distance, colors) {
         min = d;
 
       S += d;
+      t++;
     }
   }
 
-  return {min: min, mean: S / l};
+  return {min: min, mean: S / t};
 }
 
 exports.validateRgb = validateRgb;
