@@ -45,6 +45,7 @@ var palette = iwanthue(5, {
 
 * **count** *number*: number of colors in the generated palette.
 * **settings** *?object*: Settings:
+  * **attempts** *?number* [`1`]: Number of times should the function try to generate a palette in order to only keep the one maximizing the minimum distance between two of the palette colors. Will only make a single attempt by default.
   * **colorSpace** *?string|object|array* [`default`]: Color space preset. Check [this](https://github.com/medialab/iwanthue/blob/master/npm/presets.js) file for the full list of preset names, or go to the [website]([iWantHue](http://tools.medialab.sciences-po.fr/iwanthue/)) to try them. Alternatively you can pass the `colorSpace` either as a `[hmin, hmax, cmin, cmax, lmin, lmax]` array or a `{hmin, hmax, cmin, cmax, lmin, lmax}` object where keys can be omitted.
   * **colorFilter** *?function*: Function used to filter suitable colors. Takes a `[r, g, b]` color and the same `[l, a, b]` color as arguments.
   * **clustering** *?string* [`k-means`]: Clustering method to use. Can either be `k-means` or `force-vector`.
