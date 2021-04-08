@@ -19,6 +19,7 @@ var diffSort = helpers.diffSort;
  * Constants.
  */
 var DEFAULT_SETTINGS = {
+  attempts: 1,
   colorFilter: null,
   colorSpace: 'default',
   clustering: 'k-means',
@@ -55,6 +56,9 @@ function stringSum(string) {
 
 function resolveAndValidateSettings(userSettings) {
   var settings = Object.assign({}, DEFAULT_SETTINGS, userSettings);
+
+  if (typeof settings.attempts !== 'number' || settings.attempts <= 0)
+    throw new Error('iwanthue: invalid `attempts` setting. Expecting a positive number.');
 
   if (settings.colorFilter && typeof settings.colorFilter !== 'function')
     throw new Error('iwanthue: invalid `colorFilter` setting. Expecting a function.');
@@ -431,12 +435,20 @@ module.exports = function generatePalette(count, settings) {
     return true;
   };
 
-  var colors = sampleLabColors(rng, count, validColor);
+  var attempts = 1;
 
-  if (settings.clustering === 'force-vector')
-    forceVector(rng, distance, validColor, colors, settings);
-  else
-    kMeans(distance, validColor, colors, settings);
+  var colors;
+
+  while (attempts > 0) {
+    colors = sampleLabColors(rng, count, validColor);
+
+    if (settings.clustering === 'force-vector')
+      forceVector(rng, distance, validColor, colors, settings);
+    else
+      kMeans(distance, validColor, colors, settings);
+
+    attempts--;
+  }
 
   colors = diffSort(distance, colors);
 

@@ -15,7 +15,8 @@ describe('iwanthue', function() {
       [5, {ultraPrecision: 43}],
       [5, {distance: 'manhattan'}],
       [5, {seed: undefined}],
-      [6, {colorSpace: 'tabundeshou'}]
+      [6, {colorSpace: 'tabundeshou'}],
+      [3, {attempts: 'test'}]
     ];
 
     tests.forEach(args => {
