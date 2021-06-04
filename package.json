@@ -5,7 +5,7 @@
   "description": "Scripts to build static site.",
   "main": "build.js",
   "scripts": {
-    "build": "rm -rf build && GOOGLE_ANALYTICS=$npm_package_iwanthue_ga TWEET=$npm_package_iwanthue_tweet PREFIX=$npm_package_iwanthue_prefix node build.js",
+    "build": "rm -rf build && MATOMO_ANALYTICS=$npm_package_config_matomo TWEET=$npm_package_config_tweet PREFIX=$npm_package_config_prefix node build.js",
     "deploy": "npm run build && gh-pages -d ./build"
   },
   "repository": {
@@ -24,8 +24,8 @@
     "gh-pages": "^2.0.1",
     "glob": "^7.1.4"
   },
-  "iwanthue": {
-    "ga": "UA-37695848-1",
+  "config": {
+    "matomo": "20",
     "tweet": "iWantHue: make clever color palettes",
     "prefix": "/iwanthue/"
   }

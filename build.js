@@ -8,11 +8,11 @@ const ASSET_URL_RE = /(["'])((?:css|img|js|res)\/[^"']+)["']/g;
 
 const BUILD_FOR_JEKYLL = true;
 
-const GOOGLE_ANALYTICS = process.env.GOOGLE_ANALYTICS,
+const MATOMO_ANALYTICS = process.env.MATOMO_ANALYTICS,
       TWEET = process.env.TWEET,
       PREFIX = process.env.PREFIX;
 
-if (!GOOGLE_ANALYTICS || !TWEET || !PREFIX) {
+if (!MATOMO_ANALYTICS || !TWEET || !PREFIX) {
   console.error('Missing env var!');
   process.exit(1);
 }
@@ -33,7 +33,7 @@ function solveIncludes(code, links) {
   })
 
   solved = solved
-    .replace(/\$GOOGLE_ANALYTICS/g, GOOGLE_ANALYTICS)
+    .replace(/\$MATOMO_ANALYTICS/g, MATOMO_ANALYTICS)
     .replace(/\$TWEET/g, TWEET)
     .replace(ASSET_URL_RE, `$1${PREFIX}$2$1`);
 
