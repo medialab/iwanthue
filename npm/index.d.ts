@@ -46,7 +46,7 @@ interface IWantHueOptions {
   quality?: number,
   ultraPrecision?: boolean,
   distance?: 'euclidean' | 'cmc' | 'compromise' | 'protanope' | 'deuteranope' | 'tritanope',
-  seed?: string | null
+  seed?: string | number | null
 }
 
 export default function iwanthue(colors: number, options?: IWantHueOptions): Array<string>;
