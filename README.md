@@ -79,7 +79,7 @@ palette.get('unknown');
   * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known or if the palette is over capacity.
   * **maxCount** *?number*: maximum number of different colors to use.
   * **trueCount** *?number*: if passing a clamped list of values, true count to be considered to know if the palette is over capacity.
-  * ...: any setting that can be passed to [iwanthue](#usage).
+  * *...* any setting that can be passed to [iwanthue](#usage).
 
 *Palette members*
 
@@ -121,6 +121,7 @@ var palette = builder.build();
 * **max** *number*: maximum number of colors for the palette.
 * **settings** *?object*:
   * **defaultColor** *?string* [`#ccc`]: default color for the palette.
+  * *...* any setting that can be passed to [iwanthue](#usage).
 
 *Palette builder members*
 
