@@ -54,6 +54,83 @@ var palette = iwanthue(5, {
   * **distance** *?string* [`euclidean`]: Distance function to use. Can be `euclidean`, `cmc`, `compromise` (colorblind), `protanope`, `deuteranope` or `tritanope`.
   * **seed** *?string|number*: Random number generator seed. Useful to produce the same palette every time based on some data attribute.
 
+### Palette
+
+A helper class representing a categorical color palette over a set of given values.
+
+```js
+// To build your palette from a unique list of values
+var Palette = require('iwanthue/palette');
+
+var palette = new Palette('categoryName', ['one', 'two', 'three'], {defaultColor: '#000'});
+
+palette.get('one');
+>>> '#19d3a2'
+
+palette.get('unknown');
+>>> '#000'
+```
+
+*Palette arguments*
+
+* **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
+* **values** *array|set*: unique values for the represented category.
+* **settings** *?object*:
+  * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known or if the palette is over capacity.
+  * **maxCount** *?number*: maximum number of different colors to use.
+  * **trueCount** *?number*: if passing a clamped list of values, true count to be considered to know if the palette is over capacity.
+  * ...: any setting that can be passed to [iwanthue](#usage).
+
+*Palette members*
+
+* **name** *string*: name of the palette.
+* **size** *number*: number of colors.
+* **defaultColor** *string*: default color.
+* **colors** *array*: array of colors.
+* **map** *Map*: map from values to colors.
+* **overflowing** *boolean*: whether the palette has less colors than the number of known values.
+
+*Palette methods*
+
+* **get**: return the color for the given value or the default color if value is unkown.
+* **has**: return whether the value is known to the palette.
+* **forEach**: callback iteration over (color, value).
+
+### PaletteBuilder
+
+A helper class useful to build a [Palette](#palette) object over an arbitrary stream of data.
+
+The builder takes a maximum number of colors for the generated palette and will make sure most frequent values will have a color.
+
+```js
+// To build your palette from a stream of data
+var PaletteBuilder = require('iwanthue/palette-builder');
+
+var builder = new PaletteBuilder('categoryName', 10, {defaultColor: '#000'});
+
+forEachRow(function(row) {
+  builder.add(row.type);
+});
+
+var palette = builder.build();
+```
+
+*Palette builder arguments*
+
+* **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
+* **max** *number*: maximum number of colors for the palette.
+* **settings** *?object*:
+  * **defaultColor** *?string* [`#ccc`]: default color for the palette.
+
+*Palette builder members*
+
+* **frequencies** *MultiSet*: frequencies of seen values.
+
+*Palette builder methods*
+
+* **add**: add the occurrence of a single value to the builder to count frequencies and cardinality of considered category.
+* **build**: returns the generated palette.
+
 ### Precomputed palettes
 
 If you don't want to load iwanthue's whole code into your client app or if you just want to prototype things quickly, the npm module also packs some precomputed palettes that you can import.

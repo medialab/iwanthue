@@ -1,6 +1,7 @@
 /* eslint no-new: 0 */
 var assert = require('assert');
 var Palette = require('../palette.js');
+var PaletteBuilder = require('../palette-builder.js');
 
 describe('Palette', function() {
   it('should throw if given bad values.', function() {
@@ -19,8 +20,8 @@ describe('Palette', function() {
 
     var entries = [];
 
-    palette.forEach(function(color, category) {
-      entries.push([category, color]);
+    palette.forEach(function(color, value) {
+      entries.push([value, color]);
     });
 
     var expected = [
@@ -46,8 +47,8 @@ describe('Palette', function() {
 
     var entries = [];
 
-    palette.forEach(function(color, category) {
-      entries.push([category, color]);
+    palette.forEach(function(color, value) {
+      entries.push([value, color]);
     });
 
     var expected = [
@@ -63,7 +64,7 @@ describe('Palette', function() {
     assert.strictEqual(palette.get('unknown'), '#ccc');
   });
 
-  it('should work with a single category.', function() {
+  it('should work with a single value.', function() {
     var palette = new Palette('test', ['single']);
 
     assert.strictEqual(palette.get('test'), '#ccc');
@@ -87,5 +88,25 @@ describe('Palette', function() {
     assert.deepStrictEqual(palette.colors, ['#19d3a2', '#7f92f5']);
     assert.strictEqual(palette.get('three'), '#ccc');
     assert.strictEqual(palette.overflowing, true);
+  });
+
+  it('should work with a builder.', function() {
+    var builder = new PaletteBuilder('test', 2);
+
+    builder.add('three');
+    builder.add('three');
+    builder.add('three');
+    builder.add('one');
+    builder.add('two');
+    builder.add('two');
+    builder.add('one');
+    builder.add('one');
+    builder.add('three');
+
+    var palette = builder.build();
+
+    assert.strictEqual(palette.size, 2);
+    assert.strictEqual(palette.get('three'), palette.colors[0]);
+    assert.strictEqual(palette.has('two'), false);
   });
 });

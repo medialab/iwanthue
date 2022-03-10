@@ -6,7 +6,7 @@ export interface PaletteSettings extends IWantHueSettings {
   defaultColor?: string;
 }
 
-export type Categories<T> = Array<T> | Set<T> | Map<T>;
+export type Values<T> = Array<T> | Set<T>;
 
 export default class Palette<T> {
   name: string;
@@ -16,7 +16,8 @@ export default class Palette<T> {
   map: Map<T, string>;
   overflowing: boolean;
 
-  constructor(name: string, values: Categories<T>, settings?: PaletteSettings);
-  get(category: T): string;
-  forEach(callback: (color: string, category: T) => void): void;
+  constructor(name: string, values: Values<T>, settings?: PaletteSettings);
+  get(value: T): string;
+  has(value: T): boolean;
+  forEach(callback: (color: string, value: T) => void): void;
 }

@@ -7,9 +7,9 @@
 var forEach = require('obliterator/foreach');
 var iwanthue = require('./index.js');
 
-function Palette(name, categories, settings) {
-  if (!categories.length && !categories.size)
-    throw new Error('iwanthue/palette: categories should be a list, set or map having at least one item');
+function Palette(name, values, settings) {
+  if (!values.length && !values.size)
+    throw new Error('iwanthue/palette: values should be an array or set having at least one item');
 
   settings = Object.assign({
     colorSpace: 'sensible',
@@ -23,7 +23,7 @@ function Palette(name, categories, settings) {
   this.defaultColor = settings.defaultColor || '#ccc';
 
   var maxCount = settings.maxCount || Infinity;
-  var inputCount = categories.length || categories.size;
+  var inputCount = values.length || values.size;
   var count = Math.min(maxCount, inputCount);
 
   this.size = count;
@@ -34,16 +34,20 @@ function Palette(name, categories, settings) {
 
   var i = 0;
 
-  forEach(categories, function(category) {
-    map.set(category, colors[i++]);
+  forEach(values, function(value) {
+    map.set(value, colors[i++]);
   });
 
   this.colors = colors;
   this.map = map;
 }
 
-Palette.prototype.get = function(category) {
-  return this.map.get(category) || this.defaultColor;
+Palette.prototype.get = function(value) {
+  return this.map.get(value) || this.defaultColor;
+};
+
+Palette.prototype.has = function(value) {
+  return this.map.has(value);
 };
 
 Palette.prototype.forEach = function(callback) {
