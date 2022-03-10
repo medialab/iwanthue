@@ -3,6 +3,7 @@
   "version": "1.5.1",
   "description": "Colors for data scientists. Generate and refine palettes of optimally distinct colors.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "lint": "eslint *.js test",
     "precompute": "node scripts/precompute.js",
