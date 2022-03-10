@@ -1,22 +1,31 @@
-type Color = [number, number, number];
+export type RGBColor = [r: number, g: number, b: number];
+export type LABColor = [l: number, a: number, b: number];
 
-type ColorFilterFunction = (rgb: Color, lab: Color) => boolean;
+export type ColorFilterFunction = (rgb: RGBColor, lab: LABColor) => boolean;
 
-type ColorSpaceArray = [number, number, number, number, number, number];
-type ColorSpaceObject = {
-  hmin?: number,
-  hmax?: number,
-  cmin?: number,
-  cmax?: number,
-  lmin?: number,
-  lmax?: number
+export type ColorSpaceArray = [
+  hmin: number,
+  hmax: number,
+  cmin: number,
+  cmax: number,
+  lmin: number,
+  lmax: number
+];
+
+export type ColorSpaceObject = {
+  hmin: number,
+  hmax: number,
+  cmin: number,
+  cmax: number,
+  lmin: number,
+  lmax: number
 };
 
 /**
  * Available color spaces
  * @see https://github.com/medialab/iwanthue/blob/master/npm/presets.js
  */
-type ColorSpacePreset =
+export type ColorSpacePreset =
   | 'all'
   | 'default'
   | 'sensible'
@@ -38,16 +47,26 @@ type ColorSpacePreset =
   | 'indigo-night'
   | 'purple-wine';
 
-type ColorSpace = ColorSpacePreset | ColorSpaceArray | ColorSpaceObject;
+export type ColorSpace = ColorSpacePreset | ColorSpaceArray | Partial<ColorSpaceObject>;
 
-interface IWantHueOptions {
+export type Distance =
+  | 'euclidean'
+  | 'cmc'
+  | 'compromise'
+  | 'protanope'
+  | 'deuteranope'
+  | 'tritanope';
+
+export type ClusteringType = 'k-means' | 'force-vector';
+
+export interface IWantHueOptions {
   attempts?: number,
   colorFilter?: ColorFilterFunction,
   colorSpace?: ColorSpace,
-  clustering?: 'k-means' | 'force-vector',
+  clustering?: Distance,
   quality?: number,
   ultraPrecision?: boolean,
-  distance?: 'euclidean' | 'cmc' | 'compromise' | 'protanope' | 'deuteranope' | 'tritanope',
+  distance?: Distance,
   seed?: string | number | null
 }
 
