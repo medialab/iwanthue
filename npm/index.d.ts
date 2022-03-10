@@ -59,7 +59,7 @@ export type Distance =
 
 export type ClusteringType = 'k-means' | 'force-vector';
 
-export interface IWantHueOptions {
+export interface IWantHueSettings {
   attempts?: number,
   colorFilter?: ColorFilterFunction,
   colorSpace?: ColorSpace,
@@ -70,4 +70,4 @@ export interface IWantHueOptions {
   seed?: string | number | null
 }
 
-export default function iwanthue(colors: number, options?: IWantHueOptions): Array<string>;
+export default function iwanthue(count: number, settings?: IWantHueSettings): Array<string>;

@@ -21,6 +21,8 @@
     "distances.js",
     "helpers.js",
     "index.js",
+    "palette.js",
+    "palette-builder.js",
     "presets.js",
     "rng.js"
   ],
@@ -59,5 +61,8 @@
     "parserOptions": {
       "ecmaVersion": 6
     }
+  },
+  "dependencies": {
+    "mnemonist": "^0.39.0"
   }
 }
