@@ -17,25 +17,27 @@ type ColorSpaceObject = {
  * @see https://github.com/medialab/iwanthue/blob/master/npm/presets.js
  */
 type ColorSpacePreset =
-  | "all"
-  | "default"
-  | "colorblind"
-  | "fancy-light"
-  | "fancy-dark"
-  | "shades"
-  | "tarnish"
-  | "pastel"
-  | "pimp"
-  | "intense"
-  | "fluo"
-  | "red-roses"
-  | "ochre-sand"
-  | "yellow-lime"
-  | "green-mint"
-  | "ice-cube"
-  | "blue-ocean"
-  | "indigo-night"
-  | "purple-wine"
+  | 'all'
+  | 'default'
+  | 'sensible'
+  | 'colorblind'
+  | 'fancy-light'
+  | 'fancy-dark'
+  | 'shades'
+  | 'tarnish'
+  | 'pastel'
+  | 'pimp'
+  | 'intense'
+  | 'fluo'
+  | 'red-roses'
+  | 'ochre-sand'
+  | 'yellow-lime'
+  | 'green-mint'
+  | 'ice-cube'
+  | 'blue-ocean'
+  | 'indigo-night'
+  | 'purple-wine';
+
 type ColorSpace = ColorSpacePreset | ColorSpaceArray | ColorSpaceObject;
 
 interface IWantHueOptions {

@@ -6,8 +6,7 @@
   "scripts": {
     "lint": "eslint *.js test",
     "precompute": "node scripts/precompute.js",
-    "prepublish": "npm run readme && npm run lint && npm test && npm run precompute",
-    "prepublishOnly": "npm run prepublish",
+    "prepublishOnly": "npm run readme && npm run lint && npm test && npm run precompute",
     "readme": "cp ../README.md .",
     "test": "mocha test"
   },
