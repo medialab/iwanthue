@@ -63,7 +63,7 @@ export interface IWantHueSettings {
   attempts?: number,
   colorFilter?: ColorFilterFunction,
   colorSpace?: ColorSpace,
-  clustering?: Distance,
+  clustering?: ClusteringType,
   quality?: number,
   ultraPrecision?: boolean,
   distance?: Distance,
