@@ -29,7 +29,7 @@ PaletteBuilder.prototype.build = function() {
     maxCount: this.maxCount
   }, this.settings);
 
-  return new Palette(this.name, values, settings);
+  return Palette.fromValues(this.name, values, settings);
 };
 
 module.exports = PaletteBuilder;

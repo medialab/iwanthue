@@ -15,7 +15,7 @@ var HTML_TEMPLATE = hjs.compile(fs.readFileSync(path.join(__dirname, 'palettes.h
 var SUMMARY_TEMPLATE = hjs.compile(fs.readFileSync(path.join(__dirname, 'summary.handlebars'), 'utf-8'));
 
 var MAX_COUNT = 15;
-var COUNTS = range(2, MAX_COUNT + 1);
+var COUNTS = range(1, MAX_COUNT + 1);
 var SEED = 'precomputed';
 
 var PRECOMPUTED_PATH = path.join(__dirname, '..', 'precomputed');

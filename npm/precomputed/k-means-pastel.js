@@ -1,4 +1,5 @@
 module.exports = {
+  1: ['#dbf9d2'],
   2: ['#b8d0bb', '#cfbace'],
   3: ['#a5d4c7', '#c8bcd8', '#dac2a5'],
   4: ['#9dd3ce', '#e2b4ba', '#cecca8', '#b9c0e2'],

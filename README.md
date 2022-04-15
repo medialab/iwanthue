@@ -62,31 +62,52 @@ A helper class representing a categorical color palette over a set of given valu
 // To build your palette from a unique list of values
 var Palette = require('iwanthue/palette');
 
-var palette = new Palette('categoryName', ['one', 'two', 'three'], {defaultColor: '#000'});
+var palette = Palette.fromValues('cities', ['one', 'two', 'three'], {defaultColor: '#000'});
 
 palette.get('one');
 >>> '#19d3a2'
 
 palette.get('unknown');
 >>> '#000'
+
+// From entries
+var palette = Palette.fromEntries('cities', [['one', 'red'], ['two', 'blue']]);
+
+// From mappin
+var palette = Palette.fromMapping('cities', {one: 'red', two: 'blue'});
 ```
 
-*Palette arguments*
+*Palette.fromValues arguments*
 
 * **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
-* **values** *array|set*: unique values for the represented category.
+* **values** *iter*: unique values for the represented category.
 * **settings** *?object*:
   * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known or if the palette is over capacity.
   * **maxCount** *?number*: maximum number of different colors to use.
   * **trueCount** *?number*: if passing a clamped list of values, true count to be considered to know if the palette is over capacity.
   * *...* any setting that can be passed to [iwanthue](#usage).
 
+*Palette.fromEntries arguments*
+
+* **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
+* **entries** *iter*: key, value entries mapping values to colors.
+* **settings** *?object*:
+  * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known or if the palette is over capacity.
+  * **overflowing** *?boolean* [`false`]: whether the palette is overflowing.
+
+*Palette.fromMapping arguments*
+
+* **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
+* **mapping** *object|Map*: mapping from values to colors.
+* **settings** *?object*:
+  * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known or if the palette is over capacity.
+  * **overflowing** *?boolean* [`false`]: whether the palette is overflowing.
+
 *Palette members*
 
 * **name** *string*: name of the palette.
 * **size** *number*: number of colors.
 * **defaultColor** *string*: default color.
-* **colors** *array*: array of colors.
 * **map** *Map*: map from values to colors.
 * **overflowing** *boolean*: whether the palette has less colors than the number of known values.
 
@@ -95,6 +116,7 @@ palette.get('unknown');
 * **get**: return the color for the given value or the default color if value is unkown.
 * **has**: return whether the value is known to the palette.
 * **forEach**: callback iteration over (color, value).
+* **colors**: return the palette's colors as an array.
 
 ### PaletteBuilder
 

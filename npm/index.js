@@ -405,8 +405,8 @@ function kMeans(distance, validColor, colors, settings) {
  * @return {Array}                     - The computed palette as an array of hexadecimal colors.
  */
 module.exports = function generatePalette(count, settings) {
-  if (typeof count !== 'number' || count < 2)
-    throw new Error('iwanthue: expecting a color count > 2.');
+  if (typeof count !== 'number' || count < 1)
+    throw new Error('iwanthue: expecting a color count > 1.');
 
   settings = resolveAndValidateSettings(settings);
 
@@ -435,9 +435,18 @@ module.exports = function generatePalette(count, settings) {
     return true;
   };
 
+  var colors;
+
+  // In this case, we only sample a single color
+  if (count === 1) {
+    colors = sampleLabColors(rng, count, validColor);
+
+    return [labToRgbHex(colors[0])];
+  }
+
   var attempts = settings.attempts;
 
-  var colors, metrics;
+  var metrics;
 
   var bestMetric = -Infinity,
       best;

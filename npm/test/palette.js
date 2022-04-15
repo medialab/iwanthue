@@ -6,17 +6,17 @@ var PaletteBuilder = require('../palette-builder.js');
 describe('Palette', function() {
   it('should throw if given bad values.', function() {
     assert.throws(function() {
-      new Palette('test', null);
+      Palette.fromValues('test', null);
     });
   });
 
   it('should provide a sensible palette.', function() {
-    var palette = new Palette('test', ['one', 'two', 'three']);
+    var palette = Palette.fromValues('test', ['one', 'two', 'three']);
 
     assert.strictEqual(palette.size, 3);
     assert.strictEqual(palette.defaultColor, '#ccc');
     assert.strictEqual(palette.overflowing, false);
-    assert.deepStrictEqual(palette.colors, ['#ffb4c0', '#02aeb0', '#bfcf62']);
+    assert.deepStrictEqual(palette.colors(), ['#ffb4c0', '#02aeb0', '#bfcf62']);
 
     var entries = [];
 
@@ -38,12 +38,12 @@ describe('Palette', function() {
   });
 
   it('should be possible to pass settings.', function() {
-    var palette = new Palette('test', ['one', 'two', 'three'], {colorSpace: 'fancy-light'});
+    var palette = Palette.fromValues('test', ['one', 'two', 'three'], {colorSpace: 'fancy-light'});
 
     assert.strictEqual(palette.size, 3);
     assert.strictEqual(palette.defaultColor, '#ccc');
     assert.strictEqual(palette.overflowing, false);
-    assert.deepStrictEqual(palette.colors, ['#82b4fb', '#faffc6', '#ffb0b5']);
+    assert.deepStrictEqual(palette.colors(), ['#82b4fb', '#faffc6', '#ffb0b5']);
 
     var entries = [];
 
@@ -65,29 +65,51 @@ describe('Palette', function() {
   });
 
   it('should work with a single value.', function() {
-    var palette = new Palette('test', ['single']);
+    var palette = Palette.fromValues('test', ['single']);
 
     assert.strictEqual(palette.get('test'), '#ccc');
   });
 
   it('should work with a default value.', function() {
-    var palette = new Palette('test', ['one', 'two', 'three'], {defaultColor: '#000'});
+    var palette = Palette.fromValues('test', ['one', 'two', 'three'], {defaultColor: '#000'});
 
     assert.strictEqual(palette.get('unknown'), '#000');
   });
 
   it('should be possible to clamp & overflow.', function() {
-    var palette = new Palette('test', ['one', 'two', 'three'], {maxCount: 2});
+    var palette = Palette.fromValues('test', ['one', 'two', 'three'], {maxCount: 2});
 
-    assert.deepStrictEqual(palette.colors, ['#19d3a2', '#7f92f5']);
+    assert.deepStrictEqual(palette.colors(), ['#19d3a2', '#7f92f5']);
     assert.strictEqual(palette.get('three'), '#ccc');
     assert.strictEqual(palette.overflowing, true);
 
-    palette = new Palette('test', ['one', 'two'], {trueCount: 3});
+    palette = Palette.fromValues('test', ['one', 'two'], {trueCount: 3});
 
-    assert.deepStrictEqual(palette.colors, ['#19d3a2', '#7f92f5']);
+    assert.deepStrictEqual(palette.colors(), ['#19d3a2', '#7f92f5']);
     assert.strictEqual(palette.get('three'), '#ccc');
     assert.strictEqual(palette.overflowing, true);
+  });
+
+  it('should be possible to create a palette from entries.', function() {
+    var palette = Palette.fromEntries('test', [['one', 'red'], ['two', 'blue']]);
+
+    assert.strictEqual(palette.size, 2);
+    assert.strictEqual(palette.get('two'), 'blue');
+    assert.strictEqual(palette.get('unknown'), '#ccc');
+    assert.strictEqual(palette.defaultColor, '#ccc');
+    assert.strictEqual(palette.overflowing, false);
+    assert.deepStrictEqual(palette.colors(), ['red', 'blue']);
+  });
+
+  it('should be possible to create a palette from a mapping.', function() {
+    var palette = Palette.fromMapping('test', {one: 'red', two: 'blue'});
+
+    assert.strictEqual(palette.size, 2);
+    assert.strictEqual(palette.get('two'), 'blue');
+    assert.strictEqual(palette.get('unknown'), '#ccc');
+    assert.strictEqual(palette.defaultColor, '#ccc');
+    assert.strictEqual(palette.overflowing, false);
+    assert.deepStrictEqual(palette.colors(), ['red', 'blue']);
   });
 
   it('should work with a builder.', function() {
@@ -106,7 +128,7 @@ describe('Palette', function() {
     var palette = builder.build();
 
     assert.strictEqual(palette.size, 2);
-    assert.strictEqual(palette.get('three'), palette.colors[0]);
+    assert.strictEqual(palette.get('three'), palette.colors()[0]);
     assert.strictEqual(palette.has('two'), false);
   });
 });
