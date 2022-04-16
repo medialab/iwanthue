@@ -109,6 +109,10 @@ var palette = Palette.fromMapping(
 * **mapping** *object|Map*: mapping from values to colors.
 * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known.
 
+*Palette.fromJSON arguments*
+
+* **data** *object*: serialized palette data (`{name, defaultColor, entries}`).
+
 *Palette members*
 
 * **name** *string*: name of the palette.
@@ -122,6 +126,7 @@ var palette = Palette.fromMapping(
 * **has**: return whether the value is known to the palette.
 * **forEach**: callback iteration over (color, value).
 * **colors**: return the palette's colors as an array.
+* **toJSON**: return the palette in a serialized format fit for JSON.
 
 ### Precomputed palettes
 
