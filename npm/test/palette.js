@@ -92,4 +92,23 @@ describe('Palette', function() {
     assert.strictEqual(palette.defaultColor, '#ccc');
     assert.deepStrictEqual(palette.colors(), ['red', 'blue']);
   });
+
+  it('should be possible to serialize a palette.', function() {
+    var palette = Palette.fromMapping('test', {one: 'red', two: 'blue'});
+    var serialized = palette.toJSON();
+
+    assert.deepStrictEqual(serialized, {
+      name: 'test',
+      default: '#ccc',
+      entries: [['one', 'red'], ['two', 'blue']]
+    });
+
+    var otherPalette = Palette.fromJSON(serialized);
+
+    assert.strictEqual(palette.size, otherPalette.size);
+    assert.strictEqual(palette.get('two'), otherPalette.get('two'));
+    assert.strictEqual(palette.get('unknown'), otherPalette.get('unknown'));
+    assert.strictEqual(palette.defaultColor, otherPalette.defaultColor);
+    assert.deepStrictEqual(palette.colors(), otherPalette.colors());
+  });
 });

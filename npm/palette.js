@@ -36,6 +36,20 @@ Palette.prototype.colors = function() {
   return Array.from(this.map.values());
 };
 
+Palette.prototype.toJSON = function() {
+  return {
+    name: this.name,
+    default: this.defaultColor,
+    entries: Array.from(this.map.entries()),
+  };
+};
+
+Palette.fromJSON = function(data) {
+  const map = new Map(data.entries);
+
+  return new Palette(data.name, map, data.defaultColor);
+};
+
 Palette.generateFromValues = function(name, values, settings) {
   settings = Object.assign({
     colorSpace: 'sensible',

@@ -22,6 +22,9 @@ export default class Palette<V> {
   has(value: V): boolean;
   forEach(callback: (color: string, value: V) => void): void;
   colors(): Array<string>;
+  toJSON(): SerializedPalette<V>;
+
+  static fromJSON<T>(data: SerializedPalette<T>): Palette<T>;
 
   static generateFromValues<T>(
     name: string,
