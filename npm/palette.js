@@ -4,22 +4,24 @@
  *
  * A utility class representing a categorical color palette.
  */
-var some = require('obliterator/some');
 var forEach = require('obliterator/foreach');
 var iwanthue = require('./index.js');
 
-function Palette(name, map, options) {
-  options = options || {};
+function Palette(name, map, defaultColor) {
+  defaultColor = defaultColor || '#ccc';
 
   this.name = name;
-  this.overflowing = options.overflowing === true;
-  this.defaultColor = options.defaultColor || '#ccc';
+  this.defaultColor = defaultColor;
   this.map = map;
   this.size = map.size;
 }
 
 Palette.prototype.get = function(value) {
-  return this.map.get(value) || this.defaultColor;
+  var color = this.map.get(value);
+
+  if (color === undefined) return this.defaultColor;
+
+  return color;
 };
 
 Palette.prototype.has = function(value) {
@@ -34,9 +36,7 @@ Palette.prototype.colors = function() {
   return Array.from(this.map.values());
 };
 
-Palette.fromValues = function(name, values, settings) {
-  if (!values.size && !values.length) return new Palette(name, new Map());
-
+Palette.generateFromValues = function(name, values, settings) {
   settings = Object.assign({
     colorSpace: 'sensible',
     seed: name,
@@ -44,48 +44,40 @@ Palette.fromValues = function(name, values, settings) {
     attempts: 5
   }, settings);
 
-  var maxCount = settings.maxCount || Infinity;
-  var inputCount = values.length || values.size;
-  var count = Math.min(maxCount, inputCount);
+  var count = 'size' in values ? values.size : values.length;
 
-  var overflowing = settings.trueCount ? count < settings.trueCount : count < inputCount;
+  if (!count) return new Palette(name, new Map(), settings.defaultColor);
 
   var colors = iwanthue(count, settings);
   var map = new Map();
 
   var i = 0;
 
-  some(values, function(value) {
+  forEach(values, function(value) {
     map.set(value, colors[i++]);
-    if (i >= maxCount) return true;
   });
 
-  settings = {
-    defaultColor: settings.defaultColor,
-    overflowing: overflowing
-  };
-
-  return new Palette(name, map, settings);
+  return new Palette(name, map, settings.defaultColor);
 };
 
-Palette.fromEntries = function(name, entries, settings) {
+Palette.fromEntries = function(name, entries, defaultColor) {
   const map = new Map();
 
   forEach(entries, function(entry) {
     map.set(entry[0], entry[1]);
   });
 
-  return new Palette(name, map, settings);
+  return new Palette(name, map, defaultColor);
 };
 
-Palette.fromMapping = function(name, mapping, settings) {
+Palette.fromMapping = function(name, mapping, defaultColor) {
   const map = new Map();
 
   forEach(mapping, function(color, value) {
     map.set(value, color);
   });
 
-  return new Palette(name, map, settings);
+  return new Palette(name, map, defaultColor);
 };
 
 module.exports = Palette;

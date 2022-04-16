@@ -1,14 +1,14 @@
 import type {IWantHueSettings} from './index';
-import type {IntoInterator} from 'obliterator/types';
+import type {IntoInterator, IntoEntriesIterator, AnyMapping} from 'obliterator/types';
 
-export type PaletteSettings = {
+export interface PaletteGenerateFromValuesSettings extends IWantHueSettings {
   defaultColor?: string;
-  overflowing?: boolean;
 }
 
-export interface PaletteFromValuesSettings extends IWantHueSettings, PaletteSettings {
-  trueCount?: number;
-  maxCount?: number;
+export type SerializedPalette<V> = {
+  name: string;
+  defaultColor: string;
+  entries: Array<[value: V, color: string]>;
 }
 
 export default class Palette<V> {
@@ -16,29 +16,28 @@ export default class Palette<V> {
   size: number;
   defaultColor: string;
   map: Map<V, string>;
-  overflowing: boolean;
 
-  constructor(name: string, map: Map<V, string>, settings?: PaletteSettings);
+  constructor(name: string, map: Map<V, string>, defaultColor?: string);
   get(value: V): string;
   has(value: V): boolean;
   forEach(callback: (color: string, value: V) => void): void;
   colors(): Array<string>;
 
-  static fromValues<T>(
+  static generateFromValues<T>(
     name: string,
     values: IntoInterator<T>,
-    settings?: PaletteFromValuesSettings
+    settings?: PaletteGenerateFromValuesSettings
   ): Palette<T>;
 
   static fromEntries<T>(
     name: string,
-    entries: IntoInterator<[value: T, color: string]>,
-    settings?: PaletteSettings
+    entries: IntoEntriesIterator<T, string>,
+    defaultColor?: string
   ): Palette<T>;
 
   static fromMapping<T>(
     name: string,
-    mapping: Map<T, string> | {[value: T]: string},
-    settings?: PaletteSettings
+    mapping: AnyMapping<T, string>,
+    defaultColor?: string
   ): Palette<T>;
 }

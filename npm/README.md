@@ -62,7 +62,11 @@ A helper class representing a categorical color palette over a set of given valu
 // To build your palette from a unique list of values
 var Palette = require('iwanthue/palette');
 
-var palette = Palette.fromValues('cities', ['one', 'two', 'three'], {defaultColor: '#000'});
+var palette = Palette.generateFromValues(
+  'cities',
+  ['one', 'two', 'three'],
+  {defaultColor: '#000'}
+);
 
 palette.get('one');
 >>> '#19d3a2'
@@ -71,37 +75,39 @@ palette.get('unknown');
 >>> '#000'
 
 // From entries
-var palette = Palette.fromEntries('cities', [['one', 'red'], ['two', 'blue']]);
+var palette = Palette.fromEntries(
+  'cities',
+  [['one', 'red'], ['two', 'blue']],
+  '#000'
+);
 
 // From mappin
-var palette = Palette.fromMapping('cities', {one: 'red', two: 'blue'});
+var palette = Palette.fromMapping(
+  'cities',
+  {one: 'red', two: 'blue'},
+  'red'
+);
 ```
 
-*Palette.fromValues arguments*
+*Palette.generateFromValues arguments*
 
 * **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
 * **values** *iter*: unique values for the represented category.
 * **settings** *?object*:
-  * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known or if the palette is over capacity.
-  * **maxCount** *?number*: maximum number of different colors to use.
-  * **trueCount** *?number*: if passing a clamped list of values, true count to be considered to know if the palette is over capacity.
+  * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known.
   * *...* any setting that can be passed to [iwanthue](#usage).
 
 *Palette.fromEntries arguments*
 
 * **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
 * **entries** *iter*: key, value entries mapping values to colors.
-* **settings** *?object*:
-  * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known or if the palette is over capacity.
-  * **overflowing** *?boolean* [`false`]: whether the palette is overflowing.
+* **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known.
 
 *Palette.fromMapping arguments*
 
 * **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
 * **mapping** *object|Map*: mapping from values to colors.
-* **settings** *?object*:
-  * **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known or if the palette is over capacity.
-  * **overflowing** *?boolean* [`false`]: whether the palette is overflowing.
+* **defaultColor** *?string* [`#ccc`]: default color to return in case desired value is not known.
 
 *Palette members*
 
@@ -109,7 +115,6 @@ var palette = Palette.fromMapping('cities', {one: 'red', two: 'blue'});
 * **size** *number*: number of colors.
 * **defaultColor** *string*: default color.
 * **map** *Map*: map from values to colors.
-* **overflowing** *boolean*: whether the palette has less colors than the number of known values.
 
 *Palette methods*
 
@@ -117,42 +122,6 @@ var palette = Palette.fromMapping('cities', {one: 'red', two: 'blue'});
 * **has**: return whether the value is known to the palette.
 * **forEach**: callback iteration over (color, value).
 * **colors**: return the palette's colors as an array.
-
-### PaletteBuilder
-
-A helper class useful to build a [Palette](#palette) object over an arbitrary stream of data.
-
-The builder takes a maximum number of colors for the generated palette and will make sure most frequent values will have a color.
-
-```js
-// To build your palette from a stream of data
-var PaletteBuilder = require('iwanthue/palette-builder');
-
-var builder = new PaletteBuilder('categoryName', 10, {defaultColor: '#000'});
-
-forEachRow(function(row) {
-  builder.add(row.type);
-});
-
-var palette = builder.build();
-```
-
-*Palette builder arguments*
-
-* **name** *string*: palette or category name used as `seed` for [iwanthue](#usage).
-* **max** *number*: maximum number of colors for the palette.
-* **settings** *?object*:
-  * **defaultColor** *?string* [`#ccc`]: default color for the palette.
-  * *...* any setting that can be passed to [iwanthue](#usage).
-
-*Palette builder members*
-
-* **frequencies** *MultiSet*: frequencies of seen values.
-
-*Palette builder methods*
-
-* **add**: add the occurrence of a single value to the builder to count frequencies and cardinality of considered category.
-* **build**: returns the generated palette.
 
 ### Precomputed palettes
 
