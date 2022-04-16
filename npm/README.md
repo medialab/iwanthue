@@ -81,7 +81,7 @@ var palette = Palette.fromEntries(
   '#000'
 );
 
-// From mappin
+// From mapping
 var palette = Palette.fromMapping(
   'cities',
   {one: 'red', two: 'blue'},
