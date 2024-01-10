@@ -37,7 +37,7 @@ var selectorsState = {
 };
 
 var maxLightness = 100;
-var maxChroma = 100;
+var maxChroma = 134;
 
 var hue_context;
 var chroma_context;
@@ -45,20 +45,20 @@ var lightness_context;
 
 // Init
 var initSelectors = function(){
-	
+
 	var width = $("#hueSelector").width();
 	var height = 28;
-	
+
 	// Hue
 	$("#hueSelector").html('<canvas id="hue_canvas" width="'+width+'" height="'+height+'">Your browser doesn\'t support CANVAS.</canvas>');
 	var hue_canvas = document.getElementById('hue_canvas');
 	hue_context = hue_canvas.getContext('2d');
-	
+
 	$("#hueSelector").unbind();
 	$("#hueSelector").mousedown(function(event){
 		event.stopPropagation();
 		var offsetX = Math.round(event.pageX - $(event.target).position().left);
-		
+
 		if(Math.abs(offsetX-width*selectorsState.hue.min)<selectorsState.activeWidth || Math.abs(offsetX-width*selectorsState.hue.max)<selectorsState.activeWidth){
 			// Something dragged
 			if(Math.abs(offsetX-width*selectorsState.hue.min)<Math.abs(offsetX-width*selectorsState.hue.max)){
@@ -82,12 +82,12 @@ var initSelectors = function(){
 	$("#hueSelector").mousemove(function(event){
 		event.stopPropagation();
 		var offsetX = Math.round(event.pageX - $(event.target).position().left);
-		
+
 		// Display
 		selectorsState.chroma.extravar = 'hue';
 		selectorsState.lightness.extravar = 'hue';
 		selectorsState.currentValues.hue = 360 * offsetX/width;
-		
+
 		// Display cursor
 		if(
 			(selectorsState.hue.min<selectorsState.hue.max && Math.abs(offsetX-width*selectorsState.hue.min)<selectorsState.activeWidth)
@@ -99,7 +99,7 @@ var initSelectors = function(){
 		} else {
 			$('#hueSelector').removeClass('hover');
 		}
-		
+
 		updateSelectors();
 	});
 	$("#hueSelector").mouseout(function(event){
@@ -114,17 +114,17 @@ var initSelectors = function(){
 			updateSelectors();
 		}
 	});
-	
+
 	// Chroma
 	$("#chromaSelector").html('<canvas id="chroma_canvas" width="'+width+'" height="'+height+'">Your browser doesn\'t support CANVAS.</canvas>');
 	var chroma_canvas = document.getElementById('chroma_canvas');
 	chroma_context = chroma_canvas.getContext('2d');
-	
+
 	$("#chromaSelector").unbind();
 	$("#chromaSelector").mousedown(function(event){
 		event.stopPropagation();
 		var offsetX = Math.round(event.pageX - $(event.target).position().left);
-		
+
 		if(Math.abs(offsetX-width*selectorsState.chroma.min)<selectorsState.activeWidth || Math.abs(offsetX-width*selectorsState.chroma.max)<selectorsState.activeWidth){
 			// Something dragged
 			if(Math.abs(offsetX-width*selectorsState.chroma.min)<Math.abs(offsetX-width*selectorsState.chroma.max)){
@@ -145,12 +145,12 @@ var initSelectors = function(){
 	$("#chromaSelector").mousemove(function(event){
 		event.stopPropagation();
 		var offsetX = Math.round(event.pageX - $(event.target).position().left);
-		
+
 		// Display
 		selectorsState.hue.extravar = 'chroma';
 		selectorsState.lightness.extravar = 'chroma';
 		selectorsState.currentValues.chroma = maxChroma*offsetX/width;
-		
+
 		// Display cursor
 		if(Math.abs(offsetX-width*selectorsState.chroma.min)<selectorsState.activeWidth
 		|| Math.abs(offsetX-width*selectorsState.chroma.max)<selectorsState.activeWidth
@@ -159,7 +159,7 @@ var initSelectors = function(){
 		} else {
 			$('#chromaSelector').removeClass('hover');
 		}
-		
+
 		updateSelectors();
 	});
 	$("#chromaSelector").mouseout(function(event){
@@ -174,17 +174,17 @@ var initSelectors = function(){
 			updateSelectors();
 		}
 	});
-	
+
 	// Lightness
 	$("#lightnessSelector").html('<canvas id="lightness_canvas" width="'+width+'" height="'+height+'">Your browser doesn\'t support CANVAS.</canvas>');
 	var lightness_canvas = document.getElementById('lightness_canvas');
 	lightness_context = lightness_canvas.getContext('2d');
-	
+
 	$("#lightnessSelector").unbind();
 	$("#lightnessSelector").mousedown(function(event){
 		event.stopPropagation();
 		var offsetX = Math.round(event.pageX - $(event.target).position().left);
-		
+
 		if(Math.abs(offsetX-width*selectorsState.lightness.min)<selectorsState.activeWidth || Math.abs(offsetX-width*selectorsState.lightness.max)<selectorsState.activeWidth){
 			// Something dragged
 			if(Math.abs(offsetX-width*selectorsState.lightness.min)<Math.abs(offsetX-width*selectorsState.lightness.max)){
@@ -205,12 +205,12 @@ var initSelectors = function(){
 	$("#lightnessSelector").mousemove(function(event){
 		event.stopPropagation();
 		var offsetX = Math.round(event.pageX - $(event.target).position().left);
-		
+
 		// Display
 		selectorsState.hue.extravar = 'lightness';
 		selectorsState.chroma.extravar = 'lightness';
 		selectorsState.currentValues.lightness = maxLightness*offsetX/width;
-		
+
 		// Display cursor
 		if(Math.abs(offsetX-width*selectorsState.lightness.min)<selectorsState.activeWidth
 		|| Math.abs(offsetX-width*selectorsState.lightness.max)<selectorsState.activeWidth
@@ -219,7 +219,7 @@ var initSelectors = function(){
 		} else {
 			$('#lightnessSelector').removeClass('hover');
 		}
-		
+
 		updateSelectors();
 	});
 	$("#lightnessSelector").mouseout(function(event){
@@ -234,7 +234,7 @@ var initSelectors = function(){
 			updateSelectors();
 		}
 	});
-	
+
 	$("#selectorsTable, #hueSelector, #chromaSelector, #lightnessSelector").mousemove(function(event){
 		// Drag
 		var offsetX = Math.round(event.pageX - $("#hueSelector").position().left - selectorsState.clickOffset)
@@ -250,7 +250,7 @@ var initSelectors = function(){
 			drag = true;
 		} else if(selectorsState.hue.drag == 'all'){
 			move = offsetX/width-selectorsState.dragPosition;
-			
+
 			selectorsState.hue.min = (selectorsState.hue.min + move)%1
 			selectorsState.hue.max = (selectorsState.hue.max + move)%1
 			if(selectorsState.hue.min<0)
@@ -330,7 +330,7 @@ var initSelectors = function(){
 	});
 
 	updateSelectors();
-	
+
 	// Also update the numeric fields
 	$('#cmax').val(maxChroma);
 	$('#lmax').val(maxLightness);
@@ -345,7 +345,7 @@ var updateSelectors = function(){
 	var h_default = 340;
 	var c_default = 40;
 	var l_default = 70;
-	
+
 	/// Hue
 	// Draw
 	hue_context.clearRect(0, 0, w, h);
@@ -398,7 +398,7 @@ var updateSelectors = function(){
 	// Selectors
 	drawSelector(hue_context, selectorsState.hue.min, w, h, true);
 	drawSelector(hue_context, selectorsState.hue.max, w, h, false);
-	
+
 	/// Chroma
 	// Draw
 	chroma_context.clearRect (0, 0, w, h);
@@ -434,7 +434,7 @@ var updateSelectors = function(){
 	// Selectors
 	drawSelector(chroma_context, selectorsState.chroma.min, w, h, true);
 	drawSelector(chroma_context, selectorsState.chroma.max, w, h, false);
-	
+
 	/// Lightness
 	// Draw
 	lightness_context.clearRect (0, 0, w, h);
@@ -470,7 +470,7 @@ var updateSelectors = function(){
 	// Selectors
 	drawSelector(lightness_context, selectorsState.lightness.min, w, h, true);
 	drawSelector(lightness_context, selectorsState.lightness.max, w, h, false);
-	
+
 }
 
 
