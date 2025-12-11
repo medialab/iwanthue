@@ -135,34 +135,68 @@ function labToHcl(lab) {
 }
 
 function diffSort(distance, colors) {
+  const colorsCount = colors.length;
   colors = colors.slice();
 
-  var diffColors = [colors.shift()];
+  var cachedDistances = new Array();
 
-  var index, maxDistance, candidateIndex;
+  var diffColors = [colors[0]];
+  colors[0] = null;
 
-  var A, B, d, i;
+  while (diffColors.length < colorsCount) {
 
-  while (colors.length > 0) {
-    index = -1;
-    maxDistance = -Infinity;
+    var lastPickColor = diffColors[diffColors.length - 1];
+    var lastDistances = [];
 
-    for (candidateIndex = 0; candidateIndex < colors.length; candidateIndex++) {
-      A = colors[candidateIndex];
+    colors.forEach((color,idx)=>{
+      if(color){
+        lastDistances.push([distance(lastPickColor, color),idx]);
+      }
+    });
 
-      for (i = 0; i < diffColors.length; i++) {
-        B = diffColors[i];
-        d = distance(A, B);
+    lastDistances.sort((a,b)=>{
+      if(a[0] == b[0]){
+        return 0;
+      }
+      return a[0] < b[0]?-1:1;
+    });
 
-        if (d > maxDistance) {
-          maxDistance = d;
-          index = candidateIndex;
+    cachedDistances.push(lastDistances);
+
+    var maxDistance = -Infinity;
+    var toPickIdx = -1;
+
+
+
+    for(var j = 0; j< cachedDistances.length;++j)
+    {
+      var distances = cachedDistances[j];
+      if(distances.length == 0){
+        continue;
+      }
+
+      for(var i = 0;i < distances.length;){
+
+        var reverseIdx = distances.length - 1 - i;
+        var thisIdx = distances[reverseIdx][1];
+        if(colors[thisIdx] == null){
+          // already being picked
+          distances.pop();
+          continue;
         }
+
+        var thisDistance = distances[reverseIdx][0];
+        if(thisDistance > maxDistance){
+          maxDistance = thisDistance;
+          toPickIdx = thisIdx;
+        }
+
+        break;
       }
     }
 
-    diffColors.push(colors[index]);
-    colors.splice(index, 1);
+    diffColors.push(colors[toPickIdx]);
+    colors[toPickIdx] = null;
   }
 
   return diffColors;
