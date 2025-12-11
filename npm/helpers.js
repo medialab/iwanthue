@@ -145,48 +145,44 @@ function diffSort(distance, colors) {
 
   while (diffColors.length < colorsCount) {
 
-    var lastPickColor = diffColors[diffColors.length - 1];
-    var lastDistances = [];
+    const lastPickColor = diffColors[diffColors.length - 1];
+    const lastDistances = [];
 
-    colors.forEach((color,idx)=>{
-      if(color){
-        lastDistances.push([distance(lastPickColor, color),idx]);
+    colors.forEach((color, idx)=>{
+      if (color) {
+        lastDistances.push([distance(lastPickColor, color), idx]);
       }
     });
-
-    lastDistances.sort((a,b)=>{
-      if(a[0] == b[0]){
+    lastDistances.sort((a, b)=>{
+      if (a[0] === b[0]) {
         return 0;
       }
-      return a[0] < b[0]?-1:1;
+      return a[0] < b[0] ? -1 : 1;
     });
-
     cachedDistances.push(lastDistances);
 
     var maxDistance = -Infinity;
     var toPickIdx = -1;
 
-
-
-    for(var j = 0; j< cachedDistances.length;++j)
+    for (var j = 0; j < cachedDistances.length; ++j)
     {
       var distances = cachedDistances[j];
-      if(distances.length == 0){
+      if (distances.length === 0) {
         continue;
       }
 
-      for(var i = 0;i < distances.length;){
+      for (var i = 0; i < distances.length;) {
 
         var reverseIdx = distances.length - 1 - i;
         var thisIdx = distances[reverseIdx][1];
-        if(colors[thisIdx] == null){
+        if (colors[thisIdx] === null) {
           // already being picked
           distances.pop();
           continue;
         }
 
         var thisDistance = distances[reverseIdx][0];
-        if(thisDistance > maxDistance){
+        if (thisDistance > maxDistance) {
           maxDistance = thisDistance;
           toPickIdx = thisIdx;
         }
