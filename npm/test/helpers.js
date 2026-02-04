@@ -19,13 +19,6 @@ function deepApproximatelyEqual(a1, a2) {
   });
 }
 
-function rgbHexToLab(hex) {
-  return helpers.rgbToLab([
-    parseInt(hex.slice(1, 3), 16),
-    parseInt(hex.slice(3, 5), 16),
-    parseInt(hex.slice(5, 7), 16)
-  ]);
-}
 
 describe('helpers', function() {
 
@@ -55,7 +48,7 @@ describe('helpers', function() {
     ];
 
     var output = helpers
-      .diffSort(distances.get('euclidean'), colors.map(rgbHexToLab))
+      .diffSort(distances.get('euclidean'), colors.map(helpers.rgbHexToLab))
       .map(helpers.labToRgbHex);
 
     assert.deepEqual(output, sortedColors);

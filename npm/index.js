@@ -8,6 +8,7 @@ var Random = require('./rng.js');
 var CachedDistances = require('./distances.js');
 var helpers = require('./helpers.js');
 var presets = require('./presets.js');
+const {omit} = require('lodash');
 
 var validateRgb = helpers.validateRgb;
 var labToRgb = helpers.labToRgb;
@@ -20,6 +21,7 @@ var diffSort = helpers.diffSort;
  */
 var DEFAULT_SETTINGS = {
   attempts: 1,
+  originalColorsToExpand: null,
   colorFilter: null,
   colorSpace: 'default',
   clustering: 'k-means',
@@ -80,6 +82,12 @@ function resolveAndValidateSettings(userSettings) {
 
   if (settings.seed !== null && typeof settings.seed !== 'number')
     throw new Error('iwanthue: invalid `seed`. Expecting an integer or a string.');
+  if (settings.originalColorsToExpand !== null && (
+    !Array.isArray(settings.originalColorsToExpand) ||
+    !settings.originalColorsToExpand.every(function(c) {
+      return typeof c === 'string' && helpers.validateRgbHex(c);
+    })))
+    throw new Error(`iwanthue: invalid 'originalColorsToExpand' ${settings.originalColorsToExpand}. Expecting an array of hexadecimal colors.`);
 
   // Building color filter from preset?
   if (!settings.colorFilter) {
@@ -246,13 +254,25 @@ function forceVector(rng, distance, validColor, colors, settings) {
 }
 
 function kMeans(distance, validColor, colors, settings) {
+  // discretized color space into list of colors
   var colorSamples = [];
+  // for each color sample indicate the index in the colors array of the closest color
   var samplesClosest = [];
+  var lockMaxIndex = -1;
+  if (settings.originalColorsToExpand) {
+    // replace sampled colors by original ones
+    diffSort(distance, settings.originalColorsToExpand.map(helpers.rgbHexToLab)).forEach(function (c, i) {
+      colors[i] = c;
+    });
 
+    lockMaxIndex = settings.originalColorsToExpand.length - 1;
+
+  }
   var l, a, b;
 
   var lab, rgb;
 
+  // Define sample discretization precision: i.e. number of samples
   var linc = 5,
       ainc = 10,
       binc = 10;
@@ -263,6 +283,7 @@ function kMeans(distance, validColor, colors, settings) {
     binc = 5;
   }
 
+  // sample the color space
   for (l = 0; l <= 100; l += linc) {
     for (a = -100; a <= 100; a += ainc) {
       for (b = -100; b <= 100; b += binc) {
@@ -273,6 +294,7 @@ function kMeans(distance, validColor, colors, settings) {
           continue;
 
         colorSamples.push(lab);
+        // prepare closest array fin expanding it to the same size as samples
         samplesClosest.push(null);
       }
     }
@@ -289,11 +311,12 @@ function kMeans(distance, validColor, colors, settings) {
       lj = colors.length;
 
 
-  var d, minDistance, freeColorSamples, count, candidate, closest;
+  var d, minDistance, freeColorSamples, nbCandidates, candidate, closest;
 
+  // multiple pass on the same algo
   while (steps-- > 0) {
 
-    // Finding closest color
+    // For each sample, find the closest color
     for (i = 0; i < li; i++) {
       B = colorSamples[i];
       minDistance = Infinity;
@@ -305,34 +328,47 @@ function kMeans(distance, validColor, colors, settings) {
 
         if (d < minDistance) {
           minDistance = d;
+          // store closest color index
           samplesClosest[i] = j;
         }
       }
     }
 
+    // copy samples
     freeColorSamples = colorSamples.slice();
 
+    // For each color
     for (j = 0; j < lj; j++) {
-      count = 0;
+
+      nbCandidates = 0;
       candidate = [0, 0, 0];
 
+      // for each sample
       for (i = 0; i < li; i++) {
+        // if sample closest color is the current color
         if (samplesClosest[i] === j) {
-          count++;
-          candidate[0] += colorSamples[i][0];
-          candidate[1] += colorSamples[i][1];
-          candidate[2] += colorSamples[i][2];
+          nbCandidates++;
+          // sum each color component of all candidates
+          candidate[0] += colorSamples[i][0]; // l
+          candidate[1] += colorSamples[i][1]; // a
+          candidate[2] += colorSamples[i][2]; // b
         }
       }
 
-      if (count !== 0) {
-        candidate[0] /= count;
-        candidate[1] /= count;
-        candidate[2] /= count;
+      if (nbCandidates !== 0) {
+        // average the candidate color components
+        candidate[0] /= nbCandidates;
+        candidate[1] /= nbCandidates;
+        candidate[2] /= nbCandidates;
+      } else {
+        candidate = colors[j];
+      }
 
-        rgb = labToRgb(candidate);
-
-        if (validColor(rgb, candidate)) {
+      rgb = labToRgb(candidate);
+      // We adjust color using kmeans only for colors not locked ie provided as original to expand
+      if (j > lockMaxIndex) {
+        if (nbCandidates !== 0 && validColor(rgb, candidate)) {
+          // pick the candidate
           colors[j] = candidate;
         }
         else {
@@ -373,18 +409,19 @@ function kMeans(distance, validColor, colors, settings) {
             colors[j] = colorSamples[closest];
           }
 
-          // Cleaning up free samples
-          /* eslint-disable */
-          freeColorSamples = freeColorSamples.filter(function(color) {
-            return (
-              color[0] !== colors[j][0] ||
-              color[1] !== colors[j][1] ||
-              color[2] !== colors[j][2]
-            )
-          });
-          /* eslint-enable */
         }
       }
+      // Cleaning up free samples from chosen colors
+      /* eslint-disable */
+      freeColorSamples = freeColorSamples.filter(function(color) {
+        return (
+          color[0] !== colors[j][0] ||
+          color[1] !== colors[j][1] ||
+          color[2] !== colors[j][2]
+        )
+      });
+      /* eslint-enable */
+
     }
   }
 
@@ -402,11 +439,17 @@ function kMeans(distance, validColor, colors, settings) {
  * @param  {boolean}    ultraPrecision   - Whether to use ultra precision or not.
  * @param  {string}     distance         - Name of the color distance function to use. Defaults to 'colorblind'.
  * @param  {number}     seed             - Seed for random number generation.
+ * @param {Array[string]} originalColorsToExpand - List of hexadecimal colors from which to build the palette
  * @return {Array}                     - The computed palette as an array of hexadecimal colors.
  */
 module.exports = function generatePalette(count, settings) {
   if (typeof count !== 'number' || count < 1)
     throw new Error('iwanthue: expecting a color count > 1.');
+
+  if (settings.originalColorsToExpand && settings.originalColorsToExpand.length >= count) {
+    // original colors settings is long enough to generate the requested colors palette.
+    return settings.originalColorsToExpand.slice(0, count);
+  }
 
   settings = resolveAndValidateSettings(settings);
 
@@ -455,9 +498,10 @@ module.exports = function generatePalette(count, settings) {
     colors = sampleLabColors(rng, count, validColor);
 
     if (settings.clustering === 'force-vector')
-      forceVector(rng, distance, validColor, colors, settings);
+      forceVector(rng, distance, validColor, colors, omit(settings, ['originalColorsToExpand']));
     else
-      kMeans(distance, validColor, colors, settings);
+      kMeans(distance, validColor, colors, omit(settings, ['originalColorsToExpand']));
+
 
     metrics = helpers.computeQualityMetrics(distance, colors);
 
@@ -468,9 +512,16 @@ module.exports = function generatePalette(count, settings) {
 
     attempts--;
   }
-
   colors = best;
   colors = diffSort(distance, colors);
+
+  if (settings.originalColorsToExpand) {
+      //Correct palette by taking into account original colors
+      // var expandSettings = settings;
+      // expandSettings.quality = 50;
+
+      kMeans(distances.get('euclidean'), validColor, colors, settings);
+  }
 
   return colors.map(labToRgbHex);
 };

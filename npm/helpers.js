@@ -95,6 +95,11 @@ function rgbToLab(rgb) {
   return [l < 0 ? 0 : l, 500 * (x - y), 200 * (y - z)];
 }
 
+function validateRgbHex(rgbHex) {
+  var rgbHexRegExp = new RegExp('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$');
+  return rgbHexRegExp.test(rgbHex);
+}
+
 function validateRgb(rgb) {
   var r = rgb[0];
   var g = rgb[1];
@@ -116,6 +121,14 @@ function labToRgbHex(lab) {
     hexPad(rgb[1]) +
     hexPad(rgb[2])
   );
+}
+
+function rgbHexToLab(hex) {
+  return rgbToLab([
+    parseInt(hex.slice(1, 3), 16),
+    parseInt(hex.slice(3, 5), 16),
+    parseInt(hex.slice(5, 7), 16)
+  ]);
 }
 
 var RAD_TO_DEG = 180 / Math.PI;
@@ -191,8 +204,10 @@ function computeQualityMetrics(distance, colors) {
 }
 
 exports.validateRgb = validateRgb;
+exports.validateRgbHex = validateRgbHex;
 exports.labToRgb = labToRgb;
 exports.labToRgbHex = labToRgbHex;
+exports.rgbHexToLab = rgbHexToLab;
 exports.rgbToLab = rgbToLab;
 exports.labToHcl = labToHcl;
 exports.diffSort = diffSort;
