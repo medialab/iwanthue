@@ -8,7 +8,6 @@ var Random = require('./rng.js');
 var CachedDistances = require('./distances.js');
 var helpers = require('./helpers.js');
 var presets = require('./presets.js');
-const {omit} = require('lodash');
 
 var validateRgb = helpers.validateRgb;
 var labToRgb = helpers.labToRgb;
@@ -499,13 +498,16 @@ module.exports = function generatePalette(count, settings) {
   var bestMetric = -Infinity,
       best;
 
+  var settingsWithoutOriginalColorsToExpand = settings.originalColorsToExpand ? Object.keys(settings).filter(function(k) { return k !== 'originalColorsToExpand'; }).reduce(function (o, k) {
+    o[k] = settings[k];
+    return o;
+  }, {}) : settings;
   while (attempts > 0) {
     colors = sampleLabColors(rng, count, validColor);
-
     if (settings.clustering === 'force-vector')
-      forceVector(rng, distance, validColor, colors, omit(settings, ['originalColorsToExpand']));
+      forceVector(rng, distance, validColor, colors, settingsWithoutOriginalColorsToExpand);
     else
-      kMeans(distance, validColor, colors, omit(settings, ['originalColorsToExpand']));
+      kMeans(distance, validColor, colors, settingsWithoutOriginalColorsToExpand);
 
 
     metrics = helpers.computeQualityMetrics(distance, colors);

@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var helpers = require('../helpers.js');
 var CachedDistances = require('../distances.js');
-const {colorSpacePresetsSortedByArea} = require('../helpers.js');
+var {colorSpacePresetsSortedByArea} = require('../helpers.js');
 
 var LAB_COLORS = [
   [45.19047619047619, 42.698412698412696, 17.142857142857142],

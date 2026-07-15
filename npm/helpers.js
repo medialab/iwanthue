@@ -1,5 +1,4 @@
-var {sortBy, toPairs} = require('lodash');
-const presets = require('./presets');
+var presets = require('./presets');
 
 /**
  * Iwanthue Library Helpers
@@ -206,11 +205,11 @@ function computeQualityMetrics(distance, colors) {
   return {min: min, mean: S / t};
 }
 
-var colorSpacePresetsAreas = sortBy(
-  toPairs(presets).map(([presetKey, preset]) => {
+var colorSpacePresetsAreas = Object.keys(presets).map((presetKey) => {
+    var preset = presets[presetKey];
     // hRange can be expressed as a range from 330 to 360 and from 0 to 20 as [330, 20]
     // in that case the range has to be calculated differently
-    const hRange =
+    var hRange =
       preset[1] >= preset[0]
         ? preset[1] - preset[0]
         : 360 - preset[0] + preset[1];
@@ -218,8 +217,7 @@ var colorSpacePresetsAreas = sortBy(
       key: presetKey,
       area: hRange * (preset[3] - preset[2]) * (preset[5] - preset[4]),
     };
-  }),
-  function ({area}) {return area;});
+  }).sort(function (a, b) {return a.area - b.area;});
 
 var colorSpacePresetsSortedByArea = colorSpacePresetsAreas.map(
   function ({key}) {return key;});

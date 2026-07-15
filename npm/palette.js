@@ -45,7 +45,7 @@ Palette.prototype.toJSON = function() {
 };
 
 Palette.fromJSON = function(data) {
-  const map = new Map(data.entries);
+  var map = new Map(data.entries);
 
   return new Palette(data.name, map, data.defaultColor);
 };
@@ -75,7 +75,7 @@ Palette.generateFromValues = function(name, values, settings) {
 };
 
 Palette.fromEntries = function(name, entries, defaultColor) {
-  const map = new Map();
+  var map = new Map();
 
   forEach(entries, function(entry) {
     map.set(entry[0], entry[1]);
@@ -85,7 +85,7 @@ Palette.fromEntries = function(name, entries, defaultColor) {
 };
 
 Palette.fromMapping = function(name, mapping, defaultColor) {
-  const map = new Map();
+  var map = new Map();
 
   forEach(mapping, function(color, value) {
     map.set(value, color);
