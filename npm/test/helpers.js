@@ -1,6 +1,7 @@
 var assert = require('chai').assert;
 var helpers = require('../helpers.js');
 var CachedDistances = require('../distances.js');
+var {colorSpacePresetsSortedByArea} = require('../helpers.js');
 
 var LAB_COLORS = [
   [45.19047619047619, 42.698412698412696, 17.142857142857142],
@@ -19,13 +20,6 @@ function deepApproximatelyEqual(a1, a2) {
   });
 }
 
-function rgbHexToLab(hex) {
-  return helpers.rgbToLab([
-    parseInt(hex.slice(1, 3), 16),
-    parseInt(hex.slice(3, 5), 16),
-    parseInt(hex.slice(5, 7), 16)
-  ]);
-}
 
 describe('helpers', function() {
 
@@ -55,9 +49,50 @@ describe('helpers', function() {
     ];
 
     var output = helpers
-      .diffSort(distances.get('euclidean'), colors.map(rgbHexToLab))
+      .diffSort(distances.get('euclidean'), colors.map(helpers.rgbHexToLab))
       .map(helpers.labToRgbHex);
 
     assert.deepEqual(output, sortedColors);
+  });
+
+  it('should be possible to find the smallest preset matching a palette', function () {
+    var shades = ['#c6ccc2', '#2f251b', '#858a84', '#294240', '#655b4c'];
+    assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(shades), 'shades');
+
+    // expected result: we find the smallest preset, fancy-light and pastels share lots of common colors,
+    // fancy being smallest it's picked up in this case
+    var pastels = ['#e6b8b3', '#a7dde2', '#d1bbdf', '#d4d9b6', '#aac4e2', '#9bc2af'];
+    assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(pastels), 'fancy-light');
+
+    var ochreSand = ['#946056', '#e99478', '#995432', '#d79d91', '#b65f56'];
+    assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(ochreSand), 'ochre-sand');
+
+    var intense = ['#749a50', '#6b47b8', '#c76c3f', '#cd53b8', '#6f86b5', '#a04a61'];
+    assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(intense), 'intense');
+  });
+
+  it('should properly sort preset by size', () => {
+    assert.sameOrderedMembers(colorSpacePresetsSortedByArea, [
+      'ochre-sand',
+      'indigo-night',
+      'blue-ocean',
+      'purple-wine',
+      'yellow-lime',
+      'tarnish',
+      'fancy-light',
+      'red-roses',
+      'pastel',
+      'sensible',
+      'ice-cube',
+      'green-mint',
+      'shades',
+      'fancy-dark',
+      'fluo',
+      'colorblind',
+      'default',
+      'pimp',
+      'intense',
+      'all',
+    ]);
   });
 });

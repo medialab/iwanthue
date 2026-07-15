@@ -1,3 +1,5 @@
+var presets = require('./presets');
+
 /**
  * Iwanthue Library Helpers
  * =========================
@@ -95,6 +97,11 @@ function rgbToLab(rgb) {
   return [l < 0 ? 0 : l, 500 * (x - y), 200 * (y - z)];
 }
 
+function validateRgbHex(rgbHex) {
+  var rgbHexRegExp = new RegExp('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$');
+  return rgbHexRegExp.test(rgbHex);
+}
+
 function validateRgb(rgb) {
   var r = rgb[0];
   var g = rgb[1];
@@ -116,6 +123,14 @@ function labToRgbHex(lab) {
     hexPad(rgb[1]) +
     hexPad(rgb[2])
   );
+}
+
+function rgbHexToLab(hex) {
+  return rgbToLab([
+    parseInt(hex.slice(1, 3), 16),
+    parseInt(hex.slice(3, 5), 16),
+    parseInt(hex.slice(5, 7), 16)
+  ]);
 }
 
 var RAD_TO_DEG = 180 / Math.PI;
@@ -190,10 +205,53 @@ function computeQualityMetrics(distance, colors) {
   return {min: min, mean: S / t};
 }
 
+var colorSpacePresetsAreas = Object.keys(presets).map((presetKey) => {
+    var preset = presets[presetKey];
+    // hRange can be expressed as a range from 330 to 360 and from 0 to 20 as [330, 20]
+    // in that case the range has to be calculated differently
+    var hRange =
+      preset[1] >= preset[0]
+        ? preset[1] - preset[0]
+        : 360 - preset[0] + preset[1];
+    return {
+      key: presetKey,
+      area: hRange * (preset[3] - preset[2]) * (preset[5] - preset[4]),
+    };
+  }).sort(function (a, b) {return a.area - b.area;});
+
+var colorSpacePresetsSortedByArea = colorSpacePresetsAreas.map(
+  function ({key}) {return key;});
+
+function detectSmallestCompatibleColorSpace(hexColors) {
+  var colorSpace = colorSpacePresetsSortedByArea.find((presetKey) => {
+    // test that all colors are include din the color area
+    var areaBounds = presets[presetKey];
+    return hexColors
+      .map(function (c) { return labToHcl(rgbHexToLab(c));})
+      .every(
+        function ([h, c, l]) {
+          return (areaBounds[0] <= areaBounds[1]
+            ? areaBounds[0] <= h && h <= areaBounds[1]
+            : areaBounds[0] <= h || h <= areaBounds[1]) &&
+          areaBounds[2] <= c &&
+          c <= areaBounds[3] &&
+          areaBounds[4] <= l &&
+          l <= areaBounds[5];
+        }
+      );
+  });
+
+  return colorSpace;
+}
+
 exports.validateRgb = validateRgb;
+exports.validateRgbHex = validateRgbHex;
 exports.labToRgb = labToRgb;
 exports.labToRgbHex = labToRgbHex;
+exports.rgbHexToLab = rgbHexToLab;
 exports.rgbToLab = rgbToLab;
 exports.labToHcl = labToHcl;
 exports.diffSort = diffSort;
 exports.computeQualityMetrics = computeQualityMetrics;
+exports.detectSmallestCompatibleColorSpace = detectSmallestCompatibleColorSpace;
+exports.colorSpacePresetsSortedByArea = colorSpacePresetsSortedByArea;

@@ -67,7 +67,9 @@ export interface IWantHueSettings {
   quality?: number,
   ultraPrecision?: boolean,
   distance?: Distance,
-  seed?: string | number | null
+  seed?: string | number | null,
+  // list of hexadecimal colors which will be expanded with more colours (up to count)
+  originalColorsToExpand?: string[]
 }
 
 export default function iwanthue(count: number, settings?: IWantHueSettings): Array<string>;

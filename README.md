@@ -53,6 +53,7 @@ var palette = iwanthue(5, {
   * **ultraPrecision** *?boolean* [`false`]: Ultra precision for `k-means` colorspace sampling?
   * **distance** *?string* [`euclidean`]: Distance function to use. Can be `euclidean`, `cmc`, `compromise` (colorblind), `protanope`, `deuteranope` or `tritanope`.
   * **seed** *?string|number*: Random number generator seed. Useful to produce the same palette every time based on some data attribute.
+  * **originalColorsToExpand** *?string[]*: list of colors (existing palette) to expand by adding new colors. if no colorSpace in settings, the smallest preset which contains all given colors will be used
 
 ### Palette
 

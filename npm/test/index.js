@@ -68,4 +68,52 @@ describe('iwanthue', function() {
 
     assert.sameMembers(palette, palette2);
   });
+
+
+  it('should be possible to pass originalColorsToExpand to expand palette.', function() {
+
+    var palette = iwanthue(3, {originalColorsToExpand: ['#60a862', '#c15ca5'], seed: 123, colorSpace: 'all'});
+    assert.sameMembers(palette, ['#60a862', '#c15ca5', '#986e5e']);
+
+
+    var palette3 = iwanthue(5, {originalColorsToExpand: ['#94b3b9', '#9552b3', '#98bf5a', '#c7614e'], seed: 123, colorSpace: 'all'});
+    assert.includeMembers(palette3, ['#94b3b9', '#9552b3', '#98bf5a', '#c7614e', '#4f4142']);
+
+    var palette2 = iwanthue(8, {originalColorsToExpand: [
+      '#6785ce', '#ca576b', '#5eab65', '#b55eb2',
+      '#aa9b41', '#c86a38', '#6596cd'], seed: 123, colorSpace: 'all'});
+    // original colors are still there
+    assert.includeMembers(palette2, ['#6785ce', '#ca576b', '#5eab65', '#b55eb2', '#aa9b41', '#c86a38', '#6596cd']);
+    // the new one has been added
+    assert.includeMembers(palette2, ['#514343']);
+    var palette4 = iwanthue(5, {
+      originalColorsToExpand: ['#e6b8c4', '#98d4e4', '#e1c4aa', '#bfbee0'],
+      colorSpace: 'fancy-light',
+      seed: 123
+    });
+    assert.includeMembers(palette4, ['#9dd7b4']);
+  });
+
+  it('should be possible to pass originalColorsToExpand to expand palette without a colorSpace.', function() {
+
+    var palette = iwanthue(3, {originalColorsToExpand: ['#60a862', '#c15ca5'], seed: 123});
+    assert.sameMembers(palette, ['#60a862', '#c15ca5', '#be6d40']);
+
+    var palette3 = iwanthue(5, {originalColorsToExpand: ['#94b3b9', '#9552b3', '#98bf5a', '#c7614e'], seed: 123});
+    assert.includeMembers(palette3, ['#94b3b9', '#9552b3', '#98bf5a', '#c7614e', '#4f4142']);
+
+    var palette2 = iwanthue(8, {originalColorsToExpand: [
+      '#6785ce', '#ca576b', '#5eab65', '#b55eb2',
+      '#aa9b41', '#c86a38', '#6596cd'], seed: 123});
+    // original colors are still there
+    assert.includeMembers(palette2, ['#6785ce', '#ca576b', '#5eab65', '#b55eb2', '#aa9b41', '#c86a38', '#6596cd']);
+    // the new one has been added
+    assert.includeMembers(palette2, ['#49b2a0']);
+    var palette4 = iwanthue(5, {
+      originalColorsToExpand: ['#e6b8c4', '#98d4e4', '#e1c4aa', '#bfbee0'],
+      seed: 123
+    });
+    assert.includeMembers(palette4, ['#9dd7b4']);
+  });
 });
+
