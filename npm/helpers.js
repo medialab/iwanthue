@@ -1,3 +1,6 @@
+var {sortBy, toPairs} = require('lodash');
+const presets = require('./presets');
+
 /**
  * Iwanthue Library Helpers
  * =========================
@@ -203,6 +206,46 @@ function computeQualityMetrics(distance, colors) {
   return {min: min, mean: S / t};
 }
 
+var colorSpacePresetsAreas = sortBy(
+  toPairs(presets).map(([presetKey, preset]) => {
+    // hRange can be expressed as a range from 330 to 360 and from 0 to 20 as [330, 20]
+    // in that case the range has to be calculated differently
+    const hRange =
+      preset[1] >= preset[0]
+        ? preset[1] - preset[0]
+        : 360 - preset[0] + preset[1];
+    return {
+      key: presetKey,
+      area: hRange * (preset[3] - preset[2]) * (preset[5] - preset[4]),
+    };
+  }),
+  function ({area}) {return area;});
+
+var colorSpacePresetsSortedByArea = colorSpacePresetsAreas.map(
+  function ({key}) {return key;});
+
+function detectSmallestCompatibleColorSpace(hexColors) {
+  var colorSpace = colorSpacePresetsSortedByArea.find((presetKey) => {
+    // test that all colors are include din the color area
+    var areaBounds = presets[presetKey];
+    return hexColors
+      .map(function (c) { return labToHcl(rgbHexToLab(c));})
+      .every(
+        function ([h, c, l]) {
+          return (areaBounds[0] <= areaBounds[1]
+            ? areaBounds[0] <= h && h <= areaBounds[1]
+            : areaBounds[0] <= h || h <= areaBounds[1]) &&
+          areaBounds[2] <= c &&
+          c <= areaBounds[3] &&
+          areaBounds[4] <= l &&
+          l <= areaBounds[5];
+        }
+      );
+  });
+
+  return colorSpace;
+}
+
 exports.validateRgb = validateRgb;
 exports.validateRgbHex = validateRgbHex;
 exports.labToRgb = labToRgb;
@@ -212,3 +255,4 @@ exports.rgbToLab = rgbToLab;
 exports.labToHcl = labToHcl;
 exports.diffSort = diffSort;
 exports.computeQualityMetrics = computeQualityMetrics;
+exports.detectSmallestCompatibleColorSpace = detectSmallestCompatibleColorSpace;

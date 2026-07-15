@@ -53,4 +53,20 @@ describe('helpers', function() {
 
     assert.deepEqual(output, sortedColors);
   });
+
+  it('should be possible to find the smallest preset matching a palette', function () {
+    var shades = ['#c6ccc2', '#2f251b', '#858a84', '#294240', '#655b4c'];
+    assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(shades), 'shades');
+
+    // expected result: we find the smallest preset, fancy-light and pastels share lots of common colors,
+    // fancy being smallest it's picked up in this case
+    var pastels = ['#e6b8b3', '#a7dde2', '#d1bbdf', '#d4d9b6', '#aac4e2', '#9bc2af'];
+    assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(pastels), 'fancy-light');
+
+    var ochreSand = ['#946056', '#e99478', '#995432', '#d79d91', '#b65f56'];
+    assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(ochreSand), 'ochre-sand');
+
+    var intense = ['#749a50', '#6b47b8', '#c76c3f', '#cd53b8', '#6f86b5', '#a04a61'];
+    assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(intense), 'intense');
+  });
 });

@@ -89,6 +89,11 @@ function resolveAndValidateSettings(userSettings) {
     })))
     throw new Error(`iwanthue: invalid 'originalColorsToExpand' ${settings.originalColorsToExpand}. Expecting an array of hexadecimal colors.`);
 
+
+  if (settings.originalColorsToExpand !== null && settings.originalColorsToExpand.length > 0 && settings.colorSpace === 'default') {
+    settings.colorSpace = helpers.detectSmallestCompatibleColorSpace(settings.originalColorsToExpand);
+  }
+
   // Building color filter from preset?
   if (!settings.colorFilter) {
     if (
@@ -517,8 +522,6 @@ module.exports = function generatePalette(count, settings) {
 
   if (settings.originalColorsToExpand) {
       //Correct palette by taking into account original colors
-      // var expandSettings = settings;
-      // expandSettings.quality = 50;
 
       kMeans(distances.get('euclidean'), validColor, colors, settings);
   }
