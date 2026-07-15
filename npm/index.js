@@ -90,7 +90,7 @@ function resolveAndValidateSettings(userSettings) {
     throw new Error(`iwanthue: invalid 'originalColorsToExpand' ${settings.originalColorsToExpand}. Expecting an array of hexadecimal colors.`);
 
 
-  if (settings.originalColorsToExpand !== null && settings.originalColorsToExpand.length > 0 && settings.colorSpace === 'default') {
+  if (settings.originalColorsToExpand !== null && settings.originalColorsToExpand.length > 0 && !userSettings.colorSpace) {
     settings.colorSpace = helpers.detectSmallestCompatibleColorSpace(settings.originalColorsToExpand);
   }
 
