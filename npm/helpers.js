@@ -256,3 +256,4 @@ exports.labToHcl = labToHcl;
 exports.diffSort = diffSort;
 exports.computeQualityMetrics = computeQualityMetrics;
 exports.detectSmallestCompatibleColorSpace = detectSmallestCompatibleColorSpace;
+exports.colorSpacePresetsSortedByArea = colorSpacePresetsSortedByArea;

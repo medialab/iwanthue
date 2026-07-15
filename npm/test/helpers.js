@@ -1,6 +1,7 @@
 var assert = require('chai').assert;
 var helpers = require('../helpers.js');
 var CachedDistances = require('../distances.js');
+const {colorSpacePresetsSortedByArea} = require('../helpers.js');
 
 var LAB_COLORS = [
   [45.19047619047619, 42.698412698412696, 17.142857142857142],
@@ -68,5 +69,30 @@ describe('helpers', function() {
 
     var intense = ['#749a50', '#6b47b8', '#c76c3f', '#cd53b8', '#6f86b5', '#a04a61'];
     assert.strictEqual(helpers.detectSmallestCompatibleColorSpace(intense), 'intense');
+  });
+
+  it('should properly sort preset by size', () => {
+    assert.sameOrderedMembers(colorSpacePresetsSortedByArea, [
+      'ochre-sand',
+      'indigo-night',
+      'blue-ocean',
+      'purple-wine',
+      'yellow-lime',
+      'tarnish',
+      'fancy-light',
+      'red-roses',
+      'pastel',
+      'sensible',
+      'ice-cube',
+      'green-mint',
+      'shades',
+      'fancy-dark',
+      'fluo',
+      'colorblind',
+      'default',
+      'pimp',
+      'intense',
+      'all',
+    ]);
   });
 });
