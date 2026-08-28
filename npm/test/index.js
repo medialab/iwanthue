@@ -67,8 +67,11 @@ describe('iwanthue', function() {
     var palette2 = iwanthue(5, {seed: 123, colorSpace: {cmin: 25.59, cmax: 55.59, lmin: 60.94, lmax: 90.94}});
 
     assert.sameMembers(palette, palette2);
-  });
 
+    var palette3 = iwanthue(5, {seed: 123, originalColorsToExpand: undefined, colorSpace: [0, 360, 25.59, 55.59, 60.94, 90.94]});
+
+    assert.sameMembers(palette, palette3);
+  });
 
   it('should be possible to pass originalColorsToExpand to expand palette.', function() {
 

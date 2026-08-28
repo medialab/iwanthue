@@ -20,7 +20,7 @@ var diffSort = helpers.diffSort;
  */
 var DEFAULT_SETTINGS = {
   attempts: 1,
-  originalColorsToExpand: null,
+  originalColorsToExpand: undefined,
   colorFilter: null,
   colorSpace: 'default',
   clustering: 'k-means',
@@ -81,7 +81,7 @@ function resolveAndValidateSettings(userSettings) {
 
   if (settings.seed !== null && typeof settings.seed !== 'number')
     throw new Error('iwanthue: invalid `seed`. Expecting an integer or a string.');
-  if (settings.originalColorsToExpand !== null && (
+  if (!!settings.originalColorsToExpand && (
     !Array.isArray(settings.originalColorsToExpand) ||
     !settings.originalColorsToExpand.every(function(c) {
       return typeof c === 'string' && helpers.validateRgbHex(c);
@@ -89,7 +89,7 @@ function resolveAndValidateSettings(userSettings) {
     throw new Error(`iwanthue: invalid 'originalColorsToExpand' ${settings.originalColorsToExpand}. Expecting an array of hexadecimal colors.`);
 
 
-  if (settings.originalColorsToExpand !== null && settings.originalColorsToExpand.length > 0 && !userSettings.colorSpace) {
+  if (!!settings.originalColorsToExpand && settings.originalColorsToExpand.length > 0 && !userSettings.colorSpace) {
     settings.colorSpace = helpers.detectSmallestCompatibleColorSpace(settings.originalColorsToExpand);
   }
 
