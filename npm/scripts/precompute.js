@@ -147,9 +147,14 @@ FILES.forEach(file => {
     path.join(PRECOMPUTED_PATH, p, file.name + '.html'),
     templateHtml(file.title, palettes)
   );
+  if (file.name !== 'index')
+    fs.copyFileSync(
+      'scripts/precomputedPalette.d.ts',
+      path.join(PRECOMPUTED_PATH, p, file.name + '.d.ts')
+    );
 });
 
-console.log('\n\nFinished computing the following palettes:')
+console.log('\n\nFinished computing the following palettes:');
 FILES.forEach(file => {
   console.log('iwanthue/precomputed/' + file.name);
 });
